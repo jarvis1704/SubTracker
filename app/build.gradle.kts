@@ -1,10 +1,11 @@
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -78,5 +79,35 @@ dependencies {
 
     //extended icons
     implementation(libs.androidx.compose.material.icons.extended)
+
+    // Credential Manager
+    implementation (libs.androidx.credentials)
+    implementation (libs.androidx.credentials.play.services.auth)
+    implementation (libs.googleid)
+
+    implementation (libs.play.services.auth)
+
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    kapt(libs.androidx.lifecycle.compiler)
+
+    implementation(libs.lottie)
+    implementation (libs.lottie.compose)
+
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    implementation(platform(libs.okhttp.bom)) // Add OkHttp BOM
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging.interceptor)
 
 }
