@@ -21,9 +21,22 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
 
+
+//dummy data class, will be changed with room implemention
+//todo: replace with room source
+data class Subscription(
+    val name: String,
+    val price: Double,
+    val dueInDays: Int,
+    val logoResId: Int
+)
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SubscriptionCard(modifier: Modifier = Modifier) {
+fun SubscriptionCard(
+    modifier: Modifier = Modifier,
+    subscription: Subscription
+) {
 
     Card(
         modifier = modifier.fillMaxWidth().clickable{ /*TODO: Handle click for subscription card */ },
@@ -44,24 +57,24 @@ fun SubscriptionCard(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    "Netflix",
+                    text = subscription.name,
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "$15.99",
+                    text= "$${subscription.price}",
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Due in 2 Days",
+                    "Due in ${subscription.dueInDays} Days",
                     style = MaterialTheme.typography.labelLargeEmphasized
                 )
             }
 
             //image
             AsyncImage(
-                model = R.drawable.netflix_logo,
+                model = subscription.logoResId,
                 contentDescription = "Netflix logo",
                 modifier = Modifier.size(48.dp)
             )
