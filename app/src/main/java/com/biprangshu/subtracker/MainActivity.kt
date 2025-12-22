@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.biprangshu.subtracker.ui.screens.HomeScreen
 import com.biprangshu.subtracker.ui.theme.SubTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,9 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SubTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    HomeScreen(
+                        innerPadding = innerPadding
                     )
                 }
             }
@@ -30,18 +30,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SubTrackerTheme {
-        Greeting("Android")
-    }
-}

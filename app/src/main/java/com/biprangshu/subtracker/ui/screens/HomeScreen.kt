@@ -1,0 +1,54 @@
+package com.biprangshu.subtracker.ui.screens
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.biprangshu.subtracker.ui.components.SubscriptionCard
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize().padding(innerPadding)
+    ) {
+        Column(
+            modifier= Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 16.dp)
+        ) {
+            Text(
+                "SubTracker",
+                style = MaterialTheme.typography.headlineLargeEmphasized
+            )
+            Spacer(Modifier.height(32.dp))
+            //dyanamic spending details
+
+            Text(
+                "Total Monthly: $29.99",
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Total Yearly: $299.99",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(Modifier.height(48.dp))
+            //list of subscriptions
+            SubscriptionCard()
+        }
+    }
+}
