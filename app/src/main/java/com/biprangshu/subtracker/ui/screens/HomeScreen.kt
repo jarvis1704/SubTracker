@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,6 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.glance.appwidget.lazy.LazyColumn
+import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.ui.components.Subscription
 import com.biprangshu.subtracker.ui.components.SubscriptionCard
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -22,6 +27,35 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
+
+    val subscription = listOf(
+        Subscription(
+            name = "Netflix",
+            price = 9.99,
+            dueInDays = 5,
+            logoResId = R.drawable.netflix_logo
+        ),
+        Subscription(
+            name = "Spotify",
+            price = 4.99,
+            dueInDays = 12,
+            logoResId = R.drawable.netflix_logo
+        ),
+        Subscription(
+            name = "Disney+",
+            price = 14.99,
+            dueInDays = 20,
+            logoResId = R.drawable.netflix_logo
+        ),
+        Subscription(
+            name = "YouTube Premium",
+            price = 11.99,
+            dueInDays = 25,
+            logoResId = R.drawable.netflix_logo
+        )
+    )
+
+
     Surface(
         modifier = Modifier.fillMaxSize().padding(innerPadding)
     ) {
@@ -46,9 +80,16 @@ fun HomeScreen(
                 style = MaterialTheme.typography.titleLarge
             )
 
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(24.dp))
             //list of subscriptions
-            SubscriptionCard()
+            LazyColumn(
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
+                items(subscription) { subscription ->
+                    SubscriptionCard(subscription = subscription)
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
