@@ -1,0 +1,4 @@
+Things to do after the intial lookup of the app:
+1. Implement user authentication (sign up, login, logout).
+2. Add functionality to track subscriptions (add, edit, delete).
+3. Create a database to store user data and subscriptions. Update the data tracks which is now used to store static data.
