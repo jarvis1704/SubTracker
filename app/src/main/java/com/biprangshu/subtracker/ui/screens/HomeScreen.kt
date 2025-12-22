@@ -39,19 +39,19 @@ fun HomeScreen(
             name = "Spotify",
             price = 4.99,
             dueInDays = 12,
-            logoResId = R.drawable.netflix_logo
+            logoResId = R.drawable.spotify_logo
         ),
         Subscription(
             name = "Disney+",
             price = 14.99,
             dueInDays = 20,
-            logoResId = R.drawable.netflix_logo
+            logoResId = R.drawable.disney
         ),
         Subscription(
             name = "YouTube Premium",
             price = 11.99,
             dueInDays = 25,
-            logoResId = R.drawable.netflix_logo
+            logoResId = R.drawable.youtube
         )
     )
 
