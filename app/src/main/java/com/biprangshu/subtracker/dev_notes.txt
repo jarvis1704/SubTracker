@@ -2,3 +2,9 @@ Things to do after the intial lookup of the app:
 1. Implement user authentication (sign up, login, logout).
 2. Add functionality to track subscriptions (add, edit, delete).
 3. Create a database to store user data and subscriptions. Update the data tracks which is now used to store static data.
+4. Idea to dynamically fetch the logo from url instead of storing it in the app:
+    - The basic idea of the implementation is to when the user searches for the subscription name, this will be sent to logo fetching API (Logo.dev) to download the logo image.
+    - The fetched logo image will be stored in the local storage of the app against that subscription entry.
+    - Whenever the subscription details are displayed, the app will first check if a logo image is available in the local storage. If available, it will load the logo from there; otherwise, it will display a default placeholder image.
+    - Check the gemimi chat https://gemini.google.com/share/35f0e8b93a9d for more details.
+
