@@ -111,4 +111,6 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.coil.compose)
+
+    implementation(libs.vico.compose.m3)
 }

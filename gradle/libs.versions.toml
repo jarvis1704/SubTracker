@@ -23,6 +23,7 @@ playServicesAuth = "21.4.0"
 room = "2.6.1"
 retrofit = "2.9.0"
 okhttp = "4.12.0"
+vico = "2.3.6"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -50,6 +51,7 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 androidx-navigation3-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation3" }
 androidx-navigation3-runtime = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigation3" }

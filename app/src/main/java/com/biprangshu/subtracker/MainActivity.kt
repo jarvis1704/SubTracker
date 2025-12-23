@@ -35,12 +35,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                 ) { innerPadding ->
-                    HomeScreen(
-                        innerPadding = innerPadding
-                    )
-//                    AnalyticsScreen(
+//                    HomeScreen(
 //                        innerPadding = innerPadding
 //                    )
+                    AnalyticsScreen(
+                        innerPadding = innerPadding
+                    )
                 }
             }
         }
