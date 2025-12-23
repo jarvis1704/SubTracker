@@ -19,7 +19,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.appwidget.lazy.LazyColumn
 import com.biprangshu.subtracker.R
 import com.biprangshu.subtracker.ui.components.Subscription
 import com.biprangshu.subtracker.ui.components.SubscriptionCard
@@ -61,10 +60,15 @@ fun HomeScreen(
 
 
     Surface(
-        modifier = Modifier.fillMaxSize().padding(innerPadding)
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier= Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 16.dp)
+            modifier= Modifier.fillMaxSize()
+                .padding(
+                    top = innerPadding.calculateTopPadding() + 16.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                ),
         ) {
             Text(
                 "SubTracker",
@@ -92,7 +96,11 @@ fun HomeScreen(
             Spacer(Modifier.height(24.dp))
             //list of subscriptions
             LazyColumn(
-                contentPadding = PaddingValues(vertical = 16.dp)
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(
+                    // 4. Add the bottom bar height (innerPadding.bottom) here
+                    bottom = innerPadding.calculateBottomPadding() + 16.dp
+                )
             ) {
                 items(subscription) { subscription ->
                     SubscriptionCard(subscription = subscription)
