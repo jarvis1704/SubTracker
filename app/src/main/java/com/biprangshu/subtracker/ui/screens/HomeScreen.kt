@@ -10,16 +10,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.appwidget.lazy.LazyColumn
 import com.biprangshu.subtracker.R
 import com.biprangshu.subtracker.ui.components.Subscription
 import com.biprangshu.subtracker.ui.components.SubscriptionCard
+import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -64,7 +68,12 @@ fun HomeScreen(
         ) {
             Text(
                 "SubTracker",
-                style = MaterialTheme.typography.headlineLargeEmphasized
+                style = TextStyle(
+                    fontFamily = robotoFlexTopBar,
+                    fontSize = 32.sp,
+                    lineHeight = 34.sp,
+                    color = colorScheme.primary
+                ),
             )
             Spacer(Modifier.height(32.dp))
             //dyanamic spending details
