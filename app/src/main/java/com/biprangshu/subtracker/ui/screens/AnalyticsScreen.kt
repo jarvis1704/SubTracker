@@ -37,6 +37,7 @@ fun AnalyticsScreen(
 ) {
     // 1. Setup Vico Model Producer
     val modelProducer = remember { CartesianChartModelProducer() }
+    val modelProducer2 = remember { CartesianChartModelProducer() }
     val labelKey = remember { ExtraStore.Key<List<String>>() }
 
     // 2. Generate Dummy Data (Jan - Dec)
@@ -48,6 +49,14 @@ fun AnalyticsScreen(
         modelProducer.runTransaction {
             columnSeries { series(values) }
             extras { it[labelKey] = months }
+        }
+
+        val subscriptions = listOf("Netflix", "Spotify", "Disney+", "YouTube")
+        val costs = listOf(9.99, 4.99, 14.99, 11.99)
+
+        modelProducer2.runTransaction {
+            columnSeries { series(costs) }
+            extras { it[labelKey] = subscriptions }
         }
     }
 
@@ -97,6 +106,37 @@ fun AnalyticsScreen(
                     // 4. The Chart
                     MonthlySpendChart(
                         modelProducer = modelProducer,
+                        xValueFormatter = CartesianValueFormatter { context, x, _ ->
+                            // Map index to Month String from ExtraStore
+                            val index = x.toInt()
+                            context.model.extraStore[labelKey].getOrElse(index) { "" }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(28.dp))
+            //subscription spend chart
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
+                ),
+                shape = MaterialTheme.shapes.extraLarge,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Your Subscription Spends",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // 4. The Chart
+                    MonthlySpendChart(
+                        modelProducer = modelProducer2,
                         xValueFormatter = CartesianValueFormatter { context, x, _ ->
                             // Map index to Month String from ExtraStore
                             val index = x.toInt()
