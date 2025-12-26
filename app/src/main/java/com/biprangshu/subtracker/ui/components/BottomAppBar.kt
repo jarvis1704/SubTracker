@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.biprangshu.subtracker.navigation.Route
 
 /**
  * Data class to represent a single item in the bottom navigation bar.
@@ -47,7 +48,8 @@ import androidx.compose.ui.unit.sp
 data class BottomNavItem(
     val label: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
+    val route: Route
 )
 
 /**
@@ -58,17 +60,20 @@ val bottomNavItems = listOf(
     BottomNavItem(
         label = "Dashboard",
         selectedIcon = Icons.Filled.Dashboard,
-        unselectedIcon = Icons.Outlined.Dashboard
+        unselectedIcon = Icons.Outlined.Dashboard,
+        route = Route.HomeScreen
     ),
     BottomNavItem(
         label = "Analytics",
         selectedIcon = Icons.Filled.Analytics,
-        unselectedIcon = Icons.Outlined.Analytics
+        unselectedIcon = Icons.Outlined.Analytics,
+        route = Route.AnalyticsScreen
     ),
     BottomNavItem(
         label = "Settings",
         selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings
+        unselectedIcon = Icons.Outlined.Settings,
+        route = Route.SettingsScreen
     )
 )
 
@@ -79,7 +84,11 @@ val bottomNavItems = listOf(
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SubTrackerBottomAppBar(modifier: Modifier = Modifier) {
+fun SubTrackerBottomAppBar(
+    currentRoute: Route?,
+    onNavigate: (Route) -> Unit,
+    modifier: Modifier = Modifier
+) {
     // State to keep track of the currently selected item index.
     // Since there is no navigation graph yet, we manage this state locally.
     var selectedItemIndex by remember { mutableIntStateOf(0) }
@@ -100,11 +109,13 @@ fun SubTrackerBottomAppBar(modifier: Modifier = Modifier) {
             ),
             content = {
                 bottomNavItems.forEachIndexed { index, item ->
-                    val isSelected = selectedItemIndex == index
+                    val isSelected = currentRoute == item.route
 
                     ToggleButton(
                         checked = isSelected,
-                        onCheckedChange = { selectedItemIndex = index },
+                        onCheckedChange = {
+                            onNavigate(item.route)
+                        },
                         // Styling matches the demo app's usage
                         colors = ToggleButtonDefaults.toggleButtonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
