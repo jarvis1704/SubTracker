@@ -24,6 +24,7 @@ room = "2.6.1"
 retrofit = "2.9.0"
 okhttp = "4.12.0"
 vico = "2.3.6"
+ui = "1.10.0"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -78,6 +79,7 @@ retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version = "4.12.0" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor"}
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 
 
