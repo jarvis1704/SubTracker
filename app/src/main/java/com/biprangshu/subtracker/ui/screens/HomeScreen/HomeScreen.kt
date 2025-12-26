@@ -1,4 +1,4 @@
-package com.biprangshu.subtracker.ui.screens
+package com.biprangshu.subtracker.ui.screens.HomeScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.biprangshu.subtracker.R
-import com.biprangshu.subtracker.ui.components.Subscription
-import com.biprangshu.subtracker.ui.components.SubscriptionCard
+import com.biprangshu.subtracker.ui.screens.HomeScreen.components.Subscription
+import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

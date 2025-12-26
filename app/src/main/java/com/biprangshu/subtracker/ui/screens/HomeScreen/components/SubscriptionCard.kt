@@ -1,4 +1,4 @@
-package com.biprangshu.subtracker.ui.components
+package com.biprangshu.subtracker.ui.screens.HomeScreen.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.biprangshu.subtracker.R
 
 
 //dummy data class, will be changed with room implemention
