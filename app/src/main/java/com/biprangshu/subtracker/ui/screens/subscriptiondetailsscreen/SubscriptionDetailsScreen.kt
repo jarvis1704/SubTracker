@@ -69,7 +69,7 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 fun SubscriptionDetailsScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit
 ) {
     // Shapes for grouped list items (Expressive Style)
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -94,7 +94,9 @@ fun SubscriptionDetailsScreen(
                 },
                 navigationIcon = {
                     FilledTonalIconButton(
-                        onClick = {},
+                        onClick = {
+                            onBackClick()
+                        },
                         shapes = IconButtonDefaults.shapes(),
                     ) {
                         Icon(

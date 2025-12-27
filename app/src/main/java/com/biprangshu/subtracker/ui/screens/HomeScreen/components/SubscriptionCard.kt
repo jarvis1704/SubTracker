@@ -36,11 +36,13 @@ data class Subscription(
 fun SubscriptionCard(
     modifier: Modifier = Modifier,
     subscription: Subscription,
-//    onNavigate: (Route) -> Unit
+    onNavigate: (Route) -> Unit
 ) {
 
     Card(
-        modifier = modifier.fillMaxWidth().clickable{ /*TODO: Handle click for subscription card */ },
+        modifier = modifier.fillMaxWidth().clickable{
+            onNavigate(Route.SubscriptionDetailsScreen)
+        },
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,

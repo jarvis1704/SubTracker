@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.Subscription
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -28,7 +29,8 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigate: (Route) -> Unit
 ) {
 
     val subscription = listOf(
@@ -103,7 +105,13 @@ fun HomeScreen(
                 )
             ) {
                 items(subscription) { subscription ->
-                    SubscriptionCard(subscription = subscription)
+                    SubscriptionCard(
+                        subscription = subscription,
+                        onNavigate = {
+                            route ->
+                            onNavigate(route)
+                        }
+                    )
                     Spacer(Modifier.height(16.dp))
                 }
             }

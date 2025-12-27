@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                            currentRoute == Route.HomeScreen
                        ){
                            Fab(){
-                                   route ->
+                               route ->
                                //navigate to add subscription screen
                                backStack.add(route)
                            }

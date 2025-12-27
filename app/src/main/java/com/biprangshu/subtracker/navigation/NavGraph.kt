@@ -15,7 +15,7 @@ import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.Subscripti
 
 @Composable
 fun NavGraph(
-    backStack: List<NavKey>,
+    backStack: MutableList<NavKey>,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
@@ -28,7 +28,11 @@ fun NavGraph(
                 is Route.HomeScreen -> {
                     NavEntry(key){
                         HomeScreen(
-                            innerPadding = innerPadding
+                            innerPadding = innerPadding,
+                            onNavigate = {
+                                route ->
+                                backStack.add(route)
+                            }
                         )
                     }
                 }
@@ -60,7 +64,10 @@ fun NavGraph(
                 is Route.SubscriptionDetailsScreen -> {
                     NavEntry(key){
                         SubscriptionDetailsScreen(
-                            innerPadding = innerPadding
+                            innerPadding = innerPadding,
+                            onBackClick = {
+                                backStack.removeAt(backStack.lastIndex)
+                            }
                         )
                     }
                 }
