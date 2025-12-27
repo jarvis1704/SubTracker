@@ -10,6 +10,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
+import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
 
 @Composable
 fun NavGraph(
@@ -42,6 +43,14 @@ fun NavGraph(
                 is Route.SettingsScreen -> {
                     NavEntry(key){
                         SettingsScreen(
+                            innerPadding = innerPadding
+                        )
+                    }
+                }
+
+                is Route.AddSubscriptionScreen -> {
+                    NavEntry(key){
+                        AddSubscriptionScreen(
                             innerPadding = innerPadding
                         )
                     }

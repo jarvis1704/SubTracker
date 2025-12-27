@@ -12,15 +12,16 @@ import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.biprangshu.subtracker.navigation.Route
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Fab(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: (Route) -> Unit
 ) {
     MediumFloatingActionButton(
-        onClick = onClick,
+        onClick = { onClick(Route.AddSubscriptionScreen) },
         modifier = modifier,
         // Material 3 Default FAB shape is a rounded rectangle (usually 16.dp),
         // but you can customize it here if you want it more "expressive".

@@ -40,32 +40,44 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        SubTrackerBottomAppBar(
-                            currentRoute= currentRoute,
-                            onNavigate = {
-                                route->
+                        if(
+                            currentRoute == Route.HomeScreen ||
+                            currentRoute == Route.AnalyticsScreen ||
+                            currentRoute == Route.SettingsScreen
+                        ){
+                            SubTrackerBottomAppBar(
+                                currentRoute= currentRoute,
+                                onNavigate = {
+                                        route->
 
-                                //prevents duplicate navigation
-                                if(currentRoute == route) return@SubTrackerBottomAppBar
+                                    //prevents duplicate navigation
+                                    if(currentRoute == route) return@SubTrackerBottomAppBar
 
-                                //pop everything up to root (only for bottom bar navigation)
-                                while (backStack.size > 1){
-                                    backStack.removeAt(backStack.lastIndex)
+                                    //pop everything up to root (only for bottom bar navigation)
+                                    while (backStack.size > 1){
+                                        backStack.removeAt(backStack.lastIndex)
+                                    }
+
+
+                                    //navigation logic, only navigate when not on the current screen
+                                    if(route != Route.HomeScreen){
+                                        //add route to backstack
+                                        backStack.add(route)
+                                    }
                                 }
-
-
-                                //navigation logic, only navigate when not on the current screen
-                                if(route != Route.HomeScreen){
-                                    //add route to backstack
-                                    backStack.add(route)
-                                }
-                            }
-                        )
+                            )
+                        }
                     },
                     floatingActionButton = {
-                        Fab() {
-                            //onclick redirection
-                        }
+                       if (
+                           currentRoute == Route.HomeScreen
+                       ){
+                           Fab(){
+                                   route ->
+                               //navigate to add subscription screen
+                               backStack.add(route)
+                           }
+                       }
                     }
 
                 ) { innerPadding ->
