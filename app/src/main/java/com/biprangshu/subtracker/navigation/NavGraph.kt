@@ -11,6 +11,7 @@ import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
+import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
 
 @Composable
 fun NavGraph(
@@ -51,6 +52,14 @@ fun NavGraph(
                 is Route.AddSubscriptionScreen -> {
                     NavEntry(key){
                         AddSubscriptionScreen(
+                            innerPadding = innerPadding
+                        )
+                    }
+                }
+
+                is Route.SubscriptionDetailsScreen -> {
+                    NavEntry(key){
+                        SubscriptionDetailsScreen(
                             innerPadding = innerPadding
                         )
                     }

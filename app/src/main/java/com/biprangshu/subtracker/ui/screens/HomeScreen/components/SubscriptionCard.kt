@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.biprangshu.subtracker.navigation.Route
 
 
 //dummy data class, will be changed with room implemention
@@ -34,7 +35,8 @@ data class Subscription(
 @Composable
 fun SubscriptionCard(
     modifier: Modifier = Modifier,
-    subscription: Subscription
+    subscription: Subscription,
+//    onNavigate: (Route) -> Unit
 ) {
 
     Card(
