@@ -2,6 +2,7 @@ package com.biprangshu.subtracker
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,12 @@ class MainActivity : ComponentActivity() {
                     Route.HomeScreen
                 )
 
+                BackHandler(
+                    enabled = backStack.size > 1
+                ) {
+                    backStack.removeAt(backStack.lastIndex)
+                }
+
                 val currentRoute = backStack.lastOrNull() as? Route
 
                 Scaffold(
@@ -37,8 +44,18 @@ class MainActivity : ComponentActivity() {
                             currentRoute= currentRoute,
                             onNavigate = {
                                 route->
+
+                                //prevents duplicate navigation
+                                if(currentRoute == route) return@SubTrackerBottomAppBar
+
+                                //pop everything up to root (only for bottom bar navigation)
+                                while (backStack.size > 1){
+                                    backStack.removeAt(backStack.lastIndex)
+                                }
+
+
                                 //navigation logic, only navigate when not on the current screen
-                                if(currentRoute != route){
+                                if(route != Route.HomeScreen){
                                     //add route to backstack
                                     backStack.add(route)
                                 }
