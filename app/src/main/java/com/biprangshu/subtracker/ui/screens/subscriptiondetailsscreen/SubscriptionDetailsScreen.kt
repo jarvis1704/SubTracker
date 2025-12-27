@@ -29,31 +29,41 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SubscriptionDetailsScreen(
     modifier: Modifier = Modifier,
@@ -66,12 +76,12 @@ fun SubscriptionDetailsScreen(
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
 
     // Scroll behavior for the Large Top Bar
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
+            LargeFlexibleTopAppBar(
                 title = {
                     Text(
                         "Netflix",
@@ -82,12 +92,21 @@ fun SubscriptionDetailsScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    FilledTonalIconButton(
+                        onClick = {},
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back Button"
+                        )
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Edit */ }) {
+                    FilledTonalIconButton(
+                        onClick = { /* TODO: Edit */ },
+                        IconButtonDefaults.shapes()
+                    ) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }
                 },
@@ -108,7 +127,6 @@ fun SubscriptionDetailsScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 1. Hero Card (Subscription Info)
             SubscriptionHeroCard()
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -169,7 +187,7 @@ fun SubscriptionDetailsScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // 4. Cancel Button
-            Button(
+            FilledTonalButton(
                 onClick = { /* TODO: Cancel Logic */ },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -192,6 +210,7 @@ fun SubscriptionDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SubscriptionHeroCard() {
     // Using a specific red to match Netflix brand from the image,
@@ -210,17 +229,22 @@ fun SubscriptionHeroCard() {
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             // Logo (Placeholder using Icon, ideally this is an Image)
-            Icon(
-                painter = painterResource(id = R.drawable.netflix_logo), // Ensure this resource exists or use a generic icon
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = Color.Unspecified
-            )
+            Surface(
+                modifier = Modifier.size(52.dp),
+                shape = MaterialShapes.Cookie12Sided.toShape(),
+                color = Color.White // White background for logos usually looks best
+            ) {
+                AsyncImage(
+                    model = R.drawable.netflix_logo, // Ensure this resource exists or use a generic icon
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp).padding(8.dp),
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
