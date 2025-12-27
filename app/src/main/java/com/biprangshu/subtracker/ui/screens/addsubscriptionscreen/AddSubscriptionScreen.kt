@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.components.SubscriptionOptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 // Simple data class for the options in this screen
@@ -159,54 +160,3 @@ fun AddSubscriptionScreen(
     }
 }
 
-@Composable
-fun SubscriptionOptionCard(service: SubscriptionOption) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .clickable { /* TODO: Navigate to details/edit screen */ },
-        colors = CardDefaults.cardColors(
-            containerColor = colorScheme.surfaceContainerHigh
-        ),
-        shape = RoundedCornerShape(20.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // Logo
-                Surface(
-                    modifier = Modifier.size(48.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.White // White background for logos usually looks best
-                ) {
-//                    Image(
-//                        painter = painterResource(id = service.iconRes),
-//                        contentDescription = service.name,
-//                        contentScale = ContentScale.Fit,
-//                        modifier = Modifier.padding(8.dp)
-//                    )
-                    AsyncImage(
-                        model = service.iconRes,
-                        contentDescription = "icon logo",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Text(
-                    text = service.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = colorScheme.onSurface
-                )
-            }
-        }
-    }
-}
