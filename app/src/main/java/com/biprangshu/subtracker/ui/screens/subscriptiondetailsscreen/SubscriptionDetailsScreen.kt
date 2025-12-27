@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.components.SubscriptionHeroCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -75,7 +76,7 @@ fun SubscriptionDetailsScreen(
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
 
-    // Scroll behavior for the Large Top Bar
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -131,7 +132,7 @@ fun SubscriptionDetailsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 2. Details Section
+
             Text(
                 text = "Details",
                 style = MaterialTheme.typography.titleLarge,
@@ -168,7 +169,7 @@ fun SubscriptionDetailsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 3. Spending History Chart
+
             Text(
                 text = "Spending History",
                 style = MaterialTheme.typography.titleLarge,
@@ -204,90 +205,13 @@ fun SubscriptionDetailsScreen(
                 )
             }
 
-            // Bottom padding to clear floating bars if any
+
             Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding() + 24.dp))
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun SubscriptionHeroCard() {
-    // Using a specific red to match Netflix brand from the image,
-    // but mixing it with the theme could also work.
-    val brandColor = Color(0xFFE50914)
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-        shape = RoundedCornerShape(32.dp), // Extra large styling
-        colors = CardDefaults.cardColors(
-            containerColor = brandColor,
-            contentColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            // Logo (Placeholder using Icon, ideally this is an Image)
-            Surface(
-                modifier = Modifier.size(52.dp),
-                shape = MaterialShapes.Cookie12Sided.toShape(),
-                color = Color.White // White background for logos usually looks best
-            ) {
-                AsyncImage(
-                    model = R.drawable.netflix_logo, // Ensure this resource exists or use a generic icon
-                    contentDescription = null,
-                    modifier = Modifier.size(48.dp).padding(8.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Standard Plan",
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White.copy(alpha = 0.9f)
-                )
-            )
-
-            Text(
-                text = "$15.99",
-                style = MaterialTheme.typography.displayMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            )
-            Text(
-                text = "/mo",
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Status Pills
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Active",
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-                )
-                Text(
-                    text = " • Next payment on Dec 25, 2025",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = Color.White.copy(alpha = 0.8f)
-                    )
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun DetailItem(

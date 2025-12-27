@@ -15,6 +15,7 @@ import com.biprangshu.subtracker.ui.components.Fab
 import com.biprangshu.subtracker.ui.components.SubTrackerBottomAppBar
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
+import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.theme.SubTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -88,6 +89,10 @@ class MainActivity : ComponentActivity() {
 //                        innerPadding = innerPadding
 //                    )
 //                    SettingsScreen(
+//                        innerPadding = innerPadding
+//                    )
+
+//                    SubscriptionDetailsScreen(
 //                        innerPadding = innerPadding
 //                    )
 
