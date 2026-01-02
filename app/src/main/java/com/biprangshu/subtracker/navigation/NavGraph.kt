@@ -76,9 +76,16 @@ fun NavGraph(
 
                 is Route.OnboardingScreen -> {
                     NavEntry(key){
-                        OnboardingScreen{
-                            showCurrencySetModal = true
-                        }
+                        OnboardingScreen(
+                            onOnboardComplete = { route ->
+                                //clear backstack and navigate to home screen
+                                backStack.clear()
+                                backStack.add(route)
+                            },
+                            onGetStartedClick = {
+                                showCurrencySetModal = true
+                            }
+                        )
                     }
                 }
 

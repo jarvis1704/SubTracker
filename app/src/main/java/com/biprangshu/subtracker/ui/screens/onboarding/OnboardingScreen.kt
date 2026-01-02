@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -61,7 +62,8 @@ data class OnboardingStep(
 
 @Composable
 fun OnboardingScreen(
-    onGetStartedClick: () -> Unit
+    onGetStartedClick: () -> Unit,
+    onOnboardComplete: (Route) -> Unit
 ) {
 
     val steps = listOf(
@@ -275,5 +277,7 @@ fun OnboardingScreen(
         }
     }
 
-    BudgetSetModal()
+    BudgetSetModal(
+        onOnboardComplete= onOnboardComplete
+    )
 }

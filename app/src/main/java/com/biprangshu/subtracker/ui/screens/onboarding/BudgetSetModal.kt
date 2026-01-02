@@ -35,12 +35,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.showCurrencySetModal
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BudgetSetModal(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOnboardComplete: (Route) -> Unit
 ) {
 
     var budgetAmount by remember {
@@ -156,6 +158,7 @@ fun BudgetSetModal(
                         //handle budget confirmation logic here
                         //todo: save budget and currency to user preferences
                         showCurrencySetModal = false
+                        onOnboardComplete(Route.HomeScreen)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

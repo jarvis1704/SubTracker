@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
                                     //navigation logic, only navigate when not on the current screen
                                     //todo: Change to Route.HomeScreen after testing
-                                    if(route != Route.OnboardingScreen){
+                                    if(route != Route.HomeScreen){
                                         //add route to backstack
                                         backStack.add(route)
                                     }
