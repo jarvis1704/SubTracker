@@ -11,6 +11,7 @@ import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
+import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
 
 @Composable
@@ -69,6 +70,15 @@ fun NavGraph(
                                 backStack.removeAt(backStack.lastIndex)
                             }
                         )
+                    }
+                }
+
+                is Route.OnboardingScreen -> {
+                    NavEntry(key){
+                        OnboardingScreen{
+                            route ->
+                            backStack.add(route)
+                        }
                     }
                 }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.rememberNavBackStack
+import com.biprangshu.subtracker.navigation.NavGraph
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.components.Fab
 import com.biprangshu.subtracker.ui.components.SubTrackerBottomAppBar
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
                 //navigation 3 backstack
                 val backStack = rememberNavBackStack(
-                    Route.HomeScreen
+                    Route.OnboardingScreen
                 )
 
                 BackHandler(
@@ -38,43 +39,44 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-//                        if(
-//                            currentRoute == Route.HomeScreen ||
-//                            currentRoute == Route.AnalyticsScreen ||
-//                            currentRoute == Route.SettingsScreen
-//                        ){
-//                            SubTrackerBottomAppBar(
-//                                currentRoute= currentRoute,
-//                                onNavigate = {
-//                                        route->
-//
-//                                    //prevents duplicate navigation
-//                                    if(currentRoute == route) return@SubTrackerBottomAppBar
-//
-//                                    //pop everything up to root (only for bottom bar navigation)
-//                                    while (backStack.size > 1){
-//                                        backStack.removeAt(backStack.lastIndex)
-//                                    }
-//
-//
-//                                    //navigation logic, only navigate when not on the current screen
-//                                    if(route != Route.HomeScreen){
-//                                        //add route to backstack
-//                                        backStack.add(route)
-//                                    }
-//                                }
-//                            )
-//                        }
+                        if(
+                            currentRoute == Route.HomeScreen ||
+                            currentRoute == Route.AnalyticsScreen ||
+                            currentRoute == Route.SettingsScreen
+                        ){
+                            SubTrackerBottomAppBar(
+                                currentRoute= currentRoute,
+                                onNavigate = {
+                                        route->
+
+                                    //prevents duplicate navigation
+                                    if(currentRoute == route) return@SubTrackerBottomAppBar
+
+                                    //pop everything up to root (only for bottom bar navigation)
+                                    while (backStack.size > 1){
+                                        backStack.removeAt(backStack.lastIndex)
+                                    }
+
+
+                                    //navigation logic, only navigate when not on the current screen
+                                    //todo: Change to Route.HomeScreen after testing
+                                    if(route != Route.OnboardingScreen){
+                                        //add route to backstack
+                                        backStack.add(route)
+                                    }
+                                }
+                            )
+                        }
                     },
                     floatingActionButton = {
                        if (
                            currentRoute == Route.HomeScreen
                        ){
-//                           Fab(){
-//                               route ->
-//                               //navigate to add subscription screen
-//                               backStack.add(route)
-//                           }
+                           Fab(){
+                               route ->
+                               //navigate to add subscription screen
+                               backStack.add(route)
+                           }
                        }
                     }
 
@@ -93,11 +95,11 @@ class MainActivity : ComponentActivity() {
 //                        innerPadding = innerPadding
 //                    )
 
-//                    NavGraph(
-//                        backStack= backStack,
-//                        innerPadding = innerPadding
-//                    )
-                    OnboardingScreen {  }
+                    NavGraph(
+                        backStack= backStack,
+                        innerPadding = innerPadding
+                    )
+
                 }
             }
         }

@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar // Assuming this font is available
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -63,7 +64,7 @@ data class OnboardingStep(
 
 @Composable
 fun OnboardingScreen(
-    onGetStartedClick: () -> Unit
+    onGetStartedClick: (Route) -> Unit
 ) {
 
     val steps = listOf(
@@ -236,7 +237,7 @@ fun OnboardingScreen(
                     onClick = {
                         if (isLastPage) {
                             //todo: redirect to initial setup page if new user
-                            onGetStartedClick()
+                            onGetStartedClick(Route.HomeScreen)
                         } else {
                             scope.launch {
                                 pagerState.animateScrollToPage(
