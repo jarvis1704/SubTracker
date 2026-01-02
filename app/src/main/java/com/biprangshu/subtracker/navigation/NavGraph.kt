@@ -7,6 +7,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
@@ -76,8 +77,7 @@ fun NavGraph(
                 is Route.OnboardingScreen -> {
                     NavEntry(key){
                         OnboardingScreen{
-                            route ->
-                            backStack.add(route)
+                            showCurrencySetModal = true
                         }
                     }
                 }
