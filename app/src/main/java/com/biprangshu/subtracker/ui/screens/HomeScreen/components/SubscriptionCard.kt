@@ -59,7 +59,7 @@ fun SubscriptionCard(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text= "$${subscription.price}",
+                    text= "${subscription.currency}${subscription.price}",
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(8.dp))
