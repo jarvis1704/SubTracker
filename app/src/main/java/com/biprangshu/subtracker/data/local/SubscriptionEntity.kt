@@ -22,6 +22,7 @@ data class SubscriptionEntity(
 
     val iconName: String? = null,
     val colorHex: String? = null, // Store brand color like 0xFFE50914 for Netflix
+    val logoResId: Int? = null,
 
     //reminders
     val remindersEnabled: Boolean = false,

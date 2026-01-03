@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -19,9 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.biprangshu.subtracker.R
 import com.biprangshu.subtracker.navigation.Route
-import com.biprangshu.subtracker.ui.screens.HomeScreen.components.Subscription
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
@@ -32,33 +29,6 @@ fun HomeScreen(
     innerPadding: PaddingValues,
     onNavigate: (Route) -> Unit
 ) {
-
-    val subscription = listOf(
-        Subscription(
-            name = "Netflix",
-            price = 9.99,
-            dueInDays = 5,
-            logoResId = R.drawable.netflix_logo
-        ),
-        Subscription(
-            name = "Spotify",
-            price = 4.99,
-            dueInDays = 12,
-            logoResId = R.drawable.spotify_logo
-        ),
-        Subscription(
-            name = "Disney+",
-            price = 14.99,
-            dueInDays = 20,
-            logoResId = R.drawable.disney
-        ),
-        Subscription(
-            name = "YouTube Premium",
-            price = 11.99,
-            dueInDays = 25,
-            logoResId = R.drawable.youtube
-        )
-    )
 
 
     Surface(
@@ -104,16 +74,16 @@ fun HomeScreen(
                     bottom = innerPadding.calculateBottomPadding() + 16.dp
                 )
             ) {
-                items(subscription) { subscription ->
-                    SubscriptionCard(
-                        subscription = subscription,
-                        onNavigate = {
-                            route ->
-                            onNavigate(route)
-                        }
-                    )
-                    Spacer(Modifier.height(16.dp))
-                }
+//                items(subscription) { subscription ->
+//                    SubscriptionCard(
+//                        subscription = subscription,
+//                        onNavigate = {
+//                            route ->
+//                            onNavigate(route)
+//                        }
+//                    )
+//                    Spacer(Modifier.height(16.dp))
+//                }
             }
         }
     }

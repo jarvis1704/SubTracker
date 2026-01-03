@@ -19,17 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.navigation.Route
 
 
-//dummy data class, will be changed with room implemention
-//todo: replace with room source
-data class Subscription(
-    val name: String,
-    val price: Double,
-    val dueInDays: Int,
-    val logoResId: Int
-)
+
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -77,8 +71,8 @@ fun SubscriptionCard(
 
             //image
             AsyncImage(
-                model = subscription.logoResId,
-                contentDescription = "Netflix logo",
+                model = subscription.logoRedId,
+                contentDescription = "${subscription.iconName}",
                 modifier = Modifier.size(48.dp)
             )
         }
