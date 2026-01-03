@@ -13,9 +13,10 @@ import com.biprangshu.subtracker.navigation.NavGraph
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.components.Fab
 import com.biprangshu.subtracker.ui.components.SubTrackerBottomAppBar
-import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
 import com.biprangshu.subtracker.ui.theme.SubTrackerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
