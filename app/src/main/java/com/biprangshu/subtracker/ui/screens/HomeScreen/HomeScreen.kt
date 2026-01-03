@@ -7,19 +7,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
+import com.biprangshu.subtracker.ui.screens.HomeScreen.viewmodel.HomeViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -27,9 +32,12 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 fun HomeScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
-    onNavigate: (Route) -> Unit
+    onNavigate: (Route) -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
 
+    val subscriptions by viewModel.subscriptions.collectAsState()
+    val totalMonthly by viewModel.totalMonthlySpend.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -52,16 +60,17 @@ fun HomeScreen(
                 ),
             )
             Spacer(Modifier.height(32.dp))
-            //dyanamic spending details
-
+            //dynamic Spending Details
             Text(
-                "Total Monthly: $29.99",
+                text = "Total Monthly: $${String.format("%.2f", totalMonthly)}",
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
+
+            // Note: Yearly logic can be added to ViewModel later
             Text(
-                "Total Yearly: $299.99",
+                text = "Total Yearly: $${String.format("%.2f", totalMonthly * 12)}",
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -74,16 +83,16 @@ fun HomeScreen(
                     bottom = innerPadding.calculateBottomPadding() + 16.dp
                 )
             ) {
-//                items(subscription) { subscription ->
-//                    SubscriptionCard(
-//                        subscription = subscription,
-//                        onNavigate = {
-//                            route ->
-//                            onNavigate(route)
-//                        }
-//                    )
-//                    Spacer(Modifier.height(16.dp))
-//                }
+                items(subscriptions) { subscription ->
+                    SubscriptionCard(
+                        subscription = subscription,
+                        onNavigate = {
+                            route ->
+                            onNavigate(route)
+                        }
+                    )
+                    Spacer(Modifier.height(16.dp))
+                }
             }
         }
     }
