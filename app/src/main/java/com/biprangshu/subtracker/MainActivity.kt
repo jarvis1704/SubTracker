@@ -8,11 +8,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.biprangshu.subtracker.navigation.NavGraph
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.components.Fab
 import com.biprangshu.subtracker.ui.components.SubTrackerBottomAppBar
+import com.biprangshu.subtracker.ui.screens.onboarding.viewmodel.OnboardingViewModel
 import com.biprangshu.subtracker.ui.theme.SubTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,9 +26,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             SubTrackerTheme {
 
+                val onboardingViewModel: OnboardingViewModel = hiltViewModel()
+
                 //navigation 3 backstack
                 val backStack = rememberNavBackStack(
-                    Route.OnboardingScreen
+                    if (showOnboardingScreens){
+                        Route.OnboardingScreen
+                    }else{
+                        Route.HomeScreen
+                    }
                 )
 
                 BackHandler(
@@ -98,7 +106,8 @@ class MainActivity : ComponentActivity() {
 
                     NavGraph(
                         backStack= backStack,
-                        innerPadding = innerPadding
+                        innerPadding = innerPadding,
+                        onboardingViewModel = onboardingViewModel
                     )
 
                 }

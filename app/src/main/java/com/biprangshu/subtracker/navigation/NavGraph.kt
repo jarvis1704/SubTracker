@@ -3,6 +3,7 @@ package com.biprangshu.subtracker.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -14,12 +15,14 @@ import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
 import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
+import com.biprangshu.subtracker.ui.screens.onboarding.viewmodel.OnboardingViewModel
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
 
 @Composable
 fun NavGraph(
     backStack: MutableList<NavKey>,
     modifier: Modifier = Modifier,
+    onboardingViewModel: OnboardingViewModel,
     innerPadding: PaddingValues
 ) {
 
@@ -90,6 +93,7 @@ fun NavGraph(
                             },
                             onGetStartedClick = {
                                 showCurrencySetModal = true
+                                onboardingViewModel.updateFirstAppOpen(false)
                             }
                         )
                     }
