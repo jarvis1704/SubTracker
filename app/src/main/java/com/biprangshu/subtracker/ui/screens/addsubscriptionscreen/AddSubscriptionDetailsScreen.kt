@@ -181,6 +181,7 @@ fun AddSubscriptionDetailsScreen(
                 },
                 prefix = {
                     Text(
+                        //todo: change it to dynamic currency symbol based on user preference
                         "$",
                         style = MaterialTheme.typography.displayLarge.copy(
                             fontWeight = FontWeight.Bold,
@@ -317,6 +318,7 @@ fun AddSubscriptionDetailsScreen(
                     ListItem(
                         headlineContent = {
                             Column {
+                                //todo: add haptic feedback to the slider
                                 Slider(
                                     value = reminderDaysBefore,
                                     onValueChange = { reminderDaysBefore = it },
