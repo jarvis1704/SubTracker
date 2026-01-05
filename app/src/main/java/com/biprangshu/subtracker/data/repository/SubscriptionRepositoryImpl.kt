@@ -55,6 +55,8 @@ class SubscriptionRepositoryImpl @Inject constructor(
             firstPaymentDate = firstPaymentDate,
             dueInDays = days,
             logoRedId = logoResId,// Mapped to the logic
+            category = category,
+            paymentMethod = paymentMethod
         )
     }
 

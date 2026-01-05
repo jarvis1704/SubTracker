@@ -97,7 +97,20 @@ fun NavGraph(
                 is Route.AddSubscriptionDetailsScreen -> {
                     NavEntry(key){
                         AddSubscriptionDetailsScreen(
-                            innerPaddingValues = innerPadding
+                            innerPaddingValues = innerPadding,
+                            name = key.name,
+                            iconResId = key.iconRes,
+                            onBackClick = {
+                                backStack.removeAt(backStack.lastIndex)
+                            },
+                            onSaveSuccess = {
+                                // Remove the "Add" screens from backstack to return Home
+                                // Or just pop back once.
+                                // Let's pop back to Home to show the new item.
+                                while (backStack.last() !is Route.HomeScreen) {
+                                    backStack.removeAt(backStack.lastIndex)
+                                }
+                            }
                         )
                     }
                 }

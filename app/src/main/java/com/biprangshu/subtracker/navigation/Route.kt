@@ -25,5 +25,8 @@ sealed interface Route: NavKey {
     data object OnboardingScreen: Route, NavKey
 
     @Serializable
-    data object AddSubscriptionDetailsScreen: Route, NavKey
+    data class AddSubscriptionDetailsScreen(
+        val name: String,
+        val iconRes: Int,
+    ): Route, NavKey
 }

@@ -77,6 +77,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.viewmodel.AddSubscriptionViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -86,9 +89,12 @@ import java.util.Locale
 @Composable
 fun AddSubscriptionDetailsScreen(
     modifier: Modifier = Modifier,
+    name: String,
+    iconResId: Int,
     innerPaddingValues: PaddingValues,
     onBackClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveSuccess: () -> Unit = {},
+    addSubscriptionViewModel: AddSubscriptionViewModel = hiltViewModel()
 ) {
     // Shapes for grouped list items (Expressive Style)
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -97,6 +103,7 @@ fun AddSubscriptionDetailsScreen(
     val singleItemShape = RoundedCornerShape(24.dp)
 
     // State Holders
+    var currentName by remember { mutableStateOf(name) }
     var price by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("Netflix") } // Default or passed argument
     var selectedCycleIndex by remember { mutableIntStateOf(0) } // 0: Monthly, 1: Yearly
@@ -337,7 +344,20 @@ fun AddSubscriptionDetailsScreen(
 
             // Save Button
             Button(
-                onClick = onSaveClick,
+                onClick = {
+                    //todo: add remind before thingy
+                    addSubscriptionViewModel.saveSubscription(
+                        name = currentName,
+                        priceInput = price,
+                        billingCycle = cycles[selectedCycleIndex],
+                        firstPaymentDate = selectedDateMillis,
+                        category = category,
+                        paymentMethod = paymentMethod,
+                        iconResId = iconResId,
+                        iconName = name,
+                        onSuccess = onSaveSuccess
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

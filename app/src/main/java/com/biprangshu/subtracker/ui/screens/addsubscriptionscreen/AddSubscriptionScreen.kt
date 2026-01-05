@@ -157,7 +157,15 @@ fun AddSubscriptionScreen(
                 items(filteredServices) { service ->
                     SubscriptionOptionCard(
                         service = service,
-                        onNavigate= onNavigate
+                        onOptionClick = {
+                            option ->
+                            onNavigate(
+                                Route.AddSubscriptionDetailsScreen(
+                                    name = option.name,
+                                    iconRes = option.iconRes
+                                )
+                            )
+                        }
                     )
                 }
             }

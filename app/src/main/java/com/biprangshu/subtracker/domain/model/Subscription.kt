@@ -7,9 +7,11 @@ data class Subscription(
     val currency: String,
     val iconName: String?,
     val logoRedId: Int?,
-    val colorHex: String?,
+    val colorHex: String? = null,
     val billingCycle: String,
     val firstPaymentDate: Long,
+    val paymentMethod: String?,
+    val category: String,
 
 
     val nextPaymentDate: Long = 0,

@@ -29,7 +29,7 @@ import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.SubscriptionOp
 @Composable
 fun SubscriptionOptionCard(
     service: SubscriptionOption,
-    onNavigate: (Route) -> Unit
+    onOptionClick: (SubscriptionOption) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -37,7 +37,7 @@ fun SubscriptionOptionCard(
             .clip(RoundedCornerShape(20.dp))
             .clickable {
             /* TODO: Navigate to details/edit screen with modularity */
-                onNavigate(Route.AddSubscriptionDetailsScreen)
+                onOptionClick(service)
             },
         colors = CardDefaults.cardColors(
             containerColor = colorScheme.surfaceContainerHigh
