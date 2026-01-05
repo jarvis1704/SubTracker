@@ -6,3 +6,5 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 var showCurrencySetModal by mutableStateOf(false)
+
+var showOnboardingScreens by mutableStateOf(false)
