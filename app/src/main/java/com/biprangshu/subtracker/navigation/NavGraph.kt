@@ -59,7 +59,11 @@ fun NavGraph(
                 is Route.AddSubscriptionScreen -> {
                     NavEntry(key){
                         AddSubscriptionScreen(
-                            innerPadding = innerPadding
+                            innerPadding = innerPadding,
+                            onNavigate = {
+                                route ->
+                                backStack.add(route)
+                            }
                         )
                     }
                 }

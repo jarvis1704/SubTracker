@@ -23,15 +23,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.SubscriptionOption
 
 @Composable
-fun SubscriptionOptionCard(service: SubscriptionOption) {
+fun SubscriptionOptionCard(
+    service: SubscriptionOption,
+    onNavigate: (Route) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .clickable { /* TODO: Navigate to details/edit screen */ },
+            .clickable {
+            /* TODO: Navigate to details/edit screen with modularity */
+                onNavigate(Route.AddSubscriptionDetailsScreen)
+            },
         colors = CardDefaults.cardColors(
             containerColor = colorScheme.surfaceContainerHigh
         ),

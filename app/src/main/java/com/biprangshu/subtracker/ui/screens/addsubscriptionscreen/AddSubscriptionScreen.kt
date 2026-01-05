@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.components.SubscriptionOptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
@@ -60,7 +61,8 @@ data class SubscriptionOption(
 @Composable
 fun AddSubscriptionScreen(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigate: (Route) -> Unit
 ) {
     // Data taken from HomeScreen list
     val popularServices = remember {
@@ -153,7 +155,10 @@ fun AddSubscriptionScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(filteredServices) { service ->
-                    SubscriptionOptionCard(service = service)
+                    SubscriptionOptionCard(
+                        service = service,
+                        onNavigate= onNavigate
+                    )
                 }
             }
         }
