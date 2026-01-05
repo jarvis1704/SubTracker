@@ -8,3 +8,4 @@ Things to do after the intial lookup of the app:
     - Whenever the subscription details are displayed, the app will first check if a logo image is available in the local storage. If available, it will load the logo from there; otherwise, it will display a default placeholder image.
     - Check the gemimi chat https://gemini.google.com/share/35f0e8b93a9d for more details.
 5. The Add FAB will open up a screen where users can choose the popular ones from the list, or else they can search for the subscription name to add it. (the prelist will have the logos already stored in the app, so no need to fetch them from the API)
+6. Adding a your budget spend with a horizontal progress in it
