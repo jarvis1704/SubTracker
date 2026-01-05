@@ -11,6 +11,7 @@ import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.SettingsScreen
+import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
 import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
@@ -85,6 +86,14 @@ fun NavGraph(
                             onGetStartedClick = {
                                 showCurrencySetModal = true
                             }
+                        )
+                    }
+                }
+
+                is Route.AddSubscriptionDetailsScreen -> {
+                    NavEntry(key){
+                        AddSubscriptionDetailsScreen(
+                            innerPaddingValues = innerPadding
                         )
                     }
                 }
