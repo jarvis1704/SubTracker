@@ -19,7 +19,9 @@ sealed interface Route: NavKey {
     data object AddSubscriptionScreen: Route, NavKey
 
     @Serializable
-    data object SubscriptionDetailsScreen: Route, NavKey
+    data class SubscriptionDetailsScreen(
+        val subscriptionId: Int
+    ): Route, NavKey
 
     @Serializable
     data object OnboardingScreen: Route, NavKey

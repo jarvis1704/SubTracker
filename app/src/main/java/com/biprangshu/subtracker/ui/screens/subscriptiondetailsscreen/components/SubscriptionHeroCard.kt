@@ -26,13 +26,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.domain.model.Subscription
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SubscriptionHeroCard() {
+fun SubscriptionHeroCard(
+    subscription: Subscription
+) {
     // Using a specific red to match Netflix brand from the image,
     // but mixing it with the theme could also work.
-    val brandColor = Color(0xFFE50914)
+    val brandColor = Color(0xFFE50914) //todo: need to make color dynamic
 
     Card(
         modifier = Modifier
@@ -57,8 +63,8 @@ fun SubscriptionHeroCard() {
                 color = Color.White // White background for logos usually looks best
             ) {
                 AsyncImage(
-                    model = R.drawable.netflix_logo, // Ensure this resource exists or use a generic icon
-                    contentDescription = null,
+                    model = subscription.logoRedId,
+                    contentDescription = subscription.iconName,
                     modifier = Modifier.size(48.dp).padding(8.dp),
                 )
             }
@@ -66,7 +72,7 @@ fun SubscriptionHeroCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Standard Plan",
+                text = "Standard Plan", //todo: make it take the subscription name
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Medium,
                     color = Color.White.copy(alpha = 0.9f)
@@ -74,20 +80,25 @@ fun SubscriptionHeroCard() {
             )
 
             Text(
-                text = "$15.99",
+                text = "${subscription.price}",
                 style = MaterialTheme.typography.displayMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             )
             Text(
-                text = "/mo",
+                text = "/ ${subscription.billingCycle}",
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Color.White.copy(alpha = 0.8f)
                 )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            // Ideally, nextPaymentDate is calculated in your Domain/Repository.
+            // For now, we display the first payment or a calculated date.
+            val dateString = dateFormat.format(Date(subscription.firstPaymentDate))
 
             // Status Pills
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -96,7 +107,7 @@ fun SubscriptionHeroCard() {
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = " • Next payment on Dec 25, 2025",
+                    text = " • Next payment on $dateString",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = Color.White.copy(alpha = 0.8f)
                     )

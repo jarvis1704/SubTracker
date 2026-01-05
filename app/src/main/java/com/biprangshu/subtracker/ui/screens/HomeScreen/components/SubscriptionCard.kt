@@ -35,7 +35,11 @@ fun SubscriptionCard(
 
     Card(
         modifier = modifier.fillMaxWidth().clickable{
-            onNavigate(Route.SubscriptionDetailsScreen)
+            onNavigate(
+                Route.SubscriptionDetailsScreen(
+                    subscriptionId = subscription.id
+                )
+            )
         },
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(

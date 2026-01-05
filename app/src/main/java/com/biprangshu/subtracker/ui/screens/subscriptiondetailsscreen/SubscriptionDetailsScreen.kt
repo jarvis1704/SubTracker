@@ -48,6 +48,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,23 +62,31 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.components.SubscriptionHeroCard
+import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.viewmodel.SubscriptionDetailsViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SubscriptionDetailsScreen(
+    subscriptionId: Int,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: SubscriptionDetailsViewModel = hiltViewModel()
 ) {
-    // Shapes for grouped list items (Expressive Style)
+
+    LaunchedEffect(subscriptionId) {
+        viewModel.loadSubscription(subscriptionId)
+    }
+
+    val subscription by viewModel.subscription.collectAsState()
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
-
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -84,8 +95,9 @@ fun SubscriptionDetailsScreen(
         topBar = {
             LargeFlexibleTopAppBar(
                 title = {
+
                     Text(
-                        "Netflix",
+                        subscription?.name ?: "Details",
                         style = TextStyle(
                             fontFamily = robotoFlexTopBar,
                             fontSize = 32.sp
@@ -94,22 +106,14 @@ fun SubscriptionDetailsScreen(
                 },
                 navigationIcon = {
                     FilledTonalIconButton(
-                        onClick = {
-                            onBackClick()
-                        },
+                        onClick = onBackClick,
                         shapes = IconButtonDefaults.shapes(),
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back Button"
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    FilledTonalIconButton(
-                        onClick = { /* TODO: Edit */ },
-                        IconButtonDefaults.shapes()
-                    ) {
+                    FilledTonalIconButton(onClick = { /* TODO: Edit */ }, IconButtonDefaults.shapes()) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }
                 },
@@ -121,94 +125,127 @@ fun SubscriptionDetailsScreen(
             )
         }
     ) { scaffoldPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(scaffoldPadding)
-                .padding(horizontal = 16.dp),
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
 
-            SubscriptionHeroCard()
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-
-            Text(
-                text = "Details",
-                style = MaterialTheme.typography.titleLarge,
-                color = colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
-            )
-
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                DetailItem(
-                    icon = Icons.Default.Movie,
-                    label = "Category",
-                    value = "Entertainment",
-                    shape = topItemShape
-                )
-                DetailItem(
-                    icon = Icons.Default.DateRange,
-                    label = "Billing Cycle",
-                    value = "Monthly",
-                    shape = middleItemShape
-                )
-                DetailItem(
-                    icon = Icons.Default.CreditCard,
-                    label = "Payment Method",
-                    value = "Visa ending in 4567",
-                    shape = middleItemShape
-                )
-                DetailItem(
-                    icon = Icons.Default.Notifications,
-                    label = "Reminder",
-                    value = "3 days before",
-                    shape = bottomItemShape
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-
-            Text(
-                text = "Spending History",
-                style = MaterialTheme.typography.titleLarge,
-                color = colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
-            )
-            Text(
-                text = "Last 6 months of $15.99 payments",
-                style = MaterialTheme.typography.bodyMedium,
-                color = colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 16.dp, start = 4.dp)
-            )
-
-            SpendingHistoryChart()
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // 4. Cancel Button
-            FilledTonalButton(
-                onClick = { /* TODO: Cancel Logic */ },
+        subscription?.let { sub ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.error,
-                    contentColor = colorScheme.onError
-                ),
-                shape = RoundedCornerShape(28.dp) // Expressive pill shape
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(scaffoldPadding)
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+                SubscriptionHeroCard(subscription = sub)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // 2. Dynamic Details List
+                Text(
+                    text = "Details",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    DetailItem(
+                        icon = Icons.Default.Movie,
+                        label = "Category",
+                        value = sub.category ?: "Uncategorized",
+                        shape = topItemShape
+                    )
+                    DetailItem(
+                        icon = Icons.Default.DateRange,
+                        label = "Billing Cycle",
+                        value = sub.billingCycle,
+                        shape = middleItemShape
+                    )
+                    DetailItem(
+                        icon = Icons.Default.CreditCard,
+                        label = "Payment Method",
+                        value = sub.paymentMethod ?: "Not set",
+                        shape = middleItemShape
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Notifications,
+                        label = "Reminder",
+                        value = "Enabled", //todo: add logic for this to change based on actual data
+                        shape = bottomItemShape
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Spending History",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                )
+                Text(
+                    text = "Last 6 months of ${sub.currency}${sub.price} payments",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 16.dp, start = 4.dp)
+                )
+
+                SpendingHistoryChart(price = sub.price, currency = sub.currency)
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                //cancel Button
+                FilledTonalButton(
+                    onClick = { /* TODO: Cancel/Delete Logic */ },
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.error,
+                        contentColor = colorScheme.onError
+                    ),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Text("Delete Subscription", style = MaterialTheme.typography.titleMedium)
+                }
+
+                Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding() + 24.dp))
+            }
+        }
+    }
+}
+
+
+@Composable
+fun SpendingHistoryChart(price: Double, currency: String) {
+    // Mocking history based on current price
+    val history = List(6) { price }
+
+    Row(
+        modifier = Modifier.fillMaxWidth().height(80.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        history.forEach { amount ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.height(80.dp)
             ) {
                 Text(
-                    "Cancel Subscription",
-                    style = MaterialTheme.typography.titleMedium
+                    text = "$currency${amount.toInt()}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colorScheme.onSurfaceVariant,
+                    fontSize = 10.sp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .width(42.dp)
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                        .background(colorScheme.primaryContainer)
                 )
             }
-
-
-            Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding() + 24.dp))
         }
     }
 }

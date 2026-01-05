@@ -72,6 +72,7 @@ fun NavGraph(
                     NavEntry(key){
                         SubscriptionDetailsScreen(
                             innerPadding = innerPadding,
+                            subscriptionId = key.subscriptionId,
                             onBackClick = {
                                 backStack.removeAt(backStack.lastIndex)
                             }
