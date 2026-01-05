@@ -105,7 +105,6 @@ fun AddSubscriptionDetailsScreen(
     // State Holders
     var currentName by remember { mutableStateOf(name) }
     var price by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("Netflix") } // Default or passed argument
     var selectedCycleIndex by remember { mutableIntStateOf(0) } // 0: Monthly, 1: Yearly
     val cycles = listOf("Monthly", "Yearly")
 
