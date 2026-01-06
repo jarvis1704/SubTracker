@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val addBudgetUseCase: AddBudgetUseCase
+    private val addBudgetUseCase: dagger.Lazy<AddBudgetUseCase>
 ): ViewModel() {
 
 //    init {
@@ -45,7 +45,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun saveBudget(budget: Double, currency: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            addBudgetUseCase(budget, currency)
+            addBudgetUseCase.get().invoke(budget, currency)
             onSuccess()
         }
     }
