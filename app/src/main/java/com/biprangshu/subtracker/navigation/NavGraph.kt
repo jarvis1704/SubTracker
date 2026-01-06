@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -96,6 +97,7 @@ fun NavGraph(
                                     budget = budget,
                                     currency= currency,
                                     onSuccess = {
+                                        Log.d("NavGraph","Onboarding complete and data written to room, navigating to $route")
                                         showCurrencySetModal = false
                                         backStack.clear()
                                         backStack.add(route)
