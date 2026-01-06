@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.biprangshu.subtracker.data.local.AppDatabase
 import com.biprangshu.subtracker.data.local.SubscriptionDao
+import com.biprangshu.subtracker.data.local.UserDataDao
+import com.biprangshu.subtracker.data.local.UserDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,8 +30,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providesUserDataDatabase(app: Application): UserDatabase{
+        return Room.databaseBuilder(
+            app,
+            UserDatabase::class.java,
+            "user_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
     fun provideSubscriptionDao(db: AppDatabase): SubscriptionDao{
         return db.subscriptionDAO()
     }
+
+    @Provides
+    @Singleton
+    fun provideUserDatabaseDao(db: UserDatabase): UserDataDao{
+        return db.userDataDAO()
+    }
+
 
 }
