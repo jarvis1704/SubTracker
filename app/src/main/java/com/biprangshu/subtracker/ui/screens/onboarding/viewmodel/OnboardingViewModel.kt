@@ -17,18 +17,18 @@ class OnboardingViewModel @Inject constructor(
     private val addBudgetUseCase: AddBudgetUseCase
 ): ViewModel() {
 
-    init {
-        showOnboarding()
-    }
-
-    fun showOnboarding(){
-        viewModelScope.launch {
-
-            showOnboardingScreens = userPreferencesRepository.isFirstLaunchFlow.first()
-
-            isAppReady=true
-        }
-    }
+//    init {
+//        showOnboarding()
+//    }
+//
+//    fun showOnboarding(){
+//        viewModelScope.launch {
+//
+//            showOnboardingScreens = userPreferencesRepository.isFirstLaunchFlow.first()
+//
+//            isAppReady=true
+//        }
+//    }
 
     fun updateFirstAppOpen(appOpen: Boolean) {
         viewModelScope.launch {
