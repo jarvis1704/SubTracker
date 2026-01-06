@@ -54,7 +54,10 @@ fun NavGraph(
                 is Route.SettingsScreen -> {
                     NavEntry(key){
                         SettingsScreen(
-                            innerPadding = innerPadding
+                            innerPadding = innerPadding,
+                            onClick = {
+                                onboardingViewModel.removeUserPreference()
+                            }
                         )
                     }
                 }
@@ -86,10 +89,19 @@ fun NavGraph(
                 is Route.OnboardingScreen -> {
                     NavEntry(key){
                         OnboardingScreen(
-                            onOnboardComplete = { route ->
+                            onOnboardComplete = {
+                                budget, currency, route ->
                                 //clear backstack and navigate to home screen
-                                backStack.clear()
-                                backStack.add(route)
+                                onboardingViewModel.saveBudget(
+                                    budget = budget,
+                                    currency= currency,
+                                    onSuccess = {
+                                        showCurrencySetModal = false
+                                        backStack.clear()
+                                        backStack.add(route)
+                                    }
+                                )
+
                             },
                             onGetStartedClick = {
                                 showCurrencySetModal = true

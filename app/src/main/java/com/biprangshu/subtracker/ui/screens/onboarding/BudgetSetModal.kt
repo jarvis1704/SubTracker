@@ -42,7 +42,7 @@ import com.biprangshu.subtracker.showCurrencySetModal
 @Composable
 fun BudgetSetModal(
     modifier: Modifier = Modifier,
-    onOnboardComplete: (Route) -> Unit
+    onOnboardComplete: (budget: Double, currency: String, Route) -> Unit
 ) {
 
     var budgetAmount by remember {
@@ -157,8 +157,11 @@ fun BudgetSetModal(
                     onClick = {
                         //handle budget confirmation logic here
                         //todo: save budget and currency to user preferences
-                        showCurrencySetModal = false
-                        onOnboardComplete(Route.HomeScreen)
+                        onOnboardComplete(
+                            if(budgetAmount.isNotEmpty()) budgetAmount.toDouble() else 0.0,
+                            currency,
+                            Route.HomeScreen
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()

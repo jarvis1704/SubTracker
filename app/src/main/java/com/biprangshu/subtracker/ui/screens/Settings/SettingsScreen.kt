@@ -49,7 +49,8 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onClick: () -> Unit = {}
 ) {
     // Shapes for grouped list items
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -143,7 +144,7 @@ fun SettingsScreen(
                             title = "Security",
                             subtitle = "Biometric & Pin",
                             shape = bottomItemShape,
-                            onClick = {}
+                            onClick = onClick //todo: implement security settings and remove this temp stuff
                         )
                     }
                 }

@@ -63,7 +63,7 @@ data class OnboardingStep(
 @Composable
 fun OnboardingScreen(
     onGetStartedClick: () -> Unit,
-    onOnboardComplete: (Route) -> Unit
+    onOnboardComplete: (Double, String, Route) -> Unit
 ) {
 
     val steps = listOf(
