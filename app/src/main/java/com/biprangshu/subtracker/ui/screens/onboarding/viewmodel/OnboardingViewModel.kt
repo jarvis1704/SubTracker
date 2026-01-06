@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
 import com.biprangshu.subtracker.domain.usecase.AddBudgetUseCase
+import com.biprangshu.subtracker.isAppReady
 import com.biprangshu.subtracker.showOnboardingScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -24,6 +25,8 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
 
             showOnboardingScreens = userPreferencesRepository.isFirstLaunchFlow.first()
+
+            isAppReady=true
         }
     }
 
