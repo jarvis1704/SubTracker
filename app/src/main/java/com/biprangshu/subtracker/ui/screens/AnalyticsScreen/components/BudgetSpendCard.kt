@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -23,11 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BudgetSpendCard(spent: Float, budget: Float) {
+fun BudgetSpendCard(
+    spent: Float,
+    budget: Float
+) {
     val progress = (spent / budget).coerceIn(0f, 1f)
     // Smooth animation for the progress bar
     val animatedProgress by animateFloatAsState(
@@ -83,22 +90,17 @@ fun BudgetSpendCard(spent: Float, budget: Float) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Big Expressive Progress Bar
-            Box(
+            LinearProgressIndicator(
+                progress = { animatedProgress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(32.dp) // Big expressive height
-                    .clip(CircleShape)
-                    .background(colorScheme.surface.copy(alpha = 0.5f)) // Subtle track background
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(animatedProgress)
-                        .fillMaxHeight()
-                        .clip(CircleShape)
-                        .background(colorScheme.primary)
-                )
-            }
+                    .height(42.dp) // Expressive thickness
+                    .clip(RoundedCornerShape(16.dp)), // Ensures track is also rounded
+                color = colorScheme.primary,
+                trackColor = colorScheme.surface.copy(alpha = 0.5f),
+                strokeCap = StrokeCap.Square,
+                gapSize = 4.dp,
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

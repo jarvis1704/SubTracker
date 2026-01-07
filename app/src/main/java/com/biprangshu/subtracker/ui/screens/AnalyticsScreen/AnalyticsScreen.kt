@@ -93,8 +93,11 @@ fun AnalyticsScreen(
             )
             Spacer(Modifier.height(24.dp))
 
-            //todo: add a budget spend card here
-            BudgetSpendCard(spent = 350f, budget = 500f)
+
+            BudgetSpendCard(
+                spent = 350f,
+                budget = 500f
+            )
 
             Spacer(Modifier.height(28.dp))
 
