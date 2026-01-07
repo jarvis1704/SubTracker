@@ -46,6 +46,7 @@ fun AnalyticsScreen(
     val labelKey = remember { ExtraStore.Key<List<String>>() }
 
     // 2. Generate Dummy Data (Jan - Dec)
+    //todo: replace with real data for graphs
     LaunchedEffect(Unit) {
         // 4. Correct Month Labels
         val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -92,6 +93,7 @@ fun AnalyticsScreen(
             Spacer(Modifier.height(24.dp))
 
             //todo: add a budget spend card here
+            
 
             // 3. "Your Spends" Card
             Card(
