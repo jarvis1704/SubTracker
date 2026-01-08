@@ -49,37 +49,55 @@ fun AnalyticsScreen(
     innerPadding: PaddingValues,
     analysisScreenViewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
-    // 1. Setup Vico Model Producer
+    //vico models
     val modelProducer = remember { CartesianChartModelProducer() }
     val modelProducer2 = remember { CartesianChartModelProducer() }
     val labelKey = remember { ExtraStore.Key<List<String>>() }
 
-    // 2. Generate Dummy Data (Jan - Dec)
-    //todo: replace with real data for graphs
-    LaunchedEffect(Unit) {
-        // 4. Correct Month Labels
-        val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-        val values = listOf(420, 480, 350, 600, 650, 500, 480, 550, 400, 750, 850, 947)
-
-        modelProducer.runTransaction {
-            columnSeries { series(values) }
-            extras { it[labelKey] = months }
-        }
-
-        val subscriptions = listOf("Netflix", "Spotify", "Disney+", "YouTube")
-        val costs = listOf(9.99, 4.99, 14.99, 11.99)
-
-        modelProducer2.runTransaction {
-            columnSeries { series(costs) }
-            extras { it[labelKey] = subscriptions }
-        }
-    }
-
     val userData by analysisScreenViewModel.userData.collectAsState()
     val totalMonthlySpend by analysisScreenViewModel.totalMonthlySpend.collectAsState()
+    val monthlyChartData by analysisScreenViewModel.monthlyChartData.collectAsState()
+    val subscriptionBreakdown by analysisScreenViewModel.subscriptionBreakdownData.collectAsState()
 
     val budget = userData?.budget?.toFloat() ?: 500f
     val monthlySpend = totalMonthlySpend.toFloat()
+
+    // 2. Generate Dummy Data (Jan - Dec)
+    //todo: replace with real data for graphs
+    LaunchedEffect(monthlyChartData) {
+
+        val months = listOf(
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        )
+        modelProducer.runTransaction {
+            columnSeries {
+                series(monthlyChartData)
+            }
+            extras {
+                it[labelKey] = months
+            }
+        }
+    }
+
+    LaunchedEffect(subscriptionBreakdown) {
+
+        val names = subscriptionBreakdown.map { it.name }
+        val costs = subscriptionBreakdown.map { it.price }
+
+        if(names.isNotEmpty()){
+            modelProducer2.runTransaction {
+                columnSeries {
+                    series(costs)
+                }
+                extras {
+                    it[labelKey] = names
+                }
+            }
+        }
+    }
+
+
 
     Surface(
         modifier = Modifier.fillMaxSize()
