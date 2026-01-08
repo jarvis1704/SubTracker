@@ -63,7 +63,7 @@ fun MonthlySpendChart(
                             rememberLineComponent(
                                 fill = fill(color),
                                 thickness = thickness,
-                                shape = CorneredShape.Pill
+                                shape = CorneredShape.rounded(topLeftPercent = 50, topRightPercent = 50)
                             )
                         }
                     ),
@@ -114,7 +114,7 @@ fun MonthlySpendChart(
             zoomState = rememberVicoZoomState(
                 zoomEnabled = true,
 
-                initialZoom = Zoom.fixed(1.6f),
+                initialZoom = Zoom.Content,
                 minZoom = Zoom.Content,
             ),
             animationSpec = animationSpec,
