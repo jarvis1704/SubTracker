@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.navigation3.ui)
     implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.compose.animation.core)
+    implementation(libs.androidx.compose.foundation.layout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

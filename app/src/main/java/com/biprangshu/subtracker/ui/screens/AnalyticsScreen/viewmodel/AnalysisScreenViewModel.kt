@@ -72,5 +72,12 @@ class AnalysisScreenViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
+    val hasSubscriptions: StateFlow<Boolean> = allSubscriptions.map { it.isNotEmpty() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
+
 
 }
