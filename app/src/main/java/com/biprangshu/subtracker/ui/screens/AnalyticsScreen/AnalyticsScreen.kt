@@ -22,6 +22,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,17 +32,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BudgetSpendCard
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel.AnalysisScreenViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
 fun AnalyticsScreen(
     modifier: Modifier = Modifier,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    analysisScreenViewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
     // 1. Setup Vico Model Producer
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -65,6 +72,14 @@ fun AnalyticsScreen(
             columnSeries { series(costs) }
             extras { it[labelKey] = subscriptions }
         }
+    }
+
+    val budget by remember {
+        mutableFloatStateOf(analysisScreenViewModel.userData.value?.budget?.toFloat() ?: 500f)
+    }
+
+    val monthlySpend by remember {
+        mutableFloatStateOf(analysisScreenViewModel.totalMonthlySpend.value.toFloat())
     }
 
     Surface(
@@ -95,8 +110,8 @@ fun AnalyticsScreen(
 
 
             BudgetSpendCard(
-                spent = 350f,
-                budget = 500f
+                spent = monthlySpend,
+                budget = budget
             )
 
             Spacer(Modifier.height(28.dp))
