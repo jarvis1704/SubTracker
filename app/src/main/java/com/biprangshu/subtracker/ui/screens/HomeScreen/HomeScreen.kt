@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.navigation.Route
+import com.biprangshu.subtracker.ui.screens.HomeScreen.components.EmptyHomeState
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
 import com.biprangshu.subtracker.ui.screens.HomeScreen.viewmodel.HomeViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -60,40 +61,60 @@ fun HomeScreen(
                 ),
             )
             Spacer(Modifier.height(32.dp))
-            //dynamic Spending Details
-            Text(
-                text = "Total Monthly: $${String.format("%.2f", totalMonthly)}",
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
 
-            // Note: Yearly logic can be added to ViewModel later
-            Text(
-                text = "Total Yearly: $${String.format("%.2f", totalMonthly * 12)}",
-                style = MaterialTheme.typography.titleLarge
-            )
+
+            if (subscriptions.isNotEmpty()) {
+                //dynamic Spending Details
+                Text(
+                    text = "Total Monthly: $${String.format("%.2f", totalMonthly)}",
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(8.dp))
+
+                // Note: Yearly logic can be added to ViewModel later
+                Text(
+                    text = "Total Yearly: $${String.format("%.2f", totalMonthly * 12)}",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+
+                Text(
+                    text = "Total Monthly: $0.00",
+                    style = MaterialTheme.typography.displaySmall.copy(color = colorScheme.outline),
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             Spacer(Modifier.height(24.dp))
-            //list of subscriptions
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(
-                    // 4. Add the bottom bar height (innerPadding.bottom) here
-                    bottom = innerPadding.calculateBottomPadding() + 16.dp
+
+            // list of subscriptions or Empty State
+            if (subscriptions.isEmpty()) {
+                EmptyHomeState(
+                    modifier = Modifier.weight(1f),
+                    onAddClick = { onNavigate(Route.AddSubscriptionScreen) }
                 )
-            ) {
-                items(subscriptions) { subscription ->
-                    SubscriptionCard(
-                        subscription = subscription,
-                        onNavigate = {
-                            route ->
-                            onNavigate(route)
-                        }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(
+
+                        bottom = innerPadding.calculateBottomPadding() + 16.dp
                     )
-                    Spacer(Modifier.height(16.dp))
+                ) {
+                    items(subscriptions) { subscription ->
+                        SubscriptionCard(
+                            subscription = subscription,
+                            onNavigate = {
+                                    route ->
+                                onNavigate(route)
+                            }
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
             }
         }
     }
 }
+
