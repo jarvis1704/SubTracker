@@ -3,19 +3,22 @@ package com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.data.local.UserEntity
+import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class AnalysisScreenViewModel @Inject constructor(
     private val userDataUserCase: GetUserDataUserCase,
-    private val subscriptionRepository: SubscriptionRepository
+    private val subscriptionRepository: SubscriptionRepository,
 ): ViewModel() {
 
     //todo: implement viewmodel logic for Analytics Screen
@@ -32,6 +35,42 @@ class AnalysisScreenViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = 0.0
         )
+
+    private val allSubscriptions = subscriptionRepository.getAllSubscriptions()
+
+    val monthlyChartData: StateFlow<List<Double>> = allSubscriptions.map { subs ->
+        val monthlyTotals = MutableList(12) { 0.0 }
+        val calendar = Calendar.getInstance()
+
+        subs.forEach { sub ->
+            if (sub.billingCycle == "Monthly") {
+                // Add to all months
+                for (i in 0..11) {
+                    monthlyTotals[i] += sub.price
+                }
+            } else if (sub.billingCycle == "Yearly") {
+
+                calendar.timeInMillis = sub.firstPaymentDate
+                val month = calendar.get(Calendar.MONTH)
+                if (month in 0..11) {
+                    monthlyTotals[month] += sub.price
+                }
+            }
+        }
+        monthlyTotals
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = List(12) { 0.0 }
+    )
+
+    val subscriptionBreakdownData: StateFlow<List<Subscription>> = allSubscriptions.map { subs ->
+        subs.sortedByDescending { it.price }.take(5)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
 
 }
