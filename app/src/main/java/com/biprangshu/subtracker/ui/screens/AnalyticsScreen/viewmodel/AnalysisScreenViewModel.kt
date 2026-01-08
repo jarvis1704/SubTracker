@@ -14,14 +14,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnalysisScreenViewModel @Inject constructor(
-    private val userDataUserCase: dagger.Lazy<GetUserDataUserCase>,
+    private val userDataUserCase: GetUserDataUserCase,
     private val subscriptionRepository: SubscriptionRepository
 ): ViewModel() {
 
     //todo: implement viewmodel logic for Analytics Screen
 
-    val userData: StateFlow<UserEntity?> = userDataUserCase.get().invoke()
-        .stateIn(
+    val userData: StateFlow<UserEntity?> = userDataUserCase().stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = null

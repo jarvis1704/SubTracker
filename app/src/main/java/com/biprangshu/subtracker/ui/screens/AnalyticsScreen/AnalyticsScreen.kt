@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -74,13 +75,11 @@ fun AnalyticsScreen(
         }
     }
 
-    val budget by remember {
-        mutableFloatStateOf(analysisScreenViewModel.userData.value?.budget?.toFloat() ?: 500f)
-    }
+    val userData by analysisScreenViewModel.userData.collectAsState()
+    val totalMonthlySpend by analysisScreenViewModel.totalMonthlySpend.collectAsState()
 
-    val monthlySpend by remember {
-        mutableFloatStateOf(analysisScreenViewModel.totalMonthlySpend.value.toFloat())
-    }
+    val budget = userData?.budget?.toFloat() ?: 500f
+    val monthlySpend = totalMonthlySpend.toFloat()
 
     Surface(
         modifier = Modifier.fillMaxSize()
