@@ -36,7 +36,7 @@ class UserRepositoryImpl @Inject constructor(
             preferredCurrency = currency
         )
 
-        dao.updateUserData(updatedUser)
+        dao.insertUserData(updatedUser)
     }
 
 }
