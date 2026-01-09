@@ -33,6 +33,8 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,14 +44,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biprangshu.subtracker.ui.screens.Settings.components.ProfileCard
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
+import com.biprangshu.subtracker.ui.screens.Settings.components.SwitchSettingsItem
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
+    settingsScreenViewModel: SettingsScreenViewModel = hiltViewModel(),
     onClick: () -> Unit = {}
 ) {
     // Shapes for grouped list items
@@ -57,6 +63,8 @@ fun SettingsScreen(
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
     val singleItemShape = RoundedCornerShape(24.dp)
+
+    val isBiometicEnabled by settingsScreenViewModel.isBiometricEnabled.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -139,12 +147,13 @@ fun SettingsScreen(
                             shape = topItemShape,
                             onClick = {}
                         )
-                        SettingsItem(
+                        SwitchSettingsItem(
                             icon = Icons.Default.Lock,
                             title = "Security",
-                            subtitle = "Biometric & Pin",
+                            subtitle = "Biometric Authentication",
                             shape = bottomItemShape,
-                            onClick = onClick //todo: implement security settings and remove this temp stuff
+                            checked = isBiometicEnabled,
+                            onCheckedChange = { settingsScreenViewModel.toggleBiometric(it) }
                         )
                     }
                 }
