@@ -4,13 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.AddSubscriptionUseCase
+import com.biprangshu.subtracker.worker.ReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddSubscriptionViewModel @Inject constructor(
-    private val addSubscriptionUseCase: AddSubscriptionUseCase
+    private val addSubscriptionUseCase: AddSubscriptionUseCase,
+    private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     fun saveSubscription(
@@ -34,13 +36,13 @@ class AddSubscriptionViewModel @Inject constructor(
             val subscription = Subscription(
                 name = name,
                 price = price,
-                currency = "$", // You can make this dynamic later
+                currency = "$",
                 billingCycle = billingCycle,
                 firstPaymentDate = firstPaymentDate,
-                category = category, // Ensure your Domain Model has this field!*
-                paymentMethod = paymentMethod, // Ensure your Domain Model has this field!*
+                category = category,
+                paymentMethod = paymentMethod,
 
-                // Store the resource ID as a String for now
+
                 logoRedId = iconResId,
                 iconName = iconName,
                 remindersEnabled = reminderEnabled,
@@ -48,10 +50,23 @@ class AddSubscriptionViewModel @Inject constructor(
 
             )
 
-            // 3. Save to DB
-            addSubscriptionUseCase(subscription)
 
-            // 4. Navigate back
+            val newId = addSubscriptionUseCase(subscription)
+
+
+            if (reminderEnabled && newId != -1L) {
+                reminderScheduler.scheduleReminder(
+                    subscriptionId = newId.toInt(),
+                    name = name,
+                    price = price,
+                    currency = "$",
+                    billingCycle = billingCycle,
+                    firstPaymentDate = firstPaymentDate,
+                    reminderDaysBefore = reminderDaysBefore
+                )
+            }
+
+
             onSuccess()
         }
     }

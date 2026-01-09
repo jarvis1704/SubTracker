@@ -2,6 +2,7 @@ package com.biprangshu.subtracker
 
 import android.app.Application
 import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
+import com.biprangshu.subtracker.worker.NotificationHelper
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +18,8 @@ class SubTrackerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        NotificationHelper.createNotificationChannel(this)
 
 
         CoroutineScope(Dispatchers.IO).launch {
