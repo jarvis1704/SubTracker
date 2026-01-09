@@ -1,16 +1,25 @@
 package com.biprangshu.subtracker
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation3.runtime.rememberNavBackStack
+import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
 import com.biprangshu.subtracker.navigation.NavGraph
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.components.Fab
@@ -18,10 +27,22 @@ import com.biprangshu.subtracker.ui.components.SubTrackerBottomAppBar
 import com.biprangshu.subtracker.ui.screens.onboarding.viewmodel.OnboardingViewModel
 import com.biprangshu.subtracker.ui.theme.SubTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    private var isBiometricAuthenticated by mutableStateOf(false)
+    private var isBiometricEnabled by mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
 
         val splashScreen = installSplashScreen()
 
@@ -29,8 +50,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        //biometric
+        lifecycleScope.launch {
+            isBiometricEnabled = userPreferencesRepository.isBiometricEnabledFlow.first()
+
+            if (isBiometricEnabled) {
+                showBiometricPrompt()
+            } else {
+                isBiometricAuthenticated = true
+            }
+        }
+
         splashScreen.setKeepOnScreenCondition {
-            !isAppReady
+            !isAppReady || (isBiometricEnabled && !isBiometricAuthenticated)
         }
 
         setContent {
@@ -38,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
 
-                if(isAppReady){
+                if(isAppReady && (!isBiometricEnabled || isBiometricAuthenticated)){
                     //navigation 3 backstack
                     val backStack = rememberNavBackStack(
                         if (showOnboardingScreens){
@@ -129,5 +161,41 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    //function to facilitate biometric authentication
+    private fun showBiometricPrompt() {
+        val executor: Executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    isBiometricAuthenticated = true
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+
+                    if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON || errorCode == BiometricPrompt.ERROR_USER_CANCELED) {
+                        finish()
+                    }
+                    Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Verify it's you")
+            .setNegativeButtonText("Exit")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
+    }
+
+
+
 }
 
