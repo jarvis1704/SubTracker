@@ -1,18 +1,25 @@
 package com.biprangshu.subtracker
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
@@ -69,6 +76,33 @@ class MainActivity : FragmentActivity() {
             SubTrackerTheme {
 
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
+                val context = LocalContext.current
+
+                //notification permision request
+                val notificationPermissionLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.RequestPermission(),
+                    onResult = { isGranted ->
+                        if (!isGranted) {
+                            Toast.makeText(context, "Notifications disabled. You won't receive reminders.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                )
+
+                //to check if it has the permissions
+                LaunchedEffect(isAppReady, isBiometricAuthenticated) {
+                    if (isAppReady && (!isBiometricEnabled || isBiometricAuthenticated)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            val hasPermission = ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED
+
+                            if (!hasPermission) {
+                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                        }
+                    }
+                }
 
                 if(isAppReady && (!isBiometricEnabled || isBiometricAuthenticated)){
                     //navigation 3 backstack
