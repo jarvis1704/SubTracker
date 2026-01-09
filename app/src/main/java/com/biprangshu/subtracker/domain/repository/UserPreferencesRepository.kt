@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +25,7 @@ class UserPreferencesRepository @Inject constructor(
     companion object {
 
         private val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
+        private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         //theme choice can be added later
 
     }
@@ -32,15 +34,26 @@ class UserPreferencesRepository @Inject constructor(
         preferences[IS_FIRST_LAUNCH] ?: true
     }
 
+    val isBiometricEnabledFlow: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[BIOMETRIC_ENABLED] ?: false
+    }
+
     suspend fun setFirstLaunch(isFirstLaunch: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_FIRST_LAUNCH] = isFirstLaunch
         }
     }
 
+    suspend fun setBiometricEnabled(isEnabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[BIOMETRIC_ENABLED] = isEnabled
+        }
+    }
+
     suspend fun clearUserData() {
         dataStore.edit { preferences ->
             preferences.remove(IS_FIRST_LAUNCH)
+            preferences.remove(BIOMETRIC_ENABLED)
 
         }
     }
