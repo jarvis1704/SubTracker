@@ -23,8 +23,8 @@ class SubscriptionRepositoryImpl @Inject constructor(
         return dao.getSubscriptionById(id)?.toDomain()
     }
 
-    override suspend fun insertSubscription(subscription: Subscription) {
-        dao.insertSubscription(subscription.toEntity())
+    override suspend fun insertSubscription(subscription: Subscription): Long {
+        return dao.insertSubscription(subscription.toEntity())
     }
 
     override suspend fun deleteSubscription(subscription: Subscription) {
@@ -54,9 +54,11 @@ class SubscriptionRepositoryImpl @Inject constructor(
             billingCycle = billingCycle,
             firstPaymentDate = firstPaymentDate,
             dueInDays = days,
-            logoRedId = logoResId,// Mapped to the logic
+            logoRedId = logoResId,
             category = category,
-            paymentMethod = paymentMethod
+            paymentMethod = paymentMethod,
+            remindersEnabled = remindersEnabled,
+            reminderDaysBefore = reminderDaysBefore
         )
     }
 
@@ -70,7 +72,11 @@ class SubscriptionRepositoryImpl @Inject constructor(
             firstPaymentDate = firstPaymentDate,
             iconName = iconName,
             colorHex = colorHex,
-            logoResId = logoRedId
+            logoResId = logoRedId,
+            category = category,
+            paymentMethod = paymentMethod,
+            remindersEnabled = remindersEnabled,
+            reminderDaysBefore = reminderDaysBefore
         )
     }
 }

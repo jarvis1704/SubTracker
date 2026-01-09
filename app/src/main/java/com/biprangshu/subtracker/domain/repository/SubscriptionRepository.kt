@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface SubscriptionRepository {
     fun getAllSubscriptions(): Flow<List<Subscription>>
     suspend fun getSubscriptionById(id: Int): Subscription?
-    suspend fun insertSubscription(subscription: Subscription)
+    suspend fun insertSubscription(subscription: Subscription): Long
     suspend fun deleteSubscription(subscription: Subscription)
     fun getTotalMonthlySpend(): Flow<Double>
 }

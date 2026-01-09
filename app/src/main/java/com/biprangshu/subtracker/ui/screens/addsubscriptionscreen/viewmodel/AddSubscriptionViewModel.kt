@@ -22,6 +22,8 @@ class AddSubscriptionViewModel @Inject constructor(
         paymentMethod: String,
         iconResId: Int,
         iconName: String,
+        reminderEnabled: Boolean,
+        reminderDaysBefore: Int,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
@@ -40,7 +42,9 @@ class AddSubscriptionViewModel @Inject constructor(
 
                 // Store the resource ID as a String for now
                 logoRedId = iconResId,
-                iconName = iconName
+                iconName = iconName,
+                remindersEnabled = reminderEnabled,
+                reminderDaysBefore = reminderDaysBefore
 
             )
 

@@ -19,7 +19,7 @@ interface SubscriptionDao {
     suspend fun getSubscriptionById(id: Int): SubscriptionEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSubscription(subscription: SubscriptionEntity)
+    suspend fun insertSubscription(subscription: SubscriptionEntity): Long
 
     @Update
     suspend fun updateSubscription(subscription: SubscriptionEntity)

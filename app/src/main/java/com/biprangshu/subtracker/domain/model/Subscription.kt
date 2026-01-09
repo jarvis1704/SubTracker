@@ -12,6 +12,8 @@ data class Subscription(
     val firstPaymentDate: Long,
     val paymentMethod: String?,
     val category: String,
+    val remindersEnabled: Boolean,
+    val reminderDaysBefore: Int,
 
 
     val nextPaymentDate: Long = 0,

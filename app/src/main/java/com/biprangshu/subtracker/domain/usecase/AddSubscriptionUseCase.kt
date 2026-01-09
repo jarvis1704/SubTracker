@@ -7,10 +7,11 @@ import javax.inject.Inject
 class AddSubscriptionUseCase @Inject constructor(
     private val repository: SubscriptionRepository
 ) {
-    suspend operator fun invoke(subscription: Subscription) {
+    suspend operator fun invoke(subscription: Subscription): Long {
         // You could add validation logic here (e.g., "Price must be > 0")
         if (subscription.price >= 0) {
-            repository.insertSubscription(subscription)
+            return repository.insertSubscription(subscription)
         }
+        return -1L
     }
 }

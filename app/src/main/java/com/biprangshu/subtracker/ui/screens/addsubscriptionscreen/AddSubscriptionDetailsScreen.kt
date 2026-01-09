@@ -354,6 +354,8 @@ fun AddSubscriptionDetailsScreen(
                         paymentMethod = paymentMethod,
                         iconResId = iconResId,
                         iconName = name,
+                        reminderEnabled = remindersEnabled,
+                        reminderDaysBefore = reminderDaysBefore.toInt(),
                         onSuccess = onSaveSuccess
                     )
                 },
