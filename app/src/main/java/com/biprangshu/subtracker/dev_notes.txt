@@ -16,5 +16,6 @@ todo: add the logic and screens for editing a subscription
 todo: fix the bugs in analytics screen
 todo: improve the notification system
 todo: add a central list for all the popular subscriptions with their logo urls to fetch from logo api
+todo: implement the AI features of the app (know and research about adding them first and then add it)
 todo: move through the final app and check for bugs
 todo: Optimise the app size and performance
