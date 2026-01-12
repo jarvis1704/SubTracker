@@ -10,6 +10,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
+import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
@@ -127,6 +128,16 @@ fun NavGraph(
                                 while (backStack.last() !is Route.HomeScreen) {
                                     backStack.removeAt(backStack.lastIndex)
                                 }
+                            }
+                        )
+                    }
+                }
+
+                is Route.AboutSubscriptionScreen ->{
+                    NavEntry(key){
+                        AboutScreen(
+                            onBack = {
+                                backStack.removeAt(backStack.lastIndex)
                             }
                         )
                     }
