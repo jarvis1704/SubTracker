@@ -54,11 +54,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.biprangshu.subtracker.R // Ensure this R import is correct for your package
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
+import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalLayoutApi::class
@@ -97,14 +100,20 @@ fun AboutScreen(
         topBar = {
             LargeTopAppBar(
                 title = {
-                    Text("About")
+                    Text(
+                        text = "About",
+                        style = TextStyle(
+                            fontFamily = robotoFlexTopBar,
+                            fontSize = 32.sp
+                        )
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                    FilledTonalIconButton(
+                        onClick = onBack,
+                        shapes = IconButtonDefaults.shapes()
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -183,7 +192,7 @@ fun AboutScreen(
                         .clip(bottomListItemShape)
                         .background(containerColor)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             // Developer PFP Placeholder
                             Icon(
@@ -201,7 +210,7 @@ fun AboutScreen(
                             Spacer(Modifier.width(16.dp))
                             Column {
                                 Text(
-                                    "Biprangshu",
+                                    "Biprangshu Das",
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.SemiBold
@@ -213,7 +222,7 @@ fun AboutScreen(
                                 )
                             }
                         }
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(8.dp))
 
                         // Social Links
                         Row {
