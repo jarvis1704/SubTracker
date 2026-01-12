@@ -33,12 +33,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -84,8 +86,10 @@ fun AboutScreen(
     // Replace Icons with your actual drawables or vectors if available
     val socialLinks = remember {
         listOf(
-            SocialLink(Icons.Default.Person, "https://github.com/biprangshu"), // Example
-            SocialLink(Icons.Default.Email, "mailto:your.email@example.com")
+            SocialLink(R.drawable.github_logo, "https://github.com/jarvis1704"),
+            SocialLink(R.drawable.x_logo, url="https://x.com/DasBiprangshu"),
+            SocialLink(R.drawable.linkedin_logo, url="https://www.linkedin.com/in/biprangshu-das-34017427a/"),
+            SocialLink(R.drawable.gmail_logo, url="mailto:dasbiprangshu@gmail.com")
         )
     }
 
@@ -143,14 +147,14 @@ fun AboutScreen(
                     ) {
                         // App Icon Placeholder
                         Icon(
-                            imageVector = Icons.Default.Info, // Replace with R.drawable.ic_launcher_foreground
+                            painterResource(R.drawable.ic_launcher_monochrome), // Replace with R.drawable.ic_launcher_foreground
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(64.dp)
                                 .background(
                                     MaterialTheme.colorScheme.primaryContainer,
-                                    RoundedCornerShape(16.dp)
+                                    MaterialShapes.Cookie7Sided.toShape()
                                 )
                                 .padding(12.dp)
                         )
@@ -176,7 +180,7 @@ fun AboutScreen(
                             shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Person, // Replace with GitHub Icon
+                                painterResource(R.drawable.github_logo), // Replace with GitHub Icon
                                 contentDescription = "GitHub",
                                 modifier = Modifier.size(24.dp)
                             )
@@ -235,7 +239,7 @@ fun AboutScreen(
                                         modifier = Modifier.width(52.dp)
                                     ) {
                                         Icon(
-                                            imageVector = link.icon,
+                                            painterResource(link.icon),
                                             contentDescription = null,
                                             modifier = Modifier.size(ButtonDefaults.SmallIconSize)
                                         )
@@ -271,7 +275,7 @@ fun AboutScreen(
 
 // Data class for social buttons
 data class SocialLink(
-    val icon: ImageVector,
+    val icon: Int,
     val url: String
 )
 
