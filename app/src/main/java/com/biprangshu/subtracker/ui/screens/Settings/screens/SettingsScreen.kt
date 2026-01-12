@@ -28,6 +28,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.Settings.viewmodel.SettingsScreenViewModel
 import com.biprangshu.subtracker.ui.screens.Settings.components.ProfileCard
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
@@ -39,7 +40,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     settingsScreenViewModel: SettingsScreenViewModel = hiltViewModel(),
-    onClick: () -> Unit = {}
+    onNavigate: (Route) -> Unit = {}
 ) {
     // Shapes for grouped list items
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -149,7 +150,9 @@ fun SettingsScreen(
                         title = "About SubTracker",
                         subtitle = "Version 1.0.0",
                         shape = singleItemShape,
-                        onClick = {}
+                        onClick = {
+                            onNavigate(Route.AboutScreen)
+                        }
                     )
                 }
             }

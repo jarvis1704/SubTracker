@@ -55,8 +55,9 @@ fun NavGraph(
                     NavEntry(key){
                         SettingsScreen(
                             innerPadding = innerPadding,
-                            onClick = {
-                                onboardingViewModel.removeUserPreference()
+                            onNavigate = {
+                                route ->
+                                backStack.add(route)
                             }
                         )
                     }
@@ -133,7 +134,7 @@ fun NavGraph(
                     }
                 }
 
-                is Route.AboutSubscriptionScreen ->{
+                is Route.AboutScreen ->{
                     NavEntry(key){
                         AboutScreen(
                             onBack = {
