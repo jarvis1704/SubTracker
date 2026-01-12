@@ -1,9 +1,13 @@
 package com.biprangshu.subtracker.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,27 +42,62 @@ fun NavGraph(
 ) {
     val motionScheme = MaterialTheme.motionScheme
 
+    fun isMainTab(key: Any?): Boolean {
+        return when (key) {
+            is Route.HomeScreen,
+            is Route.AnalyticsScreen,
+            is Route.SettingsScreen -> true
+            else -> false
+        }
+    }
+
     SharedTransitionLayout(modifier = modifier) {
         NavDisplay(
             backStack = backStack,
-            // 1. Let NavDisplay handle the back action. This is crucial for predictive back.
             onBack = {
                 if (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
             },
-            // 2. Use motionScheme.defaultEffectsSpec() for that specific "Tomato" smoothness
+
+            //forward navigation
             transitionSpec = {
-                fadeIn(motionScheme.defaultEffectsSpec())
-                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+
+                val fromKey = initialState.key
+                val toKey = targetState.key
+
+                if (isMainTab(fromKey) && isMainTab(toKey)) {
+                    EnterTransition.None togetherWith ExitTransition.None
+                } else {
+                    (slideInHorizontally(initialOffsetX = { it }) + fadeIn())
+                        .togetherWith(slideOutHorizontally(targetOffsetX = { -it / 4 }) + fadeOut())
+                }
             },
+
+            //back navigation
             popTransitionSpec = {
-                fadeIn(motionScheme.defaultEffectsSpec())
-                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+                val fromKey = initialState.key
+                val toKey = targetState.key
+
+                if (isMainTab(fromKey) && isMainTab(toKey)) {
+                    EnterTransition.None togetherWith ExitTransition.None
+                } else {
+                    (slideInHorizontally(initialOffsetX = { -it / 4 }) + fadeIn())
+                        .togetherWith(slideOutHorizontally(targetOffsetX = { it }) + fadeOut())
+                }
             },
-            // 3. Add Predictive Back Spec
+
+            //predictive back gesture navigation
             predictivePopTransitionSpec = {
-                fadeIn(motionScheme.defaultEffectsSpec())
-                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+                val fromKey = initialState.key
+                val toKey = targetState.key
+
+                if (isMainTab(fromKey) && isMainTab(toKey)) {
+                    EnterTransition.None togetherWith ExitTransition.None
+                } else {
+                    (slideInHorizontally(initialOffsetX = { -it / 4 }) + fadeIn())
+                        .togetherWith(slideOutHorizontally(targetOffsetX = { it }) + fadeOut())
+                }
             },
+
             entryProvider = { key ->
                 when (key) {
                     is Route.HomeScreen -> {
@@ -70,7 +109,17 @@ fun NavGraph(
                             )
                         }
                     }
-
+                    is Route.AnalyticsScreen -> {
+                        NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
+                    }
+                    is Route.SettingsScreen -> {
+                        NavEntry(key) {
+                            SettingsScreen(
+                                innerPadding = innerPadding,
+                                onNavigate = { route -> backStack.add(route) }
+                            )
+                        }
+                    }
                     is Route.SubscriptionDetailsScreen -> {
                         NavEntry(key) {
                             SubscriptionDetailsScreen(
@@ -79,22 +128,6 @@ fun NavGraph(
                                 onBackClick = { backStack.removeAt(backStack.lastIndex) },
                                 onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) },
                                 sharedTransitionScope = this@SharedTransitionLayout
-                            )
-                        }
-                    }
-
-
-                    is Route.AnalyticsScreen -> {
-                        NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
-                    }
-                    is Route.SettingsScreen -> {
-                        NavEntry(key) {
-                            SettingsScreen(
-                                innerPadding = innerPadding,
-                                onNavigate = {
-                                        route -> backStack.add(route)
-                                }
-
                             )
                         }
                     }
@@ -148,7 +181,6 @@ fun NavGraph(
                             )
                         }
                     }
-
                     is Route.AboutScreen ->{
                         NavEntry(key){
                             AboutScreen(
