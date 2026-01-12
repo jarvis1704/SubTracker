@@ -61,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.biprangshu.subtracker.BuildConfig
 import com.biprangshu.subtracker.R // Ensure this R import is correct for your package
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -167,7 +168,7 @@ fun AboutScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "v1.0.0", // You can use BuildConfig.VERSION_NAME
+                                text = BuildConfig.VERSION_NAME,
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary
                             )
