@@ -76,6 +76,7 @@ fun SubscriptionDetailsScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     onBackClick: () -> Unit,
+    onEditClick: (Int) -> Unit,
     viewModel: SubscriptionDetailsViewModel = hiltViewModel()
 ) {
 
@@ -113,7 +114,9 @@ fun SubscriptionDetailsScreen(
                     }
                 },
                 actions = {
-                    FilledTonalIconButton(onClick = { /* TODO: Edit */ }, IconButtonDefaults.shapes()) {
+                    FilledTonalIconButton(onClick = {
+                        onEditClick(subscriptionId)
+                    }, IconButtonDefaults.shapes()) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }
                 },

@@ -14,6 +14,7 @@ import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
+import com.biprangshu.subtracker.ui.screens.editsubscriptionscreen.EditSubscriptionScreen
 import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
 import com.biprangshu.subtracker.ui.screens.onboarding.viewmodel.OnboardingViewModel
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
@@ -82,6 +83,10 @@ fun NavGraph(
                             subscriptionId = key.subscriptionId,
                             onBackClick = {
                                 backStack.removeAt(backStack.lastIndex)
+                            },
+                            onEditClick = {
+                                id->
+                                backStack.add(Route.EditSubscriptionScreen(subscriptionId = id))
                             }
                         )
                     }
@@ -138,6 +143,22 @@ fun NavGraph(
                     NavEntry(key){
                         AboutScreen(
                             onBack = {
+                                backStack.removeAt(backStack.lastIndex)
+                            }
+                        )
+                    }
+                }
+
+                is Route.EditSubscriptionScreen -> {
+                    NavEntry(key) {
+                        EditSubscriptionScreen(
+                            subscriptionId = key.subscriptionId,
+                            innerPaddingValues = innerPadding,
+                            onBackClick = {
+                                backStack.removeAt(backStack.lastIndex)
+                            },
+                            onSaveSuccess = {
+                                // Pop back to details (which will reload) or Home
                                 backStack.removeAt(backStack.lastIndex)
                             }
                         )
