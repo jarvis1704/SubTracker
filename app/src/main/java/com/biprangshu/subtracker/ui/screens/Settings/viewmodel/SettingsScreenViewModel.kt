@@ -1,4 +1,4 @@
-package com.biprangshu.subtracker.ui.screens.Settings
+package com.biprangshu.subtracker.ui.screens.Settings.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ class SettingsScreenViewModel @Inject constructor(
     val isBiometricEnabled: StateFlow<Boolean> = userPreferencesRepository.isBiometricEnabledFlow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Companion.WhileSubscribed(5_000),
             initialValue = false
         )
 
