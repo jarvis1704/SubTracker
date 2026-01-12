@@ -254,6 +254,8 @@ fun AboutScreen(
 
             item { Spacer(Modifier.height(24.dp)) }
 
+            //todo: add sharing feedback on google play
+
             // --- License Button ---
             item {
                 SettingsItem(
