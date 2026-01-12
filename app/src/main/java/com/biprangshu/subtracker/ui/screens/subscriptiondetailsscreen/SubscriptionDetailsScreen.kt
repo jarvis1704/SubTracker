@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen
 
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -65,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.ui.components.sharedBoundsReveal
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.components.SubscriptionHeroCard
 import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.viewmodel.SubscriptionDetailsViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -77,7 +79,8 @@ fun SubscriptionDetailsScreen(
     innerPadding: PaddingValues,
     onBackClick: () -> Unit,
     onEditClick: (Int) -> Unit,
-    viewModel: SubscriptionDetailsViewModel = hiltViewModel()
+    viewModel: SubscriptionDetailsViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope
 ) {
 
     LaunchedEffect(subscriptionId) {
@@ -139,8 +142,17 @@ fun SubscriptionDetailsScreen(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
+                val transitionKey = "subscription-${sub.id}"
 
-                SubscriptionHeroCard(subscription = sub)
+
+                Box(
+                    modifier = Modifier.sharedBoundsReveal(
+                        sharedTransitionScope = sharedTransitionScope,
+                        sharedContentState = sharedTransitionScope.rememberSharedContentState(key = transitionKey)
+                    )
+                ) {
+                    SubscriptionHeroCard(subscription = sub)
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 

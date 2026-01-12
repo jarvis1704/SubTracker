@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.ui.screens.HomeScreen
 
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.navigation.Route
+import com.biprangshu.subtracker.ui.components.sharedBoundsReveal
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.EmptyHomeState
 import com.biprangshu.subtracker.ui.screens.HomeScreen.components.SubscriptionCard
 import com.biprangshu.subtracker.ui.screens.HomeScreen.viewmodel.HomeViewModel
@@ -34,7 +36,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     onNavigate: (Route) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope
 ) {
 
     val subscriptions by viewModel.subscriptions.collectAsState()
@@ -103,12 +106,18 @@ fun HomeScreen(
                     )
                 ) {
                     items(subscriptions) { subscription ->
+                        val transitionKey = "subscription-${subscription.id}"
+
                         SubscriptionCard(
                             subscription = subscription,
                             onNavigate = {
                                     route ->
                                 onNavigate(route)
-                            }
+                            },
+                            modifier = Modifier.sharedBoundsReveal(
+                                sharedTransitionScope = sharedTransitionScope,
+                                sharedContentState = sharedTransitionScope.rememberSharedContentState(key = transitionKey)
+                            )
                         )
                         Spacer(Modifier.height(16.dp))
                     }

@@ -18,6 +18,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
+import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
@@ -36,27 +37,14 @@ fun NavGraph(
     onboardingViewModel: OnboardingViewModel,
     innerPadding: PaddingValues
 ) {
-    // Access the Expressive Motion Scheme from your Theme
     val motionScheme = MaterialTheme.motionScheme
 
-    // 1. Wrap in SharedTransitionLayout to enable shared element transitions in the future
-    // and provide a scope for the animations.
     SharedTransitionLayout(modifier = modifier) {
+        // Access the SharedTransitionScope as 'this' here
 
         NavDisplay(
             backStack = backStack,
-            // 2. Define standard Entry/Exit animations using the motionScheme
             transitionSpec = {
-                fadeIn(motionScheme.defaultEffectsSpec())
-                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
-            },
-            // 3. Define Pop (Back) animations
-            popTransitionSpec = {
-                fadeIn(motionScheme.defaultEffectsSpec())
-                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
-            },
-            // 4. Define Predictive Back animations (Android 14+)
-            predictivePopTransitionSpec = {
                 fadeIn(motionScheme.defaultEffectsSpec())
                     .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
             },
@@ -64,32 +52,43 @@ fun NavGraph(
                 when (key) {
                     is Route.HomeScreen -> {
                         NavEntry(key) {
+                            // Pass SharedTransitionScope to HomeScreen
                             HomeScreen(
                                 innerPadding = innerPadding,
-                                onNavigate = { route -> backStack.add(route) }
+                                onNavigate = { route -> backStack.add(route) },
+                                sharedTransitionScope = this@SharedTransitionLayout
                             )
                         }
                     }
 
-                    is Route.AnalyticsScreen -> {
+                    is Route.SubscriptionDetailsScreen -> {
                         NavEntry(key) {
-                            AnalyticsScreen(innerPadding = innerPadding)
+                            // Pass SharedTransitionScope to DetailsScreen
+                            SubscriptionDetailsScreen(
+                                innerPadding = innerPadding,
+                                subscriptionId = key.subscriptionId,
+                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) },
+                                sharedTransitionScope = this@SharedTransitionLayout
+                            )
                         }
                     }
 
+
+                    is Route.AnalyticsScreen -> {
+                        NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
+                    }
                     is Route.SettingsScreen -> {
                         NavEntry(key) {
                             SettingsScreen(
                                 innerPadding = innerPadding,
                                 onNavigate = {
-                                    route ->
-                                    backStack.add(route)
+                                    route -> backStack.add(route)
                                 }
 
                             )
                         }
                     }
-
                     is Route.AddSubscriptionScreen -> {
                         NavEntry(key) {
                             AddSubscriptionScreen(
@@ -98,46 +97,25 @@ fun NavGraph(
                             )
                         }
                     }
-
-                    is Route.SubscriptionDetailsScreen -> {
-                        NavEntry(key) {
-                            SubscriptionDetailsScreen(
-                                innerPadding = innerPadding,
-                                subscriptionId = key.subscriptionId,
-                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) }
-                            )
-                        }
-                    }
-
                     is Route.EditSubscriptionScreen -> {
                         NavEntry(key) {
                             EditSubscriptionScreen(
                                 subscriptionId = key.subscriptionId,
                                 innerPaddingValues = innerPadding,
                                 onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                onSaveSuccess = {
-                                    // Remove Edit Screen, landing back on Details (which reloads)
-                                    backStack.removeAt(backStack.lastIndex)
-                                }
+                                onSaveSuccess = { backStack.removeAt(backStack.lastIndex) }
                             )
                         }
                     }
-
                     is Route.OnboardingScreen -> {
                         NavEntry(key) {
                             OnboardingScreen(
                                 onOnboardComplete = { budget, currency, route ->
-                                    onboardingViewModel.saveBudget(
-                                        budget = budget,
-                                        currency = currency,
-                                        onSuccess = {
-                                            Log.d("NavGraph", "Onboarding complete, navigating to $route")
-                                            showCurrencySetModal = false
-                                            backStack.clear()
-                                            backStack.add(route)
-                                        }
-                                    )
+                                    onboardingViewModel.saveBudget(budget, currency) {
+                                        showCurrencySetModal = false
+                                        backStack.clear()
+                                        backStack.add(route)
+                                    }
                                 },
                                 onGetStartedClick = {
                                     showCurrencySetModal = true
@@ -146,7 +124,6 @@ fun NavGraph(
                             )
                         }
                     }
-
                     is Route.AddSubscriptionDetailsScreen -> {
                         NavEntry(key) {
                             AddSubscriptionDetailsScreen(
@@ -155,7 +132,6 @@ fun NavGraph(
                                 iconResId = key.iconRes,
                                 onBackClick = { backStack.removeAt(backStack.lastIndex) },
                                 onSaveSuccess = {
-                                    // Pop back until HomeScreen
                                     while (backStack.last() !is Route.HomeScreen) {
                                         backStack.removeAt(backStack.lastIndex)
                                     }
@@ -164,6 +140,15 @@ fun NavGraph(
                         }
                     }
 
+                    is Route.AboutScreen ->{
+                        NavEntry(key){
+                            AboutScreen(
+                                onBack = {
+                                    backStack.removeAt(backStack.lastIndex)
+                                }
+                            )
+                        }
+                    }
                     else -> error("Unknown route: $key")
                 }
             }
