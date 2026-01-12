@@ -1,6 +1,5 @@
 package com.biprangshu.subtracker.navigation
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
@@ -40,131 +39,128 @@ fun NavGraph(
     val motionScheme = MaterialTheme.motionScheme
 
     SharedTransitionLayout(modifier = modifier) {
-        // Access the SharedTransitionScope as 'this' here
-
-        val motionScheme = MaterialTheme.motionScheme
-
-        SharedTransitionLayout(
-            modifier = modifier
-        ) {
-            NavDisplay(
-                backStack = backStack,
-                transitionSpec = {
-                    fadeIn(motionScheme.defaultEffectsSpec())
-                        .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
-                },
-                // 2. Back Animation (Crucial for back nav to work)
-                popTransitionSpec = {
-                    fadeIn(motionScheme.defaultEffectsSpec())
-                        .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
-                },
-                entryProvider = { key ->
-                    when (key) {
-                        is Route.HomeScreen -> {
-                            NavEntry(key) {
-                                // Pass SharedTransitionScope to HomeScreen
-                                HomeScreen(
-                                    innerPadding = innerPadding,
-                                    onNavigate = { route -> backStack.add(route) },
-                                    sharedTransitionScope = this@SharedTransitionLayout
-                                )
-                            }
+        NavDisplay(
+            backStack = backStack,
+            // 1. Let NavDisplay handle the back action. This is crucial for predictive back.
+            onBack = {
+                if (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
+            },
+            // 2. Use motionScheme.defaultEffectsSpec() for that specific "Tomato" smoothness
+            transitionSpec = {
+                fadeIn(motionScheme.defaultEffectsSpec())
+                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+            },
+            popTransitionSpec = {
+                fadeIn(motionScheme.defaultEffectsSpec())
+                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+            },
+            // 3. Add Predictive Back Spec
+            predictivePopTransitionSpec = {
+                fadeIn(motionScheme.defaultEffectsSpec())
+                    .togetherWith(fadeOut(motionScheme.defaultEffectsSpec()))
+            },
+            entryProvider = { key ->
+                when (key) {
+                    is Route.HomeScreen -> {
+                        NavEntry(key) {
+                            HomeScreen(
+                                innerPadding = innerPadding,
+                                onNavigate = { route -> backStack.add(route) },
+                                sharedTransitionScope = this@SharedTransitionLayout
+                            )
                         }
+                    }
 
-                        is Route.SubscriptionDetailsScreen -> {
-                            NavEntry(key) {
-                                // Pass SharedTransitionScope to DetailsScreen
-                                SubscriptionDetailsScreen(
-                                    innerPadding = innerPadding,
-                                    subscriptionId = key.subscriptionId,
-                                    onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                    onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) },
-                                    sharedTransitionScope = this@SharedTransitionLayout
-                                )
-                            }
+                    is Route.SubscriptionDetailsScreen -> {
+                        NavEntry(key) {
+                            SubscriptionDetailsScreen(
+                                innerPadding = innerPadding,
+                                subscriptionId = key.subscriptionId,
+                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) },
+                                sharedTransitionScope = this@SharedTransitionLayout
+                            )
                         }
+                    }
 
 
-                        is Route.AnalyticsScreen -> {
-                            NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
+                    is Route.AnalyticsScreen -> {
+                        NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
+                    }
+                    is Route.SettingsScreen -> {
+                        NavEntry(key) {
+                            SettingsScreen(
+                                innerPadding = innerPadding,
+                                onNavigate = {
+                                        route -> backStack.add(route)
+                                }
+
+                            )
                         }
-                        is Route.SettingsScreen -> {
-                            NavEntry(key) {
-                                SettingsScreen(
-                                    innerPadding = innerPadding,
-                                    onNavigate = {
-                                            route -> backStack.add(route)
+                    }
+                    is Route.AddSubscriptionScreen -> {
+                        NavEntry(key) {
+                            AddSubscriptionScreen(
+                                innerPadding = innerPadding,
+                                onNavigate = { route -> backStack.add(route) }
+                            )
+                        }
+                    }
+                    is Route.EditSubscriptionScreen -> {
+                        NavEntry(key) {
+                            EditSubscriptionScreen(
+                                subscriptionId = key.subscriptionId,
+                                innerPaddingValues = innerPadding,
+                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onSaveSuccess = { backStack.removeAt(backStack.lastIndex) }
+                            )
+                        }
+                    }
+                    is Route.OnboardingScreen -> {
+                        NavEntry(key) {
+                            OnboardingScreen(
+                                onOnboardComplete = { budget, currency, route ->
+                                    onboardingViewModel.saveBudget(budget, currency) {
+                                        showCurrencySetModal = false
+                                        backStack.clear()
+                                        backStack.add(route)
                                     }
-
-                                )
-                            }
+                                },
+                                onGetStartedClick = {
+                                    showCurrencySetModal = true
+                                    onboardingViewModel.updateFirstAppOpen(false)
+                                }
+                            )
                         }
-                        is Route.AddSubscriptionScreen -> {
-                            NavEntry(key) {
-                                AddSubscriptionScreen(
-                                    innerPadding = innerPadding,
-                                    onNavigate = { route -> backStack.add(route) }
-                                )
-                            }
-                        }
-                        is Route.EditSubscriptionScreen -> {
-                            NavEntry(key) {
-                                EditSubscriptionScreen(
-                                    subscriptionId = key.subscriptionId,
-                                    innerPaddingValues = innerPadding,
-                                    onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                    onSaveSuccess = { backStack.removeAt(backStack.lastIndex) }
-                                )
-                            }
-                        }
-                        is Route.OnboardingScreen -> {
-                            NavEntry(key) {
-                                OnboardingScreen(
-                                    onOnboardComplete = { budget, currency, route ->
-                                        onboardingViewModel.saveBudget(budget, currency) {
-                                            showCurrencySetModal = false
-                                            backStack.clear()
-                                            backStack.add(route)
-                                        }
-                                    },
-                                    onGetStartedClick = {
-                                        showCurrencySetModal = true
-                                        onboardingViewModel.updateFirstAppOpen(false)
-                                    }
-                                )
-                            }
-                        }
-                        is Route.AddSubscriptionDetailsScreen -> {
-                            NavEntry(key) {
-                                AddSubscriptionDetailsScreen(
-                                    innerPaddingValues = innerPadding,
-                                    name = key.name,
-                                    iconResId = key.iconRes,
-                                    onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                    onSaveSuccess = {
-                                        while (backStack.last() !is Route.HomeScreen) {
-                                            backStack.removeAt(backStack.lastIndex)
-                                        }
-                                    }
-                                )
-                            }
-                        }
-
-                        is Route.AboutScreen ->{
-                            NavEntry(key){
-                                AboutScreen(
-                                    onBack = {
+                    }
+                    is Route.AddSubscriptionDetailsScreen -> {
+                        NavEntry(key) {
+                            AddSubscriptionDetailsScreen(
+                                innerPaddingValues = innerPadding,
+                                name = key.name,
+                                iconResId = key.iconRes,
+                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onSaveSuccess = {
+                                    while (backStack.last() !is Route.HomeScreen) {
                                         backStack.removeAt(backStack.lastIndex)
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
-                        else -> error("Unknown route: $key")
                     }
+
+                    is Route.AboutScreen ->{
+                        NavEntry(key){
+                            AboutScreen(
+                                onBack = {
+                                    backStack.removeAt(backStack.lastIndex)
+                                }
+                            )
+                        }
+                    }
+                    else -> error("Unknown route: $key")
                 }
-            )
-        }
-
-
+            }
+        )
     }
 }

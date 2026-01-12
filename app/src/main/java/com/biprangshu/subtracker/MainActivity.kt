@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -49,15 +48,12 @@ class MainActivity : FragmentActivity() {
     private var isBiometricEnabled by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         val splashScreen = installSplashScreen()
-
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        //biometric
+        // biometric
         lifecycleScope.launch {
             isBiometricEnabled = userPreferencesRepository.isBiometricEnabledFlow.first()
 
@@ -74,11 +70,10 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             SubTrackerTheme {
-
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
                 val context = LocalContext.current
 
-                //notification permision request
+                // notification permission request
                 val notificationPermissionLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestPermission(),
                     onResult = { isGranted ->
@@ -88,7 +83,7 @@ class MainActivity : FragmentActivity() {
                     }
                 )
 
-                //to check if it has the permissions
+                // to check if it has the permissions
                 LaunchedEffect(isAppReady, isBiometricAuthenticated) {
                     if (isAppReady && (!isBiometricEnabled || isBiometricAuthenticated)) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -105,20 +100,16 @@ class MainActivity : FragmentActivity() {
                 }
 
                 if(isAppReady && (!isBiometricEnabled || isBiometricAuthenticated)){
-                    //navigation 3 backstack
                     val backStack = rememberNavBackStack(
                         if (showOnboardingScreens){
                             Route.OnboardingScreen
-                        }else{
+                        } else {
                             Route.HomeScreen
                         }
                     )
 
-                    BackHandler(
-                        enabled = backStack.size > 1
-                    ) {
-                        backStack.removeAt(backStack.lastIndex)
-                    }
+                    // REMOVED: Manual BackHandler.
+                    // NavDisplay inside NavGraph will now handle the predictive back gesture.
 
                     val currentRoute = backStack.lastOrNull() as? Route
 
@@ -132,9 +123,7 @@ class MainActivity : FragmentActivity() {
                             ){
                                 SubTrackerBottomAppBar(
                                     currentRoute= currentRoute,
-                                    onNavigate = {
-                                            route->
-
+                                    onNavigate = { route ->
                                         //prevents duplicate navigation
                                         if(currentRoute == route) return@SubTrackerBottomAppBar
 
@@ -143,9 +132,7 @@ class MainActivity : FragmentActivity() {
                                             backStack.removeAt(backStack.lastIndex)
                                         }
 
-
                                         //navigation logic, only navigate when not on the current screen
-
                                         if(route != Route.HomeScreen){
                                             //add route to backstack
                                             backStack.add(route)
@@ -155,11 +142,8 @@ class MainActivity : FragmentActivity() {
                             }
                         },
                         floatingActionButton = {
-                            if (
-                                currentRoute == Route.HomeScreen
-                            ){
-                                Fab(){
-                                        route ->
+                            if (currentRoute == Route.HomeScreen){
+                                Fab(){ route ->
                                     //navigate to add subscription screen
                                     backStack.add(route)
                                 }
@@ -167,36 +151,18 @@ class MainActivity : FragmentActivity() {
                         }
 
                     ) { innerPadding ->
-//                    HomeScreen(
-//                        innerPadding = innerPadding
-//                    )
-//                    AnalyticsScreen(
-//                        innerPadding = innerPadding
-//                    )
-//                    SettingsScreen(
-//                        innerPadding = innerPadding
-//                    )
-
-//                    SubscriptionDetailsScreen(
-//                        innerPadding = innerPadding
-//                    )
-
                         NavGraph(
                             backStack= backStack,
                             innerPadding = innerPadding,
                             onboardingViewModel = onboardingViewModel
                         )
-
                     }
                 }
-
-
-
             }
         }
     }
 
-    //function to facilitate biometric authentication
+    // function to facilitate biometric authentication
     private fun showBiometricPrompt() {
         val executor: Executor = ContextCompat.getMainExecutor(this)
         val biometricPrompt = BiometricPrompt(this, executor,
@@ -228,8 +194,4 @@ class MainActivity : FragmentActivity() {
 
         biometricPrompt.authenticate(promptInfo)
     }
-
-
-
 }
-
