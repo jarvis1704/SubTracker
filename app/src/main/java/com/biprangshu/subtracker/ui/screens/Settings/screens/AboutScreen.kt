@@ -300,6 +300,7 @@ fun SimpleLicenseBottomSheet(onDismiss: () -> Unit) {
             )
 
             // Shortened License Text for display
+            //todo: The full license text can be placing in a scrollable container
             Text(
                 text = "Copyright (c) 2025 Biprangshu\n\n" +
                         "This file is part of SubTracker.\n\n" +
