@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.R
+import com.biprangshu.subtracker.data.SubscriptionDataSource
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.components.SubscriptionOptionCard
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -75,17 +76,7 @@ fun AddSubscriptionScreen(
     onBackClick: () -> Unit
 ) {
     // Data taken from HomeScreen list
-    val popularServices = remember {
-        listOf(
-            SubscriptionOption("Netflix", R.drawable.netflix_logo),
-            SubscriptionOption("Spotify", R.drawable.spotify_logo),
-            SubscriptionOption("Disney+", R.drawable.disney),
-            SubscriptionOption("YouTube Premium", R.drawable.youtube),
-            // Added a few placeholders for a fuller list feel
-//            SubscriptionOption("Amazon Prime", R.drawable.amazon_prime), // Assuming you might have this or similar
-//            SubscriptionOption("Apple Music", R.drawable.apple_music)    // Assuming you might have this
-        )
-    }
+    val popularServices = SubscriptionDataSource.popularServices
 
     var searchQuery by remember { mutableStateOf("") }
 
