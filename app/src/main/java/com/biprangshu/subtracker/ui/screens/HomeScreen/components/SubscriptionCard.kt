@@ -30,6 +30,7 @@ import com.biprangshu.subtracker.navigation.Route
 fun SubscriptionCard(
     modifier: Modifier = Modifier,
     subscription: Subscription,
+    preferedCurrency: String,
     onNavigate: (Route) -> Unit
 ) {
 
@@ -63,7 +64,7 @@ fun SubscriptionCard(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text= "${subscription.currency}${subscription.price}",
+                    text= "${preferedCurrency}${subscription.price}",
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(8.dp))

@@ -43,6 +43,8 @@ fun HomeScreen(
     val subscriptions by viewModel.subscriptions.collectAsState()
     val totalMonthly by viewModel.totalMonthlySpend.collectAsState()
 
+    val userData by viewModel.userData.collectAsState()
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -69,7 +71,7 @@ fun HomeScreen(
             if (subscriptions.isNotEmpty()) {
                 //dynamic Spending Details
                 Text(
-                    text = "Total Monthly: $${String.format("%.2f", totalMonthly)}",
+                    text = "Total Monthly: ${userData?.preferredCurrency}${String.format("%.2f", totalMonthly)}",
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -77,13 +79,13 @@ fun HomeScreen(
 
                 // Note: Yearly logic can be added to ViewModel later
                 Text(
-                    text = "Total Yearly: $${String.format("%.2f", totalMonthly * 12)}",
+                    text = "Total Yearly: ${userData?.preferredCurrency}${String.format("%.2f", totalMonthly * 12)}",
                     style = MaterialTheme.typography.titleLarge
                 )
             } else {
 
                 Text(
-                    text = "Total Monthly: $0.00",
+                    text = "Total Monthly: ${userData?.preferredCurrency}0.00",
                     style = MaterialTheme.typography.displaySmall.copy(color = colorScheme.outline),
                     fontWeight = FontWeight.Bold
                 )
@@ -117,7 +119,8 @@ fun HomeScreen(
                             modifier = Modifier.sharedBoundsReveal(
                                 sharedTransitionScope = sharedTransitionScope,
                                 sharedContentState = sharedTransitionScope.rememberSharedContentState(key = transitionKey)
-                            )
+                            ),
+                            preferedCurrency = userData?.preferredCurrency ?: "$"
                         )
                         Spacer(Modifier.height(16.dp))
                     }
