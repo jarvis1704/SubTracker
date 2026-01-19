@@ -45,11 +45,12 @@ fun MonthlySpendChart(
     modifier: Modifier = Modifier,
     xValueFormatter: CartesianValueFormatter = CartesianValueFormatter.Default,
     thickness: Dp = 24.dp, // Thicker bars like in the image
+    currency: String,
     animationSpec: AnimationSpec<Float>? = motionScheme.defaultEffectsSpec()
 ) {
     // Formatter for Y-Axis ($ values)
     val currencyFormatter = CartesianValueFormatter { _, value, _ ->
-        "$${value.toInt()}"
+        "${currency}${value.toInt()}"
     }
 
 
@@ -103,7 +104,7 @@ fun MonthlySpendChart(
                     valueFormatter = { _, targets ->
                         val target = targets.firstOrNull() as? ColumnCartesianLayerMarkerTarget
                         val y = target?.columns?.sumOf { it.entry.y.toDouble() } ?: 0.0
-                        "$${String.format("%.2f", y)}"
+                        "${currency}${String.format("%.2f", y)}"
                     },
                     indicator = null
                 ),

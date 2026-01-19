@@ -152,7 +152,8 @@ fun AnalyticsScreen(
                                 val index = x.toInt()
                                 context.model.extraStore[labelKey].getOrElse(index) { "" }
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            currency = userData?.preferredCurrency ?: "$"
                         )
                     }
                 }
@@ -184,7 +185,8 @@ fun AnalyticsScreen(
                                 val index = x.toInt()
                                 context.model.extraStore[labelKey].getOrElse(index) { "" }
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            currency = userData?.preferredCurrency ?: "$"
                         )
                     }
                 }
