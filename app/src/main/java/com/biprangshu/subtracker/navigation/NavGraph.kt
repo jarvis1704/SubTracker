@@ -135,7 +135,8 @@ fun NavGraph(
                         NavEntry(key) {
                             AddSubscriptionScreen(
                                 innerPadding = innerPadding,
-                                onNavigate = { route -> backStack.add(route) }
+                                onNavigate = { route -> backStack.add(route) },
+                                onBackClick = { backStack.removeAt(backStack.lastIndex) }
                             )
                         }
                     }
