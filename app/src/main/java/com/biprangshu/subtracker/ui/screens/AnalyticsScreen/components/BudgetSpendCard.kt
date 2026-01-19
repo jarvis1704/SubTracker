@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BudgetSpendCard(
     spent: Float,
-    budget: Float
+    budget: Float,
+    currency: String
 ) {
     val progress = (spent / budget).coerceIn(0f, 1f)
     // Smooth animation for the progress bar
@@ -64,7 +65,7 @@ fun BudgetSpendCard(
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            text = "$${spent.toInt()}",
+                            text = "${currency}${spent.toInt()}",
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold
                             ),
@@ -72,7 +73,7 @@ fun BudgetSpendCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "/ $${budget.toInt()}",
+                            text = "/ ${currency}${budget.toInt()}",
                             style = MaterialTheme.typography.titleMedium,
                             color = colorScheme.onSecondaryContainer.copy(alpha = 0.6f),
                             modifier = Modifier.padding(bottom = 4.dp)
@@ -105,7 +106,7 @@ fun BudgetSpendCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "$${(budget - spent).toInt()} left to spend",
+                text = "${currency}${(budget - spent).toInt()} left to spend",
                 style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
                 modifier = Modifier.align(Alignment.End)

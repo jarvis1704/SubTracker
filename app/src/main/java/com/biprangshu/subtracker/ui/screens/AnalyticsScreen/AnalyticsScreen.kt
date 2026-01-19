@@ -116,7 +116,8 @@ fun AnalyticsScreen(
 
             BudgetSpendCard(
                 spent = monthlySpend,
-                budget = budget
+                budget = budget,
+                currency = userData?.preferredCurrency ?: "$"
             )
 
             Spacer(Modifier.height(28.dp))

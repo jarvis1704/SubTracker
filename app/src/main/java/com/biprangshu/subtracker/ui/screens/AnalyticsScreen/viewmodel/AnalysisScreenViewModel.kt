@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
+import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
