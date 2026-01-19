@@ -173,6 +173,7 @@ fun NavGraph(
                                 innerPaddingValues = innerPadding,
                                 name = key.name,
                                 iconResId = key.iconRes,
+                                color = key.colour,
                                 onBackClick = { backStack.removeAt(backStack.lastIndex) },
                                 onSaveSuccess = {
                                     while (backStack.last() !is Route.HomeScreen) {

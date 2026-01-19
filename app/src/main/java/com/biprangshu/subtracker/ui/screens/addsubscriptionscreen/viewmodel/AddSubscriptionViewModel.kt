@@ -26,11 +26,14 @@ class AddSubscriptionViewModel @Inject constructor(
         iconName: String,
         reminderEnabled: Boolean,
         reminderDaysBefore: Int,
+        color: Long,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
             // 1. Validate & Parse Price
             val price = priceInput.toDoubleOrNull() ?: 0.0
+
+            val colorHex = String.format("#%08X", color)
 
             // 2. Create Domain Model
             val subscription = Subscription(
@@ -41,8 +44,7 @@ class AddSubscriptionViewModel @Inject constructor(
                 firstPaymentDate = firstPaymentDate,
                 category = category,
                 paymentMethod = paymentMethod,
-
-
+                colorHex = colorHex,
                 logoRedId = iconResId,
                 iconName = iconName,
                 remindersEnabled = reminderEnabled,

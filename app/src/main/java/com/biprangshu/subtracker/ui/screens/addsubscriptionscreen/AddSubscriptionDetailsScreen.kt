@@ -89,6 +89,7 @@ import java.util.Locale
 @Composable
 fun AddSubscriptionDetailsScreen(
     modifier: Modifier = Modifier,
+    color: Long,
     name: String,
     iconResId: Int,
     innerPaddingValues: PaddingValues,
@@ -356,7 +357,8 @@ fun AddSubscriptionDetailsScreen(
                         iconName = name,
                         reminderEnabled = remindersEnabled,
                         reminderDaysBefore = reminderDaysBefore.toInt(),
-                        onSuccess = onSaveSuccess
+                        onSuccess = onSaveSuccess,
+                        color= color
                     )
                 },
                 modifier = Modifier

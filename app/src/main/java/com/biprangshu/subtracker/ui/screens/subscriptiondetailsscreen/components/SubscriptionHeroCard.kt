@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.components
 
+import android.graphics.Color as AndroidColor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +40,17 @@ fun SubscriptionHeroCard(
 ) {
     // Using a specific red to match Netflix brand from the image,
     // but mixing it with the theme could also work.
-    val brandColor = Color(0xFFE50914) //todo: need to make color dynamic
+    val brandColor = remember(subscription.colorHex) {
+        try {
+            if (!subscription.colorHex.isNullOrEmpty()) {
+                Color(AndroidColor.parseColor(subscription.colorHex))
+            } else {
+                Color(0xFF625b71) // Fallback secondary color
+            }
+        } catch (e: Exception) {
+            Color(0xFF625b71)
+        }
+    }
 
     Card(
         modifier = Modifier
