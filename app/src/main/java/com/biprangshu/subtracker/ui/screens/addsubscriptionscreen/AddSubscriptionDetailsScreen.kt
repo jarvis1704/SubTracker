@@ -56,6 +56,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -118,6 +119,8 @@ fun AddSubscriptionDetailsScreen(
     var paymentMethod by remember { mutableStateOf("") }
     var remindersEnabled by remember { mutableStateOf(true) }
     var reminderDaysBefore by remember { mutableFloatStateOf(1f) }
+
+    val userdata by addSubscriptionViewModel.userData.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -188,8 +191,7 @@ fun AddSubscriptionDetailsScreen(
                 },
                 prefix = {
                     Text(
-                        //todo: change it to dynamic currency symbol based on user preference
-                        "$",
+                        userdata?.preferredCurrency ?: "$",
                         style = MaterialTheme.typography.displayLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = colorScheme.onSurface

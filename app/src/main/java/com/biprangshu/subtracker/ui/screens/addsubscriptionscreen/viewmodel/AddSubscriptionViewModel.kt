@@ -2,18 +2,31 @@ package com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.AddSubscriptionUseCase
+import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import com.biprangshu.subtracker.worker.ReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddSubscriptionViewModel @Inject constructor(
     private val addSubscriptionUseCase: AddSubscriptionUseCase,
-    private val reminderScheduler: ReminderScheduler
+    private val reminderScheduler: ReminderScheduler,
+    private val userDataUserCase: GetUserDataUserCase
 ) : ViewModel() {
+
+
+    val userData: StateFlow<UserEntity?> = userDataUserCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     fun saveSubscription(
         name: String,
