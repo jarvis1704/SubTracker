@@ -13,6 +13,7 @@ Things to do after the intial lookup of the app:
 Work which is to be done:
 todo: add settings item
 todo: improve the notification system
+todo: fix top subscription graph logic
 todo: add user field to put the subscription plan name
 todo: add a central list for all the popular subscriptions with their logo urls to fetch from logo api
 todo: implement the AI features of the app (know and research about adding them first and then add it)
