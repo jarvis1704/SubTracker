@@ -12,7 +12,6 @@ Things to do after the intial lookup of the app:
 
 Work which is to be done:
 todo: add settings item
-todo: add the logic and screens for editing a subscription
 todo: fix the bugs in analytics screen
 todo: improve the notification system
 todo: add a central list for all the popular subscriptions with their logo urls to fetch from logo api
