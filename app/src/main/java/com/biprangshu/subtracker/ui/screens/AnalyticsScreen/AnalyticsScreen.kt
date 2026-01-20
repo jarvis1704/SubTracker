@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.ui.screens.AnalyticsScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BudgetSpendCard
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BurnRateChart
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.EmptyAnalyticsState
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.InsightCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel.AnalysisScreenViewModel
@@ -46,6 +49,8 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer.ColumnProvider.Companion.series
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 
 @Composable
@@ -62,11 +67,15 @@ fun AnalyticsScreen(
     val hasSubscriptions by analysisScreenViewModel.hasSubscriptions.collectAsState()
 
     val insights by analysisScreenViewModel.aiInsights.collectAsState()
+    val forecasts by analysisScreenViewModel.forecastData.collectAsState()
 
     //vico model producer
     val modelProducer = remember { CartesianChartModelProducer() }
     val modelProducer2 = remember { CartesianChartModelProducer() }
     val labelKey = remember { ExtraStore.Key<List<String>>() }
+    //burn rate
+    val burnRateProducer = remember { CartesianChartModelProducer() }
+    val forecastLabelKey = remember { ExtraStore.Key<List<String>>() }
 
 
     LaunchedEffect(monthlyChartData) {
@@ -85,6 +94,23 @@ fun AnalyticsScreen(
             modelProducer2.runTransaction {
                 columnSeries { series(costs) }
                 extras { it[labelKey] = names }
+            }
+        }
+    }
+
+    LaunchedEffect(forecasts) {
+        if (forecasts.isNotEmpty()) {
+            val predicted = forecasts.map { it.predictedSpend }
+            val averages = forecasts.map { it.averageSpend }
+            val labels = forecasts.map { it.month }
+
+            burnRateProducer.runTransaction {
+                // Two series: 1. Predicted, 2. Average
+                lineSeries {
+                    series(predicted)
+                    series(averages)
+                }
+                extras { it[forecastLabelKey] = labels }
             }
         }
     }
@@ -159,6 +185,71 @@ fun AnalyticsScreen(
                             modifier = Modifier.fillMaxWidth(),
                             currency = userData?.preferredCurrency ?: "$"
                         )
+                    }
+                }
+
+                Spacer(Modifier.height(28.dp))
+
+                if (forecasts.isNotEmpty()) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Burn Rate Forecast",
+                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                    color = colorScheme.onSurface
+                                )
+                                // Legend
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(
+                                        Modifier.size(8.dp)
+                                            .background(colorScheme.primary, CircleShape)
+                                    )
+                                    Text(
+                                        " Cash Flow",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        modifier = Modifier.padding(start = 4.dp, end = 8.dp)
+                                    )
+                                    Box(
+                                        Modifier.size(8.dp)
+                                            .background(colorScheme.tertiary, CircleShape)
+                                    )
+                                    Text(
+                                        " Average",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+                                }
+                            }
+
+                            Text(
+                                text = "AI-predicted cash flow for next 12 months",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = colorScheme.onSurfaceVariant
+                            )
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            BurnRateChart(
+                                modelProducer = burnRateProducer,
+                                xValueFormatter = CartesianValueFormatter { context, x, _ ->
+                                    val index = x.toInt()
+                                    context.model.extraStore[forecastLabelKey].getOrElse(index) { "" }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                currency = userData?.preferredCurrency ?: "$"
+                            )
+                        }
                     }
                 }
 

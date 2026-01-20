@@ -55,7 +55,7 @@ class BurnRateWorker @AssistedInject constructor(
             }
 
             val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.0-flash")
+                .generativeModel("gemini-2.5-flash")
 
             val prompt = """
                 Today is $currentDate.

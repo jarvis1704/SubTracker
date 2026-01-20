@@ -3,8 +3,11 @@ package com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.biprangshu.subtracker.data.local.ForecastDao
+import com.biprangshu.subtracker.data.local.ForecastEntity
 import com.biprangshu.subtracker.data.local.InsightDao
 import com.biprangshu.subtracker.data.local.InsightEntity
 import com.biprangshu.subtracker.data.local.UserEntity
@@ -12,6 +15,7 @@ import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
+import com.biprangshu.subtracker.worker.BurnRateWorker
 import com.biprangshu.subtracker.worker.SubOptimizerWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,6 +32,7 @@ class AnalysisScreenViewModel @Inject constructor(
     private val userDataUserCase: GetUserDataUserCase,
     private val subscriptionRepository: SubscriptionRepository,
     private val insightDao: InsightDao,
+    private val forecastDao: ForecastDao,
     @ApplicationContext private val context: Context
 ): ViewModel() {
 
@@ -96,12 +101,35 @@ class AnalysisScreenViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    val forecastData: StateFlow<List<ForecastEntity>> = forecastDao.getForecasts()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+
+
     fun refreshAnalysis() {
+
+        //insight generation
         val workRequest = OneTimeWorkRequestBuilder<SubOptimizerWorker>()
             .addTag("SubOptimizerManual")
             .build()
         WorkManager.getInstance(context).enqueue(workRequest)
+
+        //burn rate analysis
+        val burnRateRequest = OneTimeWorkRequestBuilder<BurnRateWorker>()
+            .addTag("BurnRateManual")
+            .build()
+
+        WorkManager.getInstance(context).enqueue(listOf(workRequest, burnRateRequest))
     }
 
 
+
 }
+
+
+
+
