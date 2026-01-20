@@ -1,5 +1,6 @@
 package com.biprangshu.subtracker.ui.screens.AnalyticsScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BudgetSpendCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.EmptyAnalyticsState
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.InsightCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel.AnalysisScreenViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
@@ -58,6 +60,8 @@ fun AnalyticsScreen(
     val monthlyChartData by analysisScreenViewModel.monthlyChartData.collectAsState()
     val subscriptionBreakdown by analysisScreenViewModel.subscriptionBreakdownData.collectAsState()
     val hasSubscriptions by analysisScreenViewModel.hasSubscriptions.collectAsState()
+
+    val insights by analysisScreenViewModel.aiInsights.collectAsState()
 
     //vico model producer
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -193,20 +197,42 @@ fun AnalyticsScreen(
 
                 Spacer(Modifier.height(28.dp))
 
+                //ai insights
+                if (insights.isNotEmpty()) {
+                    Text(
+                        text = "Optimization Insights",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+
+                    insights.forEach { insight ->
+                        InsightCard(insight = insight)
+                        Spacer(Modifier.height(12.dp))
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                }
+
                 //ai card
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
                     ),
                     shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().clickable{
+                        //todo: create a manual button for analysis refresh, different than this
+                        analysisScreenViewModel.refreshAnalysis()
+                    }
                 ) {
                     Row(
                         modifier= Modifier.fillMaxWidth().padding(24.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Ask more of your spending with AI",
+                            "Refresh Insights",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold
                             ),

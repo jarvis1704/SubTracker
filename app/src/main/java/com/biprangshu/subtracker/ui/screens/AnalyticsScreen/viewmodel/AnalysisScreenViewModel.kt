@@ -1,13 +1,20 @@
 package com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.biprangshu.subtracker.data.local.InsightDao
+import com.biprangshu.subtracker.data.local.InsightEntity
 import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
+import com.biprangshu.subtracker.worker.SubOptimizerWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -20,6 +27,8 @@ import javax.inject.Inject
 class AnalysisScreenViewModel @Inject constructor(
     private val userDataUserCase: GetUserDataUserCase,
     private val subscriptionRepository: SubscriptionRepository,
+    private val insightDao: InsightDao,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
 
     //todo: implement viewmodel logic for Analytics Screen
@@ -79,6 +88,20 @@ class AnalysisScreenViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
+
+    val aiInsights: StateFlow<List<InsightEntity>> = insightDao.getAllInsights()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    fun refreshAnalysis() {
+        val workRequest = OneTimeWorkRequestBuilder<SubOptimizerWorker>()
+            .addTag("SubOptimizerManual")
+            .build()
+        WorkManager.getInstance(context).enqueue(workRequest)
+    }
 
 
 }
