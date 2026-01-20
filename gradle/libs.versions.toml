@@ -36,6 +36,7 @@ profileinstaller = "1.4.1"
 animationCore = "1.10.0"
 foundationLayout = "1.10.0"
 workRuntimeKtx = "2.11.0"
+firebaseAi = "17.8.0"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -100,6 +101,7 @@ androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profi
 androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+firebase-ai = { group = "com.google.firebase", name = "firebase-ai", version.ref = "firebaseAi" }
 
 
 
