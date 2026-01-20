@@ -8,6 +8,7 @@ plugins {
 //    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.baselineprofile)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -130,4 +131,8 @@ dependencies {
     implementation(libs.vico.compose.m3)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
+
+    implementation("com.google.firebase:firebase-analytics")
 }
