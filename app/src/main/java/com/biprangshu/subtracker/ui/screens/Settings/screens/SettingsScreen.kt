@@ -84,9 +84,9 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                item {
-                    ProfileCard()
-                }
+//                item {
+//                    ProfileCard()
+//                }
 
                 item { Spacer(modifier = Modifier.height(12.dp)) }
 
