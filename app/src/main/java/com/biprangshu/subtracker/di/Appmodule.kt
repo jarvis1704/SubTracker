@@ -3,6 +3,7 @@ package com.biprangshu.subtracker.di
 import android.app.Application
 import androidx.room.Room
 import com.biprangshu.subtracker.data.local.AppDatabase
+import com.biprangshu.subtracker.data.local.ForecastDatabase
 import com.biprangshu.subtracker.data.local.InsightDao
 import com.biprangshu.subtracker.data.local.InsightDatabase
 import com.biprangshu.subtracker.data.local.SubscriptionDao
@@ -52,6 +53,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providesForecastDatabase(app: Application): ForecastDatabase{
+        return Room.databaseBuilder(
+            app,
+            ForecastDatabase::class.java,
+            "forecast_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
     fun provideSubscriptionDao(db: AppDatabase): SubscriptionDao{
         return db.subscriptionDAO()
     }
@@ -66,6 +77,12 @@ object AppModule {
     @Singleton
     fun provideInsightDao(db: InsightDatabase): InsightDao {
         return db.insightDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideForecastDao(db: ForecastDatabase): com.biprangshu.subtracker.data.local.ForecastDao {
+        return db.forecastDAO()
     }
 
 
