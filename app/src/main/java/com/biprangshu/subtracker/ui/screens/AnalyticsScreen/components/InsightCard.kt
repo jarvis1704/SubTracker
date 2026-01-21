@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.biprangshu.subtracker.data.local.InsightEntity
 
 @Composable
-fun InsightCard(insight: InsightEntity) {
+fun InsightCard(insight: InsightEntity, currency: String) {
     val (icon, color) = when (insight.type.uppercase()) {
         "REDUNDANCY" -> Icons.Default.Warning to MaterialTheme.colorScheme.error
         "BUNDLE" -> Icons.Default.Savings to MaterialTheme.colorScheme.primary
@@ -64,7 +64,7 @@ fun InsightCard(insight: InsightEntity) {
                 if (insight.potentialSavings > 0) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Potential Savings: $${insight.potentialSavings}/mo",
+                        text = "Potential Savings: ${currency}${insight.potentialSavings}/mo",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
