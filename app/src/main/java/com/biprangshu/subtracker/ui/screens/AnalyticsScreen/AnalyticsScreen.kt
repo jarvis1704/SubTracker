@@ -31,7 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +45,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BudgetSpendCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BurnRateChart
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.EmptyAnalyticsState
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.FinanceAssistantSheet
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.InsightCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel.AnalysisScreenViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
@@ -76,6 +79,10 @@ fun AnalyticsScreen(
     //burn rate
     val burnRateProducer = remember { CartesianChartModelProducer() }
     val forecastLabelKey = remember { ExtraStore.Key<List<String>>() }
+
+    //chat
+    val chatState by analysisScreenViewModel.chatState.collectAsState()
+    var showChatSheet by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(monthlyChartData) {
@@ -335,9 +342,47 @@ fun AnalyticsScreen(
                         )
                     }
                 }
+
+                Spacer(Modifier.height(24.dp))
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
+                    ),
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier = Modifier.fillMaxWidth().clickable{
+                        showChatSheet = true
+                    }
+                ) {
+                    Row(
+                        modifier= Modifier.fillMaxWidth().padding(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Chat with Finance Assistant",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Filled.ArrowForward,
+                            contentDescription = null
+                        )
+                    }
+                }
             }
             Spacer(Modifier.height(32.dp))
         }
+    }
+
+    // Show Bottom Sheet when state is true
+    if (showChatSheet) {
+        FinanceAssistantSheet(
+            uiState = chatState,
+            onSend = { msg -> analysisScreenViewModel.sendMessage(msg) },
+            onDismiss = { showChatSheet = false }
+        )
     }
 }
 
