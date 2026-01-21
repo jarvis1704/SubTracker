@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BudgetSpendCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BurnRateChart
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.EmptyAnalyticsState
@@ -60,7 +61,8 @@ import com.patrykandpatrick.vico.core.common.data.ExtraStore
 fun AnalyticsScreen(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
-    analysisScreenViewModel: AnalysisScreenViewModel = hiltViewModel()
+    analysisScreenViewModel: AnalysisScreenViewModel = hiltViewModel(),
+    onNavigate: (Route) -> Unit,
 ) {
 
     val userData by analysisScreenViewModel.userData.collectAsState()
@@ -201,8 +203,7 @@ fun AnalyticsScreen(
                             alert = alert,
                             onDismiss = { analysisScreenViewModel.dismissAlert(alert) },
                             onUpdate = {
-                                // TODO: Navigate to Edit Screen for this subscription
-                                // You can implement navigation using the subscriptionName to find ID
+                                onNavigate(Route.EditSubscriptionScreen(alert.subscriptionId))
                             }
                         )
                         Spacer(Modifier.height(16.dp))

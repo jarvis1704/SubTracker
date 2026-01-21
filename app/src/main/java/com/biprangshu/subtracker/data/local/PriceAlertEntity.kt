@@ -8,6 +8,7 @@ data class PriceAlertEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val subscriptionName: String,
+    val subscriptionId: Int,
     val oldPrice: Double,
     val newPrice: Double,
     val currency: String,

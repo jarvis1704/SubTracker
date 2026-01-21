@@ -110,7 +110,12 @@ fun NavGraph(
                         }
                     }
                     is Route.AnalyticsScreen -> {
-                        NavEntry(key) { AnalyticsScreen(innerPadding = innerPadding) }
+                        NavEntry(key) {
+                            AnalyticsScreen(
+                                innerPadding = innerPadding,
+                                onNavigate = { route -> backStack.add(route) }
+                            )
+                        }
                     }
                     is Route.SettingsScreen -> {
                         NavEntry(key) {

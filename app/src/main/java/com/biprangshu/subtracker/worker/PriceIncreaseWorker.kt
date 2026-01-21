@@ -28,6 +28,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
 
     @Serializable
     data class PriceCheckResult(
+        val subscription_id: Int,
         val service_name: String,
         val current_tracked_price: Double,
         val actual_market_price: Double,
@@ -42,7 +43,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
 
 
             val subData = subscriptions.joinToString("\n") {
-                "- ${it.name}: ${it.price} ${it.currency} (${it.billingCycle})"
+                "- [ID: ${it.id}] ${it.name}: ${it.price} ${it.currency} (${it.billingCycle})"
             }
 
             val user = userDataRepository.getUser().first()
@@ -68,6 +69,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 Return a JSON list:
                 [
                   {
+                    "subscription_id": 12 (Use the ID provided in brackets),
                     "service_name": "Spotify",
                     "current_tracked_price": 10.99,
                     "actual_market_price": 11.99,
@@ -87,6 +89,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
 
             val alerts = results.filter { it.is_urgent }.map {
                 PriceAlertEntity(
+                    subscriptionId = it.subscription_id,
                     subscriptionName = it.service_name,
                     oldPrice = it.current_tracked_price,
                     newPrice = it.actual_market_price,
