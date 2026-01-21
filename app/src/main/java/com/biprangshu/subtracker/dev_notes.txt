@@ -20,3 +20,4 @@ todo: move through the final app and check for bugs
 todo: Optimise the app size and performance
 todo: calculate the next billing date based on the added date and billing cycle
 todo: fix the subscription hero card to show the correct info dynamically
+todo: add a setting item for the AI features to turn on or off
