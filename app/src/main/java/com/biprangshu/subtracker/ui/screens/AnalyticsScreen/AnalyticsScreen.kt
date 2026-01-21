@@ -344,13 +344,13 @@ fun AnalyticsScreen(
                         containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
                     ),
                     shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.fillMaxWidth().clickable{
+                    modifier = Modifier.fillMaxWidth().clickable {
                         //todo: create a manual button for analysis refresh, different than this
                         analysisScreenViewModel.refreshAnalysis()
                     }
                 ) {
                     Row(
-                        modifier= Modifier.fillMaxWidth().padding(24.dp),
+                        modifier = Modifier.fillMaxWidth().padding(24.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -366,6 +366,7 @@ fun AnalyticsScreen(
                         )
                     }
                 }
+            }
 
             Spacer(Modifier.height(32.dp))
         }
