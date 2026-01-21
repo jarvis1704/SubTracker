@@ -41,7 +41,6 @@ class PriceIncreaseWorker @AssistedInject constructor(
             val subscriptions = subscriptionRepository.getAllSubscriptions().first()
             if (subscriptions.isEmpty()) return Result.success()
 
-
             val subData = subscriptions.joinToString("\n") {
                 "- [ID: ${it.id}] ${it.name}: ${it.price} ${it.currency} (${it.billingCycle})"
             }
@@ -58,7 +57,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 
                 **User Context**:
                 - User Currency: "$userCurrency"
-                - **Region Inference**: Infer the user's region based on the currency (e.g., '₹' implies India, '£' implies UK, '€' implies Europe). If generic ('$'), check for regional pricing cues in the subscription data or default to US.
+                - **Region Inference**: Infer the user's region based on the currency (e.g., '€' implies Europe, '₹' implies India, '£' implies UK). If generic ('$'), check for regional pricing cues in the subscription data or default to US.
                 
                 **Subscriptions**:
                 $subData
@@ -70,16 +69,18 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 1. The user's price is LOWER than the current regional price (meaning they updated it long ago).
                 2. There is a publicly announced price hike coming soon for that specific region.
                 
-                Ignore small currency conversion differences. Focus on confirmed price changes in that region.
+                **Output Rules**:
+                1. Ignore small currency conversion differences.
+                2. **CRITICAL**: In the 'alert_message', ALWAYS use the user's currency symbol ("$userCurrency") for the price. Do NOT use '$' unless the user's currency is actually '$'.
                 
-                Return a JSON list (Below is an example format with the following fields for each identified service):
+                Return a JSON list:
                 [
                   {
-                    "subscription_id": 12 (Use the ID provided in brackets),
+                    "subscription_id": 12,
                     "service_name": "Spotify",
                     "current_tracked_price": 10.99,
                     "actual_market_price": 11.99,
-                    "alert_message": "Spotify Premium (in your region) is now 11.99. Your tracked price is outdated.",
+                    "alert_message": "Spotify Premium is now $userCurrency 11.99. Your tracked price is outdated.",
                     "is_urgent": true
                   }
                 ]
@@ -87,11 +88,9 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 If no discrepancies found, return [].
             """.trimIndent()
 
-
             val response = generativeModel.generateContent(prompt)
             val cleanJson = (response.text ?: "[]").replace("```json", "").replace("```", "").trim()
             val results = Json { ignoreUnknownKeys = true }.decodeFromString<List<PriceCheckResult>>(cleanJson)
-
 
             val alerts = results.filter { it.is_urgent }.map {
                 PriceAlertEntity(
