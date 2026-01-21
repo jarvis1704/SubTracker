@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.biprangshu.subtracker.data.local.InsightDao
 import com.biprangshu.subtracker.data.local.InsightEntity
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
+import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
@@ -18,19 +19,17 @@ import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
 
-// Assuming appropriate imports for your extension functions based on your snippet
-// e.g., import com.google.firebase.ai.ai
-// e.g., import com.google.firebase.ai.GenerativeBackend
 
 @HiltWorker
 class SubOptimizerWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val subscriptionRepository: SubscriptionRepository,
+    private val userDataRepository: UserDataRepository,
     private val insightDao: InsightDao
 ) : CoroutineWorker(context, params) {
 
-    // Internal model for JSON parsing
+    //json parse model
     @Serializable
     data class AIResponseItem(
         val type: String,
@@ -41,33 +40,39 @@ class SubOptimizerWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            // 1. Fetch current subscriptions
+
             val subscriptions = subscriptionRepository.getAllSubscriptions().first()
             if (subscriptions.isEmpty()) {
-                // No subscriptions to analyze
                 return Result.success()
             }
 
-            // 2. Prepare Data String for the Prompt
+            val user = userDataRepository.getUser().first()
+            val userCurrency = user?.preferredCurrency ?: "$"
+
+
             val subListString = subscriptions.joinToString("\n") {
                 "- Name: ${it.name}, Price: ${it.price} ${it.currency}, Category: ${it.category}"
             }
 
-            // 3. Initialize Model (Using your requested syntax)
-            // Note: Ensure the library supporting this syntax is in your dependencies
+
             val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
                 .generativeModel("gemini-3-flash-preview")
 
-            // 4. Create Prompt with JSON enforcement
+
             val prompt = """
-                You are a Subscription Optimization Agent. Analyze these user subscriptions:
+                You are a Subscription Optimization Agent. 
                 
+                **User Context**:
+                - User Currency: "$userCurrency"
+                - Task: Infer the user's region based on the currency (e.g., '₹' implies India, '£' implies UK, '€' implies Europe). If the currency is generic (like '$'), check the subscription prices and names for regional cues, otherwise default to US.
+                
+                **Subscriptions**:
                 $subListString
                 
-                Identify:
+                **Analysis Goals**:
                 1. Redundancies (e.g., multiple music apps).
-                2. Bundle opportunities (e.g., Disney+ and Hulu).
-                3. High cost warnings.
+                2. Bundle opportunities SPECIFIC TO THE INFERRED REGION. (e.g., In India, suggest Disney+ Hotstar or Jio bundles. Do NOT suggest US-only bundles like 'Hulu' or 'HBO Max' if the user is detected to be in a region where these are not available).
+                3. High cost warnings (relative to local purchasing power).
                 
                 Return ONLY a valid JSON list. Do not use Markdown formatting (no ```json).
                 Structure:
@@ -75,7 +80,7 @@ class SubOptimizerWorker @AssistedInject constructor(
                   {
                     "type": "REDUNDANCY" | "BUNDLE" | "SUGGESTION",
                     "title": "Short Title",
-                    "description": "Short explanation",
+                    "description": "Short explanation (tailored to the region)",
                     "savings": 0.0 (Numeric monthly savings estimate)
                   }
                 ]
@@ -86,10 +91,8 @@ class SubOptimizerWorker @AssistedInject constructor(
             Log.d("AI", "AI Response: $response")
             val responseText = response.text ?: "[]"
 
-            // Clean up potential markdown code blocks if the model ignores the instruction
             val cleanJson = responseText.replace("```json", "").replace("```", "").trim()
 
-            // 6. Parse and Save
             val aiInsights = Json { ignoreUnknownKeys = true }.decodeFromString<List<AIResponseItem>>(cleanJson)
 
             val entities = aiInsights.map {
@@ -109,7 +112,6 @@ class SubOptimizerWorker @AssistedInject constructor(
             Result.success()
         } catch (e: Exception) {
             e.printStackTrace()
-            // Return failure so WorkManager might retry later or log the error
             Result.failure()
         }
     }
