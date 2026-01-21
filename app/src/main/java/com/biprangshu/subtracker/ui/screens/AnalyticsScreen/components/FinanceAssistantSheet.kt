@@ -65,7 +65,7 @@ fun FinanceAssistantSheet(
     var inputText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
 
-    // Auto-scroll to bottom when new messages arrive
+
     LaunchedEffect(uiState.messages.size) {
         if (uiState.messages.isNotEmpty()) {
             listState.animateScrollToItem(uiState.messages.size - 1)
