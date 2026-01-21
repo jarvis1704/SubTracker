@@ -6,6 +6,8 @@ import com.biprangshu.subtracker.data.local.AppDatabase
 import com.biprangshu.subtracker.data.local.ForecastDatabase
 import com.biprangshu.subtracker.data.local.InsightDao
 import com.biprangshu.subtracker.data.local.InsightDatabase
+import com.biprangshu.subtracker.data.local.PriceAlertDao
+import com.biprangshu.subtracker.data.local.PriceAlertDatabase
 import com.biprangshu.subtracker.data.local.SubscriptionDao
 import com.biprangshu.subtracker.data.local.UserDataDao
 import com.biprangshu.subtracker.data.local.UserDatabase
@@ -63,6 +65,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providePriceIncreaseDatabase(app: Application): PriceAlertDatabase{
+        return Room.databaseBuilder(
+            app,
+            PriceAlertDatabase::class.java,
+            "price_alert_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
     fun provideSubscriptionDao(db: AppDatabase): SubscriptionDao{
         return db.subscriptionDAO()
     }
@@ -83,6 +95,12 @@ object AppModule {
     @Singleton
     fun provideForecastDao(db: ForecastDatabase): com.biprangshu.subtracker.data.local.ForecastDao {
         return db.forecastDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun providePriceAlertDao(db: PriceAlertDatabase): PriceAlertDao{
+        return db.priceAlertDao()
     }
 
 

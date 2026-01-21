@@ -10,6 +10,8 @@ import com.biprangshu.subtracker.data.local.ForecastDao
 import com.biprangshu.subtracker.data.local.ForecastEntity
 import com.biprangshu.subtracker.data.local.InsightDao
 import com.biprangshu.subtracker.data.local.InsightEntity
+import com.biprangshu.subtracker.data.local.PriceAlertDao
+import com.biprangshu.subtracker.data.local.PriceAlertEntity
 import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
@@ -18,6 +20,7 @@ import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.state.ChatMessage
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.state.ChatUiState
 import com.biprangshu.subtracker.worker.BurnRateWorker
+import com.biprangshu.subtracker.worker.PriceIncreaseWorker
 import com.biprangshu.subtracker.worker.SubOptimizerWorker
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
@@ -44,6 +47,7 @@ class AnalysisScreenViewModel @Inject constructor(
     private val userDataUserCase: GetUserDataUserCase,
     private val subscriptionRepository: SubscriptionRepository,
     private val insightDao: InsightDao,
+    private val priceAlertDao: PriceAlertDao,
     private val forecastDao: ForecastDao,
     @ApplicationContext private val context: Context
 ): ViewModel() {
@@ -120,6 +124,13 @@ class AnalysisScreenViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    val priceAlerts: StateFlow<List<PriceAlertEntity>> = priceAlertDao.getAllAlerts()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
 
 
     fun refreshAnalysis() {
@@ -135,7 +146,12 @@ class AnalysisScreenViewModel @Inject constructor(
             .addTag("BurnRateManual")
             .build()
 
-        WorkManager.getInstance(context).enqueue(listOf(workRequest, burnRateRequest))
+        //price increase check
+        val priceIncreaseRequest = OneTimeWorkRequestBuilder<PriceIncreaseWorker>()
+            .addTag("WatchdogManual")
+            .build()
+
+        WorkManager.getInstance(context).enqueue(listOf(workRequest, burnRateRequest, priceIncreaseRequest))
     }
 
     //ai chat logic
@@ -215,6 +231,12 @@ class AnalysisScreenViewModel @Inject constructor(
 
     fun clearChatError() {
         _chatState.update { it.copy(error = null) }
+    }
+
+    fun dismissAlert(alert: PriceAlertEntity) {
+        viewModelScope.launch {
+            priceAlertDao.deleteAlert(alert)
+        }
     }
 
 }

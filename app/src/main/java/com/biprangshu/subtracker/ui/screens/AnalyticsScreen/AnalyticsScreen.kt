@@ -47,6 +47,7 @@ import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.BurnRateC
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.EmptyAnalyticsState
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.FinanceAssistantSheet
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.InsightCard
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.components.PriceAlertCard
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.viewmodel.AnalysisScreenViewModel
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
@@ -82,6 +83,9 @@ fun AnalyticsScreen(
     //chat
     val chatState by analysisScreenViewModel.chatState.collectAsState()
     var showChatSheet by remember { mutableStateOf(false) }
+
+    //price increase check and alerts
+    val priceAlerts by analysisScreenViewModel.priceAlerts.collectAsState()
 
 
     LaunchedEffect(monthlyChartData) {
@@ -181,9 +185,31 @@ fun AnalyticsScreen(
             Spacer(Modifier.height(28.dp))
 
             if (!hasSubscriptions) {
-
                 EmptyAnalyticsState()
             } else {
+
+                if (priceAlerts.isNotEmpty()) {
+                    Text(
+                        text = "Alerts",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colorScheme.error,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    priceAlerts.forEach { alert ->
+                        PriceAlertCard(
+                            alert = alert,
+                            onDismiss = { analysisScreenViewModel.dismissAlert(alert) },
+                            onUpdate = {
+                                // TODO: Navigate to Edit Screen for this subscription
+                                // You can implement navigation using the subscriptionName to find ID
+                            }
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
+                }
+
+                Spacer(Modifier.height(28.dp))
 
                 //year Projection Chart
                 Card(
