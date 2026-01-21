@@ -18,3 +18,5 @@ todo: add user field to put the subscription plan name
 todo: implement the AI features of the app (know and research about adding them first and then add it)
 todo: move through the final app and check for bugs
 todo: Optimise the app size and performance
+todo: calculate the next billing date based on the added date and billing cycle
+todo: fix the subscription hero card to show the correct info dynamically
