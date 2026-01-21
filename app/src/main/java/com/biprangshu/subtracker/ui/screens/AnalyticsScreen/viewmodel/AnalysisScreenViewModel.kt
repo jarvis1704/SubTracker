@@ -15,16 +15,28 @@ import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.state.ChatMessage
+import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.state.ChatUiState
 import com.biprangshu.subtracker.worker.BurnRateWorker
 import com.biprangshu.subtracker.worker.SubOptimizerWorker
+import com.google.firebase.Firebase
+import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.GenerativeBackend
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -126,7 +138,80 @@ class AnalysisScreenViewModel @Inject constructor(
         WorkManager.getInstance(context).enqueue(listOf(workRequest, burnRateRequest))
     }
 
+    //ai chat logic
+    private val _chatState = MutableStateFlow(ChatUiState())
+    val chatState = _chatState.asStateFlow()
 
+    fun sendMessage(userMessage: String) {
+        if (userMessage.isBlank()) return
+
+
+        _chatState.update {
+            it.copy(
+                messages = it.messages + ChatMessage(text = userMessage, isUser = true),
+                isLoading = true
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val subscriptions = allSubscriptions.first()
+                val currency = userData.value?.preferredCurrency ?: "$"
+
+                val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+                val subListContext = subscriptions.joinToString("\n") { sub ->
+                    val nextDue = if (sub.nextPaymentDate > 0) dateFormat.format(Date(sub.nextPaymentDate)) else "Unknown"
+                    "- ${sub.name}: ${sub.price} ${sub.currency} (${sub.billingCycle}, Category: ${sub.category}, Next Due: $nextDue)"
+                }
+
+                val today = dateFormat.format(Date())
+
+
+                val prompt = """
+                    You are a helpful Finance Assistant for a subscription tracking app.
+                    Current Date: $today
+                    User's Preferred Currency: $currency
+                    
+                    Here is the user's active subscription data:
+                    $subListContext
+                    
+                    User Question: "$userMessage"
+                    
+                    Instructions:
+                    - Answer concisely based ONLY on the data above.
+                    - If asked about "savings", suggest cancelling unused or high-cost items.
+                    - Perform calculations (sums, differences) accurately.
+                    - Be friendly but direct.
+                """.trimIndent()
+
+                val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
+                    .generativeModel("gemini-3-flash-preview")
+
+                val response = generativeModel.generateContent(prompt)
+                val aiReplyText = response.text ?: "I couldn't analyze that right now."
+
+
+                _chatState.update {
+                    it.copy(
+                        messages = it.messages + ChatMessage(text = aiReplyText, isUser = false),
+                        isLoading = false
+                    )
+                }
+
+            } catch (e: Exception) {
+                _chatState.update {
+                    it.copy(
+                        messages = it.messages + ChatMessage(text = "Error: ${e.localizedMessage}", isUser = false),
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun clearChatError() {
+        _chatState.update { it.copy(error = null) }
+    }
 
 }
 
