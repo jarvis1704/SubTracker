@@ -54,26 +54,32 @@ class PriceIncreaseWorker @AssistedInject constructor(
 
             // 3. Prompt Engineering
             val prompt = """
-                You are an Inflation Watchdog. Analyze this list of user subscriptions and prices:
+                You are an Inflation Watchdog.
+                
+                **User Context**:
+                - User Currency: "$userCurrency"
+                - **Region Inference**: Infer the user's region based on the currency (e.g., '₹' implies India, '£' implies UK, '€' implies Europe). If generic ('$'), check for regional pricing cues in the subscription data or default to US.
+                
+                **Subscriptions**:
                 $subData
                 
-                Task:
-                Compare the user's tracked price against your knowledge of recent (2024-2025) price hikes or standard market rates.
+                **Task**:
+                Compare the user's tracked price against the **current actual market price IN THE INFERRED REGION** for 2024-2025.
                 
                 Identify ONLY services where:
-                1. The user's price is LOWER than the current actual price (meaning they updated it long ago).
-                2. There is a publicly announced price hike coming soon.
+                1. The user's price is LOWER than the current regional price (meaning they updated it long ago).
+                2. There is a publicly announced price hike coming soon for that specific region.
                 
-                Ignore small currency conversion differences. Focus on confirmed price changes.
+                Ignore small currency conversion differences. Focus on confirmed price changes in that region.
                 
-                Return a JSON list:
+                Return a JSON list (Below is an example format with the following fields for each identified service):
                 [
                   {
                     "subscription_id": 12 (Use the ID provided in brackets),
                     "service_name": "Spotify",
                     "current_tracked_price": 10.99,
                     "actual_market_price": 11.99,
-                    "alert_message": "Spotify Premium is now $11.99. Your tracked price is outdated.",
+                    "alert_message": "Spotify Premium (in your region) is now 11.99. Your tracked price is outdated.",
                     "is_urgent": true
                   }
                 ]
