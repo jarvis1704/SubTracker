@@ -20,9 +20,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
@@ -139,15 +141,37 @@ fun AnalyticsScreen(
                 )
                 .verticalScroll(rememberScrollState()),
         ) {
-            Text(
-                "Analytics",
-                style = TextStyle(
-                    fontFamily = robotoFlexTopBar,
-                    fontSize = 32.sp,
-                    lineHeight = 34.sp,
-                    color = colorScheme.primary
-                ),
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    "Analytics",
+                    style = TextStyle(
+                        fontFamily = robotoFlexTopBar,
+                        fontSize = 32.sp,
+                        lineHeight = 34.sp,
+                        color = colorScheme.primary
+                    ),
+                )
+
+                Spacer(Modifier.width(8.dp))
+
+                IconButton(
+                    onClick = {
+                        showChatSheet = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+            }
+
             Spacer(Modifier.height(24.dp))
 
 
@@ -343,35 +367,6 @@ fun AnalyticsScreen(
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
-
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.6f)
-                    ),
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.fillMaxWidth().clickable{
-                        showChatSheet = true
-                    }
-                ) {
-                    Row(
-                        modifier= Modifier.fillMaxWidth().padding(24.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Chat with Finance Assistant",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Icon(
-                            imageVector = Icons.Filled.ArrowForward,
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
             Spacer(Modifier.height(32.dp))
         }
     }
