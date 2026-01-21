@@ -169,17 +169,21 @@ class AnalysisScreenViewModel @Inject constructor(
 
                 val prompt = """
                     You are a helpful Finance Assistant for a subscription tracking app.
-                    Current Date: $today
-                    User's Preferred Currency: $currency
                     
-                    Here is the user's active subscription data:
+                    **Context**:
+                    - Current Date: $today
+                    - User's Preferred Currency: "$currency"
+                    - **Region Inference**: Infer the user's region based on the currency (e.g., '₹' = India, '£' = UK, '€' = Europe). If generic ('$'), look for regional pricing cues or default to US.
+                    
+                    **User's Subscriptions**:
                     $subListContext
                     
-                    User Question: "$userMessage"
+                    **User Question**: "$userMessage"
                     
-                    Instructions:
-                    - Answer concisely based ONLY on the data above.
-                    - If asked about "savings", suggest cancelling unused or high-cost items.
+                    **Instructions**:
+                    - Answer concisely based on the data provided.
+                    - **Region Awareness**: When making suggestions (alternatives, bundles, cancellations), ensure they are relevant to the inferred region. Do NOT suggest services not available in that region (e.g., Hulu in India).
+                    - If asked about "savings", suggest cancelling unused/high-cost items, keeping local purchasing power in mind.
                     - Perform calculations (sums, differences) accurately.
                     - Be friendly but direct.
                 """.trimIndent()
