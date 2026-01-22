@@ -3,16 +3,31 @@ package com.biprangshu.subtracker.worker
 import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
-import androidx.work.Worker
+import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
 
-class SubscriptionReminderWorker(
-    context: Context,
-    workerParams: WorkerParameters
-) : Worker(context, workerParams) {
+@HiltWorker
+class SubscriptionReminderWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val userPreferencesRepository: UserPreferencesRepository
+) : CoroutineWorker(context, workerParams) {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
+
+        val masterEnabled = userPreferencesRepository.notificationsEnabledFlow.first()
+        if (!masterEnabled) return Result.success()
+
+        val remindersEnabled = userPreferencesRepository.paymentRemindersEnabledFlow.first()
+        if (!remindersEnabled) return Result.success()
+
+
         val subscriptionName = inputData.getString("name") ?: "Subscription"
         val price = inputData.getDouble("price", 0.0)
         val currency = inputData.getString("currency") ?: "$"
@@ -26,10 +41,6 @@ class SubscriptionReminderWorker(
             message = message,
             notificationId = subscriptionId
         )
-
-        // Todo: Ideally reschedule the next periodic work here if doing one-time chain,
-        // but strictly PeriodicWorkRequest is better for recurring.
-        // For this implementation, we handle the single upcoming instance.
 
         return Result.success()
     }

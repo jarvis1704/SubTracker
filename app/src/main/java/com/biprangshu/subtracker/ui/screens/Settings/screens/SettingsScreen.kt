@@ -92,7 +92,9 @@ fun SettingsScreen(
                             title = "Notifications",
                             subtitle = "Manage alerts",
                             shape = topItemShape,
-                            onClick = { /* TODO: Notification Manager Logic */ }
+                            onClick = {
+                                onNavigate(Route.NotificationSettingsScreen)
+                            }
                         )
                         SwitchSettingsItem(
                             icon = Icons.Default.Lock,

@@ -34,6 +34,13 @@ class UserPreferencesRepository @Inject constructor(
         private val AI_BURN_RATE_ENABLED = booleanPreferencesKey("ai_burn_rate_enabled")
         private val AI_PRICE_ALERTS_ENABLED = booleanPreferencesKey("ai_price_alerts_enabled")
         private val AI_PERIODICITY_DAYS = intPreferencesKey("ai_periodicity_days")
+
+        private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_master_enabled")
+        private val PAYMENT_REMINDERS_ENABLED = booleanPreferencesKey("payment_reminders_enabled")
+
+        // can be added in future feature
+//        private val NOTIFY_PRICE_ALERTS = booleanPreferencesKey("notify_price_alerts")
+//        private val NOTIFY_INSIGHTS = booleanPreferencesKey("notify_insights")
     }
 
 
@@ -44,6 +51,9 @@ class UserPreferencesRepository @Inject constructor(
     val isBiometricEnabledFlow: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[BIOMETRIC_ENABLED] ?: false
     }
+
+    val notificationsEnabledFlow = dataStore.data.map { it[NOTIFICATIONS_ENABLED] ?: true }
+    val paymentRemindersEnabledFlow = dataStore.data.map { it[PAYMENT_REMINDERS_ENABLED] ?: true }
 
     //ai flows
     val aiOptimizerEnabledFlow = dataStore.data.map { it[AI_OPTIMIZER_ENABLED] ?: true }
@@ -78,6 +88,14 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun setAiPeriodicity(days: Int) {
         dataStore.edit { it[AI_PERIODICITY_DAYS] = days.coerceIn(3, 7) }
+    }
+
+    suspend fun setNotificationsEnabled(enabled: Boolean) {
+        dataStore.edit { it[NOTIFICATIONS_ENABLED] = enabled }
+    }
+
+    suspend fun setPaymentRemindersEnabled(enabled: Boolean) {
+        dataStore.edit { it[PAYMENT_REMINDERS_ENABLED] = enabled }
     }
 
     suspend fun clearUserData() {

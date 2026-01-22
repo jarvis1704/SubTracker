@@ -23,6 +23,7 @@ import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.AISettingsScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
+import com.biprangshu.subtracker.ui.screens.Settings.screens.NotificationSettingsScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
@@ -202,6 +203,14 @@ fun NavGraph(
                     is Route.AISettingsScreen -> {
                         NavEntry(key) {
                             AISettingsScreen(
+                                onBack = { backStack.removeAt(backStack.lastIndex) }
+                            )
+                        }
+                    }
+
+                    is Route.NotificationSettingsScreen -> {
+                        NavEntry(key) {
+                            NotificationSettingsScreen(
                                 onBack = { backStack.removeAt(backStack.lastIndex) }
                             )
                         }
