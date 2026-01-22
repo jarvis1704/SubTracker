@@ -21,6 +21,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
 import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
+import com.biprangshu.subtracker.ui.screens.Settings.screens.AISettingsScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
 import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
@@ -197,6 +198,15 @@ fun NavGraph(
                             )
                         }
                     }
+
+                    is Route.AISettingsScreen -> {
+                        NavEntry(key) {
+                            AISettingsScreen(
+                                onBack = { backStack.removeAt(backStack.lastIndex) }
+                            )
+                        }
+                    }
+
                     else -> error("Unknown route: $key")
                 }
             }
