@@ -3,11 +3,16 @@ package com.biprangshu.subtracker.worker
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresPermission
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.biprangshu.subtracker.MainActivity
 import com.biprangshu.subtracker.R
 
 object NotificationHelper {
@@ -31,20 +36,45 @@ object NotificationHelper {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showNotification(context: Context, title: String, message: String, notificationId: Int) {
-        // Note: Missing POST_NOTIFICATIONS permission check here for brevity,
-        // but it is required for Android 13+.
-        try {
-            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
 
-            val notificationManager = NotificationManagerCompat.from(context)
-            notificationManager.notify(notificationId, builder.build())
-        } catch (e: SecurityException) {
-            e.printStackTrace()
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            notify(notificationId, builder.build())
+        }
+
+//        try {
+//
+//
+//            val notificationManager = NotificationManagerCompat.from(context)
+//            notificationManager.notify(notificationId, builder.build())
+//        } catch (e: SecurityException) {
+//            e.printStackTrace()
+//        }
     }
 }
