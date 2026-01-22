@@ -49,6 +49,7 @@ fun SubscriptionDetailsScreen(
 
     val subscription by viewModel.subscription.collectAsState()
     val priceAlert by viewModel.priceAlert.collectAsState()
+    val userData by viewModel.userData.collectAsState()
 
     var showDeleteSheet by remember { mutableStateOf(false) }
 
@@ -102,7 +103,10 @@ fun SubscriptionDetailsScreen(
                         sharedContentState = sharedTransitionScope.rememberSharedContentState(key = "subscription-${sub.id}")
                     )
                 ) {
-                    SubscriptionHeroCard(subscription = sub)
+                    SubscriptionHeroCard(
+                        subscription = sub,
+                        currency = userData?.preferredCurrency ?: "$"
+                    )
                 }
 
                 // AI Alert Section

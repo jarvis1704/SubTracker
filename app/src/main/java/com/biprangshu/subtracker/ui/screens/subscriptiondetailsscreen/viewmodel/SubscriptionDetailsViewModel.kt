@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.data.local.PriceAlertDao
 import com.biprangshu.subtracker.data.local.PriceAlertEntity
+import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.DeleteSubscriptionUseCase
 import com.biprangshu.subtracker.domain.usecase.GetSubscriptionbyIdUsecase
+import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class SubscriptionDetailsViewModel @Inject constructor(
     private val getSubscriptionbyIdUsecase: GetSubscriptionbyIdUsecase,
     private val deleteSubscriptionUseCase: DeleteSubscriptionUseCase,
+    private val userDataUserCase: GetUserDataUserCase,
     private val priceAlertDao: PriceAlertDao
 ): ViewModel() {
 
@@ -29,6 +32,12 @@ class SubscriptionDetailsViewModel @Inject constructor(
 
     private val _subscription = MutableStateFlow<Subscription?>(null)
     val subscription: StateFlow<Subscription?> = _subscription.asStateFlow()
+
+    val userData: StateFlow<UserEntity?> = userDataUserCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
 
     val priceAlert: StateFlow<PriceAlertEntity?> = _subscriptionId.flatMapLatest { id ->

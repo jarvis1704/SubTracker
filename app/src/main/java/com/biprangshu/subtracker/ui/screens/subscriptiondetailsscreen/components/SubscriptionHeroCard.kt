@@ -35,7 +35,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SubscriptionHeroCard(
-    subscription: Subscription
+    subscription: Subscription,
+    currency: String
 ) {
     val brandColor = remember(subscription.colorHex) {
         try {
@@ -88,7 +89,7 @@ fun SubscriptionHeroCard(
             )
 
             Text(
-                text = "${subscription.currency}${subscription.price}",
+                text = "${currency}${subscription.price}",
                 style = MaterialTheme.typography.displayMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White
