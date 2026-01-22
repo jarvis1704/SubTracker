@@ -6,6 +6,7 @@ import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -35,14 +36,11 @@ class SubscriptionRepositoryImpl @Inject constructor(
         return dao.getTotalMonthlySpend().map { it ?: 0.0 }
     }
 
-    // --- Mappers ---
+
 
     private fun SubscriptionEntity.toDomain(): Subscription {
-        // Simple logic to calculate days remaining (can be expanded in a UseCase)
-        val today = System.currentTimeMillis()
-        // For now, let's assume firstPaymentDate is in the future or handle cycle math later
-        val diff = firstPaymentDate - today
-        val days = if (diff > 0) TimeUnit.MILLISECONDS.toDays(diff).toInt() else 0
+        val nextPaymentDate = calculateNextPaymentDate(firstPaymentDate, billingCycle)
+        val daysUntil = calculateDaysUntil(nextPaymentDate)
 
         return Subscription(
             id = id,
@@ -53,7 +51,8 @@ class SubscriptionRepositoryImpl @Inject constructor(
             colorHex = colorHex,
             billingCycle = billingCycle,
             firstPaymentDate = firstPaymentDate,
-            dueInDays = days,
+            dueInDays = daysUntil,
+            nextPaymentDate = nextPaymentDate,
             logoRedId = logoResId,
             category = category,
             paymentMethod = paymentMethod,
@@ -78,5 +77,49 @@ class SubscriptionRepositoryImpl @Inject constructor(
             remindersEnabled = remindersEnabled,
             reminderDaysBefore = reminderDaysBefore
         )
+    }
+
+
+    private fun calculateNextPaymentDate(startDate: Long, cycle: String): Long {
+        val today = System.currentTimeMillis()
+
+
+        if (startDate > today) {
+            return startDate
+        }
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = startDate
+
+
+        while (calendar.timeInMillis <= today) {
+            when (cycle.lowercase()) {
+                "yearly" -> calendar.add(Calendar.YEAR, 1)
+                "weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                else -> calendar.add(Calendar.MONTH, 1) // Default to Monthly
+            }
+        }
+        return calendar.timeInMillis
+    }
+
+
+    private fun calculateDaysUntil(targetDate: Long): Int {
+        val today = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val target = Calendar.getInstance().apply {
+            timeInMillis = targetDate
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val diff = target.timeInMillis - today.timeInMillis
+        return TimeUnit.MILLISECONDS.toDays(diff).toInt().coerceAtLeast(0)
     }
 }

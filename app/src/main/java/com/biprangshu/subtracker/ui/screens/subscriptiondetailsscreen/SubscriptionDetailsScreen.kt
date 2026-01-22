@@ -212,7 +212,9 @@ fun SubscriptionDetailsScreen(
 
                 //cancel Button
                 FilledTonalButton(
-                    onClick = { /* TODO: Cancel/Delete Logic */ },
+                    onClick = {
+
+                    },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorScheme.error,
