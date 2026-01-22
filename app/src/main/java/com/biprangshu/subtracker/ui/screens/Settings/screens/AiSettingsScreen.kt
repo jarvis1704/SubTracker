@@ -67,6 +67,42 @@ fun AISettingsScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
+                "Active Features",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
+            )
+
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                SwitchSettingsItem(
+                    icon = Icons.Default.AutoAwesome,
+                    title = "Smart Optimization",
+                    subtitle = "Find bundles & redundancies",
+                    checked = optimizerEnabled,
+                    onCheckedChange = { viewModel.toggleOptimizer(it) },
+                    shape = topItemShape
+                )
+                SwitchSettingsItem(
+                    icon = Icons.Default.TrendingDown,
+                    title = "Burn Rate Analysis",
+                    subtitle = "Predict future cash flow",
+                    checked = burnRateEnabled,
+                    onCheckedChange = { viewModel.toggleBurnRate(it) },
+                    shape = middleItemShape
+                )
+                SwitchSettingsItem(
+                    icon = Icons.Default.PriceCheck,
+                    title = "Price Watchdog",
+                    subtitle = "Alert on regional price hikes",
+                    checked = priceAlertsEnabled,
+                    onCheckedChange = { viewModel.togglePriceAlerts(it) },
+                    shape = bottomItemShape
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
                 "Analysis Frequency",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
@@ -109,41 +145,6 @@ fun AISettingsScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                "Active Features",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
-            )
-
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwitchSettingsItem(
-                    icon = Icons.Default.AutoAwesome,
-                    title = "Smart Optimization",
-                    subtitle = "Find bundles & redundancies",
-                    checked = optimizerEnabled,
-                    onCheckedChange = { viewModel.toggleOptimizer(it) },
-                    shape = topItemShape
-                )
-                SwitchSettingsItem(
-                    icon = Icons.Default.TrendingDown,
-                    title = "Burn Rate Analysis",
-                    subtitle = "Predict future cash flow",
-                    checked = burnRateEnabled,
-                    onCheckedChange = { viewModel.toggleBurnRate(it) },
-                    shape = middleItemShape
-                )
-                SwitchSettingsItem(
-                    icon = Icons.Default.PriceCheck,
-                    title = "Price Watchdog",
-                    subtitle = "Alert on regional price hikes",
-                    checked = priceAlertsEnabled,
-                    onCheckedChange = { viewModel.togglePriceAlerts(it) },
-                    shape = bottomItemShape
-                )
-            }
         }
     }
 }
