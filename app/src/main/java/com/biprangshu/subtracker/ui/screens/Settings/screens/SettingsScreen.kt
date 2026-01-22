@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.biprangshu.subtracker.BuildConfig
 import com.biprangshu.subtracker.navigation.Route
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
 import com.biprangshu.subtracker.ui.screens.Settings.components.SwitchSettingsItem
@@ -112,7 +113,7 @@ fun SettingsScreen(
                     SettingsItem(
                         icon = Icons.Default.Info,
                         title = "About SubTracker",
-                        subtitle = "Version 1.0.0",
+                        subtitle = BuildConfig.VERSION_NAME,
                         shape = singleItemShape,
                         onClick = { onNavigate(Route.AboutScreen) }
                     )
