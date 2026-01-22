@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.biprangshu.subtracker.data.local.PriceAlertDao
 import com.biprangshu.subtracker.data.local.PriceAlertEntity
 import com.biprangshu.subtracker.domain.model.Subscription
+import com.biprangshu.subtracker.domain.usecase.DeleteSubscriptionUseCase
 import com.biprangshu.subtracker.domain.usecase.GetSubscriptionbyIdUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SubscriptionDetailsViewModel @Inject constructor(
     private val getSubscriptionbyIdUsecase: GetSubscriptionbyIdUsecase,
+    private val deleteSubscriptionUseCase: DeleteSubscriptionUseCase,
     private val priceAlertDao: PriceAlertDao
 ): ViewModel() {
 
@@ -37,6 +39,14 @@ class SubscriptionDetailsViewModel @Inject constructor(
         _subscriptionId.value = id
         viewModelScope.launch {
             _subscription.value = getSubscriptionbyIdUsecase(id)
+        }
+    }
+
+    fun deleteSubscription(onSuccess: () -> Unit) {
+        val currentSub = _subscription.value ?: return
+        viewModelScope.launch {
+            deleteSubscriptionUseCase(currentSub)
+            onSuccess()
         }
     }
 }

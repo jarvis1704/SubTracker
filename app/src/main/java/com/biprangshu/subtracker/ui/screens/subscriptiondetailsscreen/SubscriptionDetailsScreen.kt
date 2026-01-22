@@ -50,9 +50,10 @@ fun SubscriptionDetailsScreen(
     val subscription by viewModel.subscription.collectAsState()
     val priceAlert by viewModel.priceAlert.collectAsState()
 
+    var showDeleteSheet by remember { mutableStateOf(false) }
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    // Shapes
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
@@ -95,7 +96,6 @@ fun SubscriptionDetailsScreen(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // 1. Hero Card
                 Box(
                     modifier = Modifier.sharedBoundsReveal(
                         sharedTransitionScope = sharedTransitionScope,
@@ -105,7 +105,7 @@ fun SubscriptionDetailsScreen(
                     SubscriptionHeroCard(subscription = sub)
                 }
 
-                // 2. AI Alerts Section (Only shows if there's an issue)
+                // AI Alert Section
                 priceAlert?.let { alert ->
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
@@ -141,13 +141,13 @@ fun SubscriptionDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 3. Details Group
                 Text(
                     text = "Details",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
                 )
+
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     DetailItem(Icons.Default.Movie, "Category", sub.category ?: "Uncategorized", topItemShape)
                     DetailItem(Icons.Default.DateRange, "Billing Cycle", sub.billingCycle, middleItemShape)
@@ -162,7 +162,6 @@ fun SubscriptionDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 4. Spending History (Calculated)
                 Text(
                     text = "Recent Payments",
                     style = MaterialTheme.typography.titleLarge,
@@ -174,9 +173,9 @@ fun SubscriptionDetailsScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // 5. Delete Button
+                // Delete Button
                 FilledTonalButton(
-                    onClick = { /* TODO: Cancel/Delete Logic */ },
+                    onClick = { showDeleteSheet = true },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,
@@ -191,18 +190,81 @@ fun SubscriptionDetailsScreen(
             }
         }
     }
+
+
+    if (showDeleteSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showDeleteSheet = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            dragHandle = { BottomSheetDefaults.DragHandle() }
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 48.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DeleteForever,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = "Delete Subscription?",
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Are you sure you want to remove ${subscription?.name}? This action cannot be undone.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(Modifier.height(32.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+
+                    OutlinedButton(
+                        onClick = { showDeleteSheet = false },
+                        modifier = Modifier.weight(1f).height(48.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                    ) {
+                        Text("Cancel")
+                    }
+
+
+                    Button(
+                        onClick = {
+                            viewModel.deleteSubscription {
+                                showDeleteSheet = false
+                                onBackClick()
+                            }
+                        },
+                        modifier = Modifier.weight(1f).height(48.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.onError
+                        )
+                    ) {
+                        Text("Delete")
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun CalculatedSpendingHistory(subscription: Subscription) {
-    // Generate last 6 payments
     val payments = remember(subscription) {
         val list = mutableListOf<Long>()
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = subscription.firstPaymentDate
         val now = System.currentTimeMillis()
 
-        // Find all dates from start until now
         while (calendar.timeInMillis <= now) {
             list.add(calendar.timeInMillis)
             if (subscription.billingCycle == "Monthly") {
@@ -211,7 +273,6 @@ fun CalculatedSpendingHistory(subscription: Subscription) {
                 calendar.add(Calendar.YEAR, 1)
             }
         }
-        // Take last 6, reversed (newest first)
         list.takeLast(6)
     }
 
@@ -225,7 +286,6 @@ fun CalculatedSpendingHistory(subscription: Subscription) {
         return
     }
 
-    // Chart
     val dateFormat = SimpleDateFormat("MMM", Locale.getDefault())
 
     Row(
@@ -239,23 +299,19 @@ fun CalculatedSpendingHistory(subscription: Subscription) {
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier.height(100.dp)
             ) {
-                // Date Label
                 Text(
                     text = dateFormat.format(Date(dateMillis)),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-
-                // Bar
                 Box(
                     modifier = Modifier
                         .width(42.dp)
-                        .height(60.dp) // Fixed height implies fixed cost
+                        .height(60.dp)
                         .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    // Price inside bar
                     Text(
                         text = "${subscription.price.toInt()}",
                         style = MaterialTheme.typography.labelSmall,
