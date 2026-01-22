@@ -55,6 +55,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -97,6 +98,7 @@ fun EditSubscriptionScreen(
     }
 
     val uiState by viewModel.uiState.collectAsState()
+    val userData by viewModel.userData.collectAsState()
 
     // Loading & Error states can be handled here; for now, we render content if Success
     if (uiState is EditSubscriptionUiState.Success) {
@@ -162,7 +164,7 @@ fun EditSubscriptionScreen(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // 1. Price Input
+
                 Text(
                     text = "Monthly Price",
                     style = MaterialTheme.typography.titleMedium,
@@ -191,7 +193,7 @@ fun EditSubscriptionScreen(
                     },
                     prefix = {
                         Text(
-                            subscription.currency,
+                            text = userData?.preferredCurrency ?: "$",
                             style = MaterialTheme.typography.displayLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = colorScheme.onSurface

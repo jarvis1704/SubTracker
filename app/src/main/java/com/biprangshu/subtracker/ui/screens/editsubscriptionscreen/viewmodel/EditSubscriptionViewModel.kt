@@ -2,14 +2,18 @@ package com.biprangshu.subtracker.ui.screens.editsubscriptionscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.biprangshu.subtracker.data.local.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.AddSubscriptionUseCase
 import com.biprangshu.subtracker.domain.usecase.GetSubscriptionbyIdUsecase
+import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase
 import com.biprangshu.subtracker.worker.ReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +21,18 @@ import javax.inject.Inject
 class EditSubscriptionViewModel @Inject constructor(
     private val getSubscriptionByIdUseCase: GetSubscriptionbyIdUsecase,
     private val addSubscriptionUseCase: AddSubscriptionUseCase,
+    private val userDataUserCase: GetUserDataUserCase,
     private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<EditSubscriptionUiState>(EditSubscriptionUiState.Loading)
     val uiState: StateFlow<EditSubscriptionUiState> = _uiState.asStateFlow()
+
+    val userData: StateFlow<UserEntity?> = userDataUserCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     fun loadSubscription(id: Int) {
         viewModelScope.launch {
@@ -48,7 +59,7 @@ class EditSubscriptionViewModel @Inject constructor(
         viewModelScope.launch {
             val price = priceInput.toDoubleOrNull() ?: 0.0
 
-            // Create updated object maintaining the original ID
+
             val updatedSubscription = originalSubscription.copy(
                 price = price,
                 billingCycle = billingCycle,
@@ -59,7 +70,7 @@ class EditSubscriptionViewModel @Inject constructor(
                 reminderDaysBefore = reminderDaysBefore
             )
 
-            // Insert (Replace) in DB
+
             addSubscriptionUseCase(updatedSubscription)
 
             // Update Reminder
@@ -74,10 +85,7 @@ class EditSubscriptionViewModel @Inject constructor(
                     reminderDaysBefore = reminderDaysBefore
                 )
             } else {
-                // If disabled, we might want to cancel the worker,
-                // but currently ReminderScheduler only has schedule.
-                // Assuming scheduleReminder handles replacement/cancellation internally or existing worker continues.
-                // ideally: reminderScheduler.cancelReminder(updatedSubscription.id)
+                reminderScheduler.cancelReminder(updatedSubscription.id)
             }
 
             onSuccess()
