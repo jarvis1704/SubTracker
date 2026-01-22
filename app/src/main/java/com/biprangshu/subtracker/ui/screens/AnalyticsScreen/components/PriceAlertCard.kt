@@ -21,6 +21,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.biprangshu.subtracker.data.local.entity.PriceAlertEntity
 
@@ -30,6 +31,9 @@ fun PriceAlertCard(
     onDismiss: () -> Unit,
     onUpdate: () -> Unit
 ) {
+
+    val hapticFeedback = LocalHapticFeedback.current
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f),

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Repeat
@@ -70,7 +71,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -105,10 +108,12 @@ fun AddSubscriptionDetailsScreen(
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
     val singleItemShape = RoundedCornerShape(24.dp)
 
+    val hapticFeedback = LocalHapticFeedback.current
+
     // State Holders
     var currentName by remember { mutableStateOf(name) }
     var price by remember { mutableStateOf("") }
-    var selectedCycleIndex by remember { mutableIntStateOf(0) } // 0: Monthly, 1: Yearly
+    var selectedCycleIndex by remember { mutableIntStateOf(0) }
     val cycles = listOf("Monthly", "Yearly")
 
     // Date Picker State
@@ -165,6 +170,7 @@ fun AddSubscriptionDetailsScreen(
 
             // 1. Price Input (Big & Expressive)
             Text(
+                //todo: fix according to selected interval
                 text = "Monthly Price",
                 style = MaterialTheme.typography.titleMedium,
                 color = colorScheme.primary,
@@ -229,7 +235,10 @@ fun AddSubscriptionDetailsScreen(
                             cycles.forEachIndexed { index, label ->
                                 SegmentedButton(
                                     selected = index == selectedCycleIndex,
-                                    onClick = { selectedCycleIndex = index },
+                                    onClick = {
+                                        selectedCycleIndex = index
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                              },
                                     shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
                                     icon = {}
                                 ) {
@@ -254,7 +263,10 @@ fun AddSubscriptionDetailsScreen(
                     label = "First Payment",
                     value = dateString,
                     shape = middleItemShape,
-                    onClick = { showDatePicker = true }
+                    onClick = {
+                        showDatePicker = true
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                    }
                 )
 
                 ClickableInputItem(
@@ -262,7 +274,9 @@ fun AddSubscriptionDetailsScreen(
                     label = "Category",
                     value = category,
                     shape = bottomItemShape,
-                    onClick = { /*no need, already set*/ }
+                    onClick = { /*no need, already set*/
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
+                    }
                 )
             }
 
@@ -310,7 +324,26 @@ fun AddSubscriptionDetailsScreen(
                     trailingContent = {
                         Switch(
                             checked = remindersEnabled,
-                            onCheckedChange = { remindersEnabled = it }
+                            onCheckedChange = { remindersEnabled = it },
+                            thumbContent = {
+                                if (remindersEnabled) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                        tint = colorScheme.onPrimary
+                                    )
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                        tint = colorScheme.onPrimary
+                                    )
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+                                }
+                            }
                         )
                     },
                     leadingContent = {
@@ -322,15 +355,16 @@ fun AddSubscriptionDetailsScreen(
                     )
                 )
 
-                // Reminder Days Slider (Visible only if enabled)
+
                 if (remindersEnabled) {
                     ListItem(
                         headlineContent = {
                             Column {
-                                //todo: add haptic feedback to the slider
                                 Slider(
                                     value = reminderDaysBefore,
-                                    onValueChange = { reminderDaysBefore = it },
+                                    onValueChange = { reminderDaysBefore = it
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                                    },
                                     valueRange = 1f..7f,
                                     steps = 5
                                 )
@@ -361,6 +395,7 @@ fun AddSubscriptionDetailsScreen(
                         onSuccess = onSaveSuccess,
                         color= color
                     )
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

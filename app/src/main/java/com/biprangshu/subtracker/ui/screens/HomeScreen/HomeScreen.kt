@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,8 @@ fun HomeScreen(
     val totalMonthly by viewModel.totalMonthlySpend.collectAsState()
 
     val userData by viewModel.userData.collectAsState()
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -77,7 +81,7 @@ fun HomeScreen(
                 )
                 Spacer(Modifier.height(8.dp))
 
-                // Note: Yearly logic can be added to ViewModel later
+
                 Text(
                     text = "Total Yearly: ${userData?.preferredCurrency}${String.format("%.2f", totalMonthly * 12)}",
                     style = MaterialTheme.typography.titleLarge
@@ -115,6 +119,7 @@ fun HomeScreen(
                             onNavigate = {
                                     route ->
                                 onNavigate(route)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                             },
                             modifier = Modifier.sharedBoundsReveal(
                                 sharedTransitionScope = sharedTransitionScope,

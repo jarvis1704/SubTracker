@@ -52,8 +52,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -76,6 +78,8 @@ fun AboutScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val context = LocalContext.current
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     // Helper to open URLs
     fun openUrl(url: String) {
@@ -135,7 +139,6 @@ fun AboutScreen(
         ) {
             item { Spacer(Modifier.height(8.dp)) }
 
-            // --- App Info Card ---
             item {
                 Box(
                     modifier = Modifier
@@ -146,9 +149,9 @@ fun AboutScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        // App Icon Placeholder
+
                         Icon(
-                            painterResource(R.drawable.ic_launcher_monochrome), // Replace with R.drawable.ic_launcher_foreground
+                            painterResource(R.drawable.ic_launcher_monochrome),
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null,
                             modifier = Modifier
@@ -175,9 +178,11 @@ fun AboutScreen(
                         }
                         Spacer(Modifier.weight(1f))
 
-                        // Action Buttons (e.g., GitHub repo)
+
                         FilledTonalIconButton(
-                            onClick = { openUrl("https://github.com/biprangshu/SubTracker") },
+                            onClick = { openUrl("https://github.com/biprangshu/SubTracker")
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                      },
                             shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(
@@ -190,7 +195,6 @@ fun AboutScreen(
                 }
             }
 
-            // --- Developer Info Card ---
             item {
                 Box(
                     modifier = Modifier
@@ -235,7 +239,9 @@ fun AboutScreen(
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 socialLinks.forEach { link ->
                                     FilledTonalIconButton(
-                                        onClick = { openUrl(link.url) },
+                                        onClick = { openUrl(link.url)
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                                  },
                                         shapes = IconButtonDefaults.shapes(),
                                         modifier = Modifier.width(52.dp)
                                     ) {
@@ -271,6 +277,7 @@ fun AboutScreen(
         }
     }
 
+    //todo: do something about the long license text
     if (showLicense) {
         SimpleLicenseBottomSheet(onDismiss = { showLicense = false })
     }

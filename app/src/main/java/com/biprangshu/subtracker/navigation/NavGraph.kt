@@ -15,6 +15,8 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -43,6 +45,7 @@ fun NavGraph(
     innerPadding: PaddingValues
 ) {
     val motionScheme = MaterialTheme.motionScheme
+    val hapticFeedback = LocalHapticFeedback.current
 
     fun isMainTab(key: Any?): Boolean {
         return when (key) {
@@ -132,8 +135,15 @@ fun NavGraph(
                             SubscriptionDetailsScreen(
                                 innerPadding = innerPadding,
                                 subscriptionId = key.subscriptionId,
-                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
-                                onEditClick = { id -> backStack.add(Route.EditSubscriptionScreen(id)) },
+                                onBackClick = {
+                                    backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                              },
+                                onEditClick = {
+                                    id ->
+                                    backStack.add(Route.EditSubscriptionScreen(id))
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                              },
                                 sharedTransitionScope = this@SharedTransitionLayout
                             )
                         }
@@ -152,7 +162,9 @@ fun NavGraph(
                             EditSubscriptionScreen(
                                 subscriptionId = key.subscriptionId,
                                 innerPaddingValues = innerPadding,
-                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onBackClick = { backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                              },
                                 onSaveSuccess = { backStack.removeAt(backStack.lastIndex) }
                             )
                         }
@@ -166,10 +178,12 @@ fun NavGraph(
                                         backStack.clear()
                                         backStack.add(route)
                                     }
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                                 },
                                 onGetStartedClick = {
                                     showCurrencySetModal = true
                                     onboardingViewModel.updateFirstAppOpen(false)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                                 }
                             )
                         }
@@ -182,7 +196,9 @@ fun NavGraph(
                                 iconResId = key.iconRes,
                                 color = key.colour,
                                 category = key.category,
-                                onBackClick = { backStack.removeAt(backStack.lastIndex) },
+                                onBackClick = { backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                              },
                                 onSaveSuccess = {
                                     while (backStack.last() !is Route.HomeScreen) {
                                         backStack.removeAt(backStack.lastIndex)
@@ -196,6 +212,7 @@ fun NavGraph(
                             AboutScreen(
                                 onBack = {
                                     backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                 }
                             )
                         }
@@ -204,7 +221,9 @@ fun NavGraph(
                     is Route.AISettingsScreen -> {
                         NavEntry(key) {
                             AISettingsScreen(
-                                onBack = { backStack.removeAt(backStack.lastIndex) }
+                                onBack = { backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                }
                             )
                         }
                     }
@@ -212,7 +231,9 @@ fun NavGraph(
                     is Route.NotificationSettingsScreen -> {
                         NavEntry(key) {
                             NotificationSettingsScreen(
-                                onBack = { backStack.removeAt(backStack.lastIndex) }
+                                onBack = { backStack.removeAt(backStack.lastIndex)
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                }
                             )
                         }
                     }

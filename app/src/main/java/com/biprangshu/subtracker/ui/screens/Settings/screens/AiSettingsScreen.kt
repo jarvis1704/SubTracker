@@ -131,7 +131,7 @@ fun AISettingsScreen(
                         value = days.toFloat(),
                         onValueChange = {
                             viewModel.setPeriodicity(it.roundToInt())
-                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
                                         },
                         valueRange = 3f..7f,
                         steps = 3, // (7-3)/1 - 1 = 3 steps (3,4,5,6,7)

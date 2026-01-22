@@ -37,6 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -73,6 +75,8 @@ fun AnalyticsScreen(
 
     val insights by analysisScreenViewModel.aiInsights.collectAsState()
     val forecasts by analysisScreenViewModel.forecastData.collectAsState()
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     //vico model producer
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -164,6 +168,7 @@ fun AnalyticsScreen(
                 IconButton(
                     onClick = {
                         showChatSheet = true
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                     }
                 ) {
                     Icon(
@@ -201,9 +206,12 @@ fun AnalyticsScreen(
                     priceAlerts.forEach { alert ->
                         PriceAlertCard(
                             alert = alert,
-                            onDismiss = { analysisScreenViewModel.dismissAlert(alert) },
+                            onDismiss = { analysisScreenViewModel.dismissAlert(alert)
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
+                                        },
                             onUpdate = {
                                 onNavigate(Route.EditSubscriptionScreen(alert.subscriptionId))
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                             }
                         )
                         Spacer(Modifier.height(16.dp))

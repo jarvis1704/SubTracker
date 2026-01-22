@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +41,8 @@ fun SettingsScreen(
     val singleItemShape = RoundedCornerShape(24.dp)
 
     val isBiometricEnabled by settingsScreenViewModel.isBiometricEnabled.collectAsState()
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -115,7 +119,9 @@ fun SettingsScreen(
                         title = "About SubTracker",
                         subtitle = BuildConfig.VERSION_NAME,
                         shape = singleItemShape,
-                        onClick = { onNavigate(Route.AboutScreen) }
+                        onClick = { onNavigate(Route.AboutScreen)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                        }
                     )
                 }
             }

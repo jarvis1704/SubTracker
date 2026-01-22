@@ -36,15 +36,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.biprangshu.subtracker.navigation.Route
 
-/**
- * Data class to represent a single item in the bottom navigation bar.
- */
+
 data class BottomNavItem(
     val label: String,
     val selectedIcon: ImageVector,
@@ -52,10 +52,7 @@ data class BottomNavItem(
     val route: Route
 )
 
-/**
- * List of navigation items based on the provided design.
- * We use 'Filled' icons for the selected state and 'Outlined' for the unselected state.
- */
+
 val bottomNavItems = listOf(
     BottomNavItem(
         label = "Dashboard",
@@ -77,11 +74,7 @@ val bottomNavItems = listOf(
     )
 )
 
-/**
- * A Material 3 expressive bottom navigation bar with animated icons.
- *
- * @param modifier The modifier to be applied to the NavigationBar.
- */
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SubTrackerBottomAppBar(
@@ -89,22 +82,20 @@ fun SubTrackerBottomAppBar(
     onNavigate: (Route) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // State to keep track of the currently selected item index.
-    // Since there is no navigation graph yet, we manage this state locally.
     var selectedItemIndex by remember { mutableIntStateOf(0) }
 
-    // This Box replicates the positioning seen in the demo app's Scaffold bottomBar
+    var hapticFeedback = LocalHapticFeedback.current
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 42.dp), // Added padding to float it off the bottom edge
+            .padding(bottom = 42.dp),
         contentAlignment = Alignment.Center
     ) {
         HorizontalFloatingToolbar(
             expanded = true,
-            // Uses the 'vibrant' colors from the demo app
             colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
-                toolbarContainerColor = MaterialTheme.colorScheme.surfaceContainer, // Adjusted for standard M3
+                toolbarContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                 toolbarContentColor = MaterialTheme.colorScheme.onSurface
             ),
             content = {
@@ -115,15 +106,16 @@ fun SubTrackerBottomAppBar(
                         checked = isSelected,
                         onCheckedChange = {
                             onNavigate(item.route)
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                         },
-                        // Styling matches the demo app's usage
+
                         colors = ToggleButtonDefaults.toggleButtonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             checkedContainerColor = MaterialTheme.colorScheme.primary,
                             checkedContentColor = MaterialTheme.colorScheme.onPrimary
                         ),
-                        // CircleShape is used for all corners in the demo app
+
                         shapes = ToggleButtonDefaults.shapes(
                             CircleShape,
                             CircleShape,
@@ -135,7 +127,7 @@ fun SubTrackerBottomAppBar(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         ) {
-                            // Icon Animation
+
                             Crossfade(targetState = isSelected, label = "IconFade") { selected ->
                                 Icon(
                                     imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
@@ -143,7 +135,7 @@ fun SubTrackerBottomAppBar(
                                 )
                             }
 
-                            // Text Expansion Animation like in the demo
+
                             AnimatedVisibility(
                                 visible = isSelected,
                                 enter = expandHorizontally(),

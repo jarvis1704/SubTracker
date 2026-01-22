@@ -49,8 +49,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -89,6 +91,7 @@ fun AddSubscriptionScreen(
     }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val hapticFeedback = LocalHapticFeedback.current
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -154,7 +157,7 @@ fun AddSubscriptionScreen(
                             contentDescription = "Search"
                         )
                     },
-                    shape = RoundedCornerShape(24.dp), // Expressive roundness
+                    shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.3f),
                         unfocusedContainerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.3f),
@@ -187,6 +190,7 @@ fun AddSubscriptionScreen(
                                 category = option.category
                             )
                         )
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                     }
                 )
             }

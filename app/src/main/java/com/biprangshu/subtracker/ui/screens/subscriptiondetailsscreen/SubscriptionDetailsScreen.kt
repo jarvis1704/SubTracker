@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,7 @@ fun SubscriptionDetailsScreen(
     var showDeleteSheet by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val hapticFeedback = LocalHapticFeedback.current
 
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
@@ -179,7 +182,10 @@ fun SubscriptionDetailsScreen(
 
                 // Delete Button
                 FilledTonalButton(
-                    onClick = { showDeleteSheet = true },
+                    onClick = {
+                        showDeleteSheet = true
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                              },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,
@@ -198,7 +204,10 @@ fun SubscriptionDetailsScreen(
 
     if (showDeleteSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showDeleteSheet = false },
+            onDismissRequest = {
+                showDeleteSheet = false
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
+                               },
             containerColor = MaterialTheme.colorScheme.surface,
             dragHandle = { BottomSheetDefaults.DragHandle() }
         ) {
@@ -232,7 +241,11 @@ fun SubscriptionDetailsScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 
                     OutlinedButton(
-                        onClick = { showDeleteSheet = false },
+                        onClick = {
+                            showDeleteSheet = false
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
+
+                                  },
                         modifier = Modifier.weight(1f).height(48.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                     ) {
@@ -244,6 +257,7 @@ fun SubscriptionDetailsScreen(
                         onClick = {
                             viewModel.deleteSubscription {
                                 showDeleteSheet = false
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                                 onBackClick()
                             }
                         },

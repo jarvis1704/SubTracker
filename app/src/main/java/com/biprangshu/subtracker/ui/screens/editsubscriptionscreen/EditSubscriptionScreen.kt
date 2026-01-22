@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Repeat
@@ -68,7 +69,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -99,6 +102,8 @@ fun EditSubscriptionScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val userData by viewModel.userData.collectAsState()
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     // Loading & Error states can be handled here; for now, we render content if Success
     if (uiState is EditSubscriptionUiState.Success) {
@@ -230,7 +235,10 @@ fun EditSubscriptionScreen(
                                 cycles.forEachIndexed { index, label ->
                                     SegmentedButton(
                                         selected = index == selectedCycleIndex,
-                                        onClick = { selectedCycleIndex = index },
+                                        onClick = {
+                                            selectedCycleIndex = index
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                                  },
                                         shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
                                         icon = {}
                                     ) {
@@ -264,7 +272,7 @@ fun EditSubscriptionScreen(
                         label = "Category",
                         value = category,
                         shape = bottomItemShape,
-                        onClick = { /* TODO: Open Category Sheet */ }
+                        onClick = { /* no need, already set*/ }
                     )
                 }
 
@@ -312,7 +320,26 @@ fun EditSubscriptionScreen(
                         trailingContent = {
                             Switch(
                                 checked = remindersEnabled,
-                                onCheckedChange = { remindersEnabled = it }
+                                onCheckedChange = { remindersEnabled = it },
+                                thumbContent = {
+                                    if (remindersEnabled){
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                    }else{
+                                        Icon(
+                                            imageVector = Icons.Default.Close,
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+                                    }
+                                }
                             )
                         },
                         leadingContent = {
@@ -331,7 +358,10 @@ fun EditSubscriptionScreen(
                                 Column {
                                     Slider(
                                         value = reminderDaysBefore,
-                                        onValueChange = { reminderDaysBefore = it },
+                                        onValueChange = {
+                                            reminderDaysBefore = it
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                                        },
                                         valueRange = 1f..7f,
                                         steps = 5
                                     )
@@ -359,6 +389,7 @@ fun EditSubscriptionScreen(
                             reminderDaysBefore = reminderDaysBefore.toInt(),
                             onSuccess = onSaveSuccess
                         )
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
