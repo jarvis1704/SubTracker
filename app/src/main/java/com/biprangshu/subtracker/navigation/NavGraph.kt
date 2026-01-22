@@ -181,6 +181,7 @@ fun NavGraph(
                                 name = key.name,
                                 iconResId = key.iconRes,
                                 color = key.colour,
+                                category = key.category,
                                 onBackClick = { backStack.removeAt(backStack.lastIndex) },
                                 onSaveSuccess = {
                                     while (backStack.last() !is Route.HomeScreen) {

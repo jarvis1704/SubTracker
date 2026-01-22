@@ -30,7 +30,8 @@ sealed interface Route: NavKey {
     data class AddSubscriptionDetailsScreen(
         val name: String,
         val iconRes: Int,
-        val colour: Long
+        val colour: Long,
+        val category: String
     ): Route, NavKey
 
     @Serializable

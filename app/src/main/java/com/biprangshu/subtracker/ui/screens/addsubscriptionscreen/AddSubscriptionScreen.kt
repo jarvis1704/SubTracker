@@ -183,7 +183,8 @@ fun AddSubscriptionScreen(
                             Route.AddSubscriptionDetailsScreen(
                                 name = option.name,
                                 iconRes = option.iconRes,
-                                colour = option.color
+                                colour = option.color,
+                                category = option.category
                             )
                         )
                     }

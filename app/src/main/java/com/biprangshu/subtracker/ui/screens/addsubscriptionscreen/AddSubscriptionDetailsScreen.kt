@@ -93,6 +93,7 @@ fun AddSubscriptionDetailsScreen(
     color: Long,
     name: String,
     iconResId: Int,
+    category: String,
     innerPaddingValues: PaddingValues,
     onBackClick: () -> Unit = {},
     onSaveSuccess: () -> Unit = {},
@@ -115,7 +116,7 @@ fun AddSubscriptionDetailsScreen(
     var selectedDateMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDateMillis)
 
-    var category by remember { mutableStateOf("Entertainment") }
+    var category by remember { mutableStateOf(category) }
     var paymentMethod by remember { mutableStateOf("") }
     var remindersEnabled by remember { mutableStateOf(true) }
     var reminderDaysBefore by remember { mutableFloatStateOf(1f) }
@@ -256,13 +257,12 @@ fun AddSubscriptionDetailsScreen(
                     onClick = { showDatePicker = true }
                 )
 
-                // Category (Mock Selection)
                 ClickableInputItem(
                     icon = Icons.Default.Category,
                     label = "Category",
                     value = category,
                     shape = bottomItemShape,
-                    onClick = { /* TODO: Open Category Sheet */ }
+                    onClick = { /*no need, already set*/ }
                 )
             }
 
@@ -347,7 +347,6 @@ fun AddSubscriptionDetailsScreen(
             // Save Button
             Button(
                 onClick = {
-                    //todo: add remind before thingy
                     addSubscriptionViewModel.saveSubscription(
                         name = currentName,
                         priceInput = price,
