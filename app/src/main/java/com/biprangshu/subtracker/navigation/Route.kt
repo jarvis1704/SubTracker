@@ -40,4 +40,7 @@ sealed interface Route: NavKey {
     data class EditSubscriptionScreen(
         val subscriptionId: Int
     ): Route, NavKey
+
+    @Serializable
+    data object AISettingsScreen: Route, NavKey
 }
