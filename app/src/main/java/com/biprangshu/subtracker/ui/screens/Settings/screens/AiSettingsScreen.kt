@@ -12,6 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +30,7 @@ fun AISettingsScreen(
     viewModel: AISettingsViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val hapticFeedback = LocalHapticFeedback.current
 
     val optimizerEnabled by viewModel.isOptimizerEnabled.collectAsState()
     val burnRateEnabled by viewModel.isBurnRateEnabled.collectAsState()
@@ -126,16 +129,12 @@ fun AISettingsScreen(
                     Spacer(Modifier.height(12.dp))
                     Slider(
                         value = days.toFloat(),
-                        onValueChange = { viewModel.setPeriodicity(it.roundToInt()) },
+                        onValueChange = {
+                            viewModel.setPeriodicity(it.roundToInt())
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                                        },
                         valueRange = 3f..7f,
                         steps = 3, // (7-3)/1 - 1 = 3 steps (3,4,5,6,7)
-                        thumb = {
-                            SliderDefaults.Thumb(
-                                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                                colors = SliderDefaults.colors(),
-                                thumbSize = androidx.compose.ui.unit.DpSize(20.dp, 20.dp)
-                            )
-                        }
                     )
                     Text(
                         "AI tasks consume battery. Higher intervals save power.",
