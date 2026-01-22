@@ -12,6 +12,9 @@ interface PriceAlertDao {
     @Query("SELECT * FROM price_alerts ORDER BY detectedAt DESC")
     fun getAllAlerts(): Flow<List<PriceAlertEntity>>
 
+    @Query("SELECT * FROM price_alerts WHERE subscriptionId = :subId LIMIT 1")
+    fun getAlertForSubscription(subId: Int): Flow<PriceAlertEntity?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlerts(alerts: List<PriceAlertEntity>)
 
