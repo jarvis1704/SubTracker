@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.biprangshu.subtracker.data.local.ForecastDao
-import com.biprangshu.subtracker.data.local.ForecastEntity
+import com.biprangshu.subtracker.data.local.dao.ForecastDao
+import com.biprangshu.subtracker.data.local.entity.ForecastEntity
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai

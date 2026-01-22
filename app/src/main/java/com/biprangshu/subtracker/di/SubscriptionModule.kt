@@ -1,6 +1,6 @@
 package com.biprangshu.subtracker.di
 
-import com.biprangshu.subtracker.data.repository.SubscriptionRepositoryImpl
+import com.biprangshu.subtracker.data.local.repository.SubscriptionRepositoryImpl
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import dagger.Binds
 import dagger.Module

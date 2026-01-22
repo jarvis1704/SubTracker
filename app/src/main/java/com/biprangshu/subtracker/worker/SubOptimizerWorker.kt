@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.biprangshu.subtracker.data.local.InsightDao
-import com.biprangshu.subtracker.data.local.InsightEntity
+import com.biprangshu.subtracker.data.local.dao.InsightDao
+import com.biprangshu.subtracker.data.local.entity.InsightEntity
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import dagger.assisted.Assisted

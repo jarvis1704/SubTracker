@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.biprangshu.subtracker.data.local.PriceAlertDao
-import com.biprangshu.subtracker.data.local.PriceAlertEntity
+import com.biprangshu.subtracker.data.local.dao.PriceAlertDao
+import com.biprangshu.subtracker.data.local.entity.PriceAlertEntity
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.google.firebase.Firebase

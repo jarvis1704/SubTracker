@@ -2,7 +2,7 @@ package com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.biprangshu.subtracker.data.local.UserEntity
+import com.biprangshu.subtracker.data.local.entity.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.AddSubscriptionUseCase
 import com.biprangshu.subtracker.domain.usecase.GetUserDataUserCase

@@ -1,7 +1,7 @@
-package com.biprangshu.subtracker.data.repository
+package com.biprangshu.subtracker.data.local.repository
 
-import com.biprangshu.subtracker.data.local.SubscriptionDao
-import com.biprangshu.subtracker.data.local.SubscriptionEntity
+import com.biprangshu.subtracker.data.local.dao.SubscriptionDao
+import com.biprangshu.subtracker.data.local.entity.SubscriptionEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import kotlinx.coroutines.flow.Flow

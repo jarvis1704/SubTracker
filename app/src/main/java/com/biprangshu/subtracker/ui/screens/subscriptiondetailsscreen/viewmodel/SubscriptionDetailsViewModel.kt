@@ -2,9 +2,9 @@ package com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.biprangshu.subtracker.data.local.PriceAlertDao
-import com.biprangshu.subtracker.data.local.PriceAlertEntity
-import com.biprangshu.subtracker.data.local.UserEntity
+import com.biprangshu.subtracker.data.local.dao.PriceAlertDao
+import com.biprangshu.subtracker.data.local.entity.PriceAlertEntity
+import com.biprangshu.subtracker.data.local.entity.UserEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.usecase.DeleteSubscriptionUseCase
 import com.biprangshu.subtracker.domain.usecase.GetSubscriptionbyIdUsecase

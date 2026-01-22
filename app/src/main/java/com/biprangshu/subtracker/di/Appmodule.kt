@@ -2,15 +2,16 @@ package com.biprangshu.subtracker.di
 
 import android.app.Application
 import androidx.room.Room
-import com.biprangshu.subtracker.data.local.AppDatabase
-import com.biprangshu.subtracker.data.local.ForecastDatabase
-import com.biprangshu.subtracker.data.local.InsightDao
-import com.biprangshu.subtracker.data.local.InsightDatabase
-import com.biprangshu.subtracker.data.local.PriceAlertDao
-import com.biprangshu.subtracker.data.local.PriceAlertDatabase
-import com.biprangshu.subtracker.data.local.SubscriptionDao
-import com.biprangshu.subtracker.data.local.UserDataDao
-import com.biprangshu.subtracker.data.local.UserDatabase
+import com.biprangshu.subtracker.data.local.database.AppDatabase
+import com.biprangshu.subtracker.data.local.database.ForecastDatabase
+import com.biprangshu.subtracker.data.local.dao.InsightDao
+import com.biprangshu.subtracker.data.local.database.InsightDatabase
+import com.biprangshu.subtracker.data.local.dao.PriceAlertDao
+import com.biprangshu.subtracker.data.local.database.PriceAlertDatabase
+import com.biprangshu.subtracker.data.local.dao.SubscriptionDao
+import com.biprangshu.subtracker.data.local.dao.UserDataDao
+import com.biprangshu.subtracker.data.local.database.UserDatabase
+import com.biprangshu.subtracker.data.local.dao.ForecastDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -93,7 +94,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideForecastDao(db: ForecastDatabase): com.biprangshu.subtracker.data.local.ForecastDao {
+    fun provideForecastDao(db: ForecastDatabase): ForecastDao {
         return db.forecastDAO()
     }
 

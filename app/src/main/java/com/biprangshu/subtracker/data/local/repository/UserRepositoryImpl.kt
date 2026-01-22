@@ -1,7 +1,7 @@
-package com.biprangshu.subtracker.data.repository
+package com.biprangshu.subtracker.data.local.repository
 
-import com.biprangshu.subtracker.data.local.UserDataDao
-import com.biprangshu.subtracker.data.local.UserEntity
+import com.biprangshu.subtracker.data.local.dao.UserDataDao
+import com.biprangshu.subtracker.data.local.entity.UserEntity
 import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
