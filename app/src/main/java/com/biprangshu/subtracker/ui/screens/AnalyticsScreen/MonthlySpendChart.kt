@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.motionScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -44,11 +45,11 @@ fun MonthlySpendChart(
     modelProducer: CartesianChartModelProducer,
     modifier: Modifier = Modifier,
     xValueFormatter: CartesianValueFormatter = CartesianValueFormatter.Default,
-    thickness: Dp = 24.dp, // Thicker bars like in the image
+    thickness: Dp = 24.dp,
     currency: String,
     animationSpec: AnimationSpec<Float>? = motionScheme.defaultEffectsSpec()
 ) {
-    // Formatter for Y-Axis ($ values)
+
     val currencyFormatter = CartesianValueFormatter { _, value, _ ->
         "${currency}${value.toInt()}"
     }
@@ -89,7 +90,8 @@ fun MonthlySpendChart(
                     label = rememberTextComponent(colorScheme.onSurfaceVariant),
                     tick = rememberLineComponent(Fill.Transparent),
                     guideline = rememberLineComponent(Fill.Transparent),
-                    valueFormatter = xValueFormatter
+                    valueFormatter = xValueFormatter,
+                    itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 1 }) }
                 ),
                 marker = rememberDefaultCartesianMarker(
                     label = rememberTextComponent(
