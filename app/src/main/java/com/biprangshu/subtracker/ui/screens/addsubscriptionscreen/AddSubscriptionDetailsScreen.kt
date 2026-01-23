@@ -102,7 +102,7 @@ fun AddSubscriptionDetailsScreen(
     onSaveSuccess: () -> Unit = {},
     addSubscriptionViewModel: AddSubscriptionViewModel = hiltViewModel()
 ) {
-    // Shapes for grouped list items (Expressive Style)
+
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
@@ -110,13 +110,13 @@ fun AddSubscriptionDetailsScreen(
 
     val hapticFeedback = LocalHapticFeedback.current
 
-    // State Holders
+
     var currentName by remember { mutableStateOf(name) }
     var price by remember { mutableStateOf("") }
     var selectedCycleIndex by remember { mutableIntStateOf(0) }
     val cycles = listOf("Monthly", "Yearly")
 
-    // Date Picker State
+
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedDateMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDateMillis)
@@ -168,10 +168,8 @@ fun AddSubscriptionDetailsScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 1. Price Input (Big & Expressive)
             Text(
-                //todo: fix according to selected interval
-                text = "Monthly Price",
+                text = "${if (cycles[selectedCycleIndex] == "Monthly") "Monthly" else "Yearly"} Price",
                 style = MaterialTheme.typography.titleMedium,
                 color = colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -218,7 +216,7 @@ fun AddSubscriptionDetailsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 2. Plan Details Group
+
             Text(
                 "Plan Details",
                 style = MaterialTheme.typography.labelLarge,
@@ -254,7 +252,7 @@ fun AddSubscriptionDetailsScreen(
                     modifier = Modifier.clip(topItemShape)
                 )
 
-                // First Payment Date
+
                 val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                 val dateString = dateFormatter.format(Date(selectedDateMillis))
 
@@ -282,7 +280,7 @@ fun AddSubscriptionDetailsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 3. Payment & Reminders Group
+
             Text(
                 "Preferences",
                 style = MaterialTheme.typography.labelLarge,
@@ -313,7 +311,7 @@ fun AddSubscriptionDetailsScreen(
                     modifier = Modifier.clip(topItemShape)
                 )
 
-                // Reminders Toggle
+
                 ListItem(
                     headlineContent = { Text("Remind me") },
                     supportingContent = {
@@ -414,11 +412,11 @@ fun AddSubscriptionDetailsScreen(
                 )
             }
 
-            // Padding for bottom nav/system bars
+
             Spacer(modifier = Modifier.height(innerPaddingValues.calculateBottomPadding() + 24.dp))
         }
 
-        // Date Picker Dialog
+
         if (showDatePicker) {
             DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },
