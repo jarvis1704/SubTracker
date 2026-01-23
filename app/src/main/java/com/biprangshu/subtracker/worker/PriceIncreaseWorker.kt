@@ -11,6 +11,9 @@ import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.Tool
+import com.google.firebase.ai.type.generationConfig
+import com.google.firebase.ai.type.thinkingConfig
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
@@ -48,10 +51,21 @@ class PriceIncreaseWorker @AssistedInject constructor(
             val user = userDataRepository.getUser().first()
             val userCurrency = user?.preferredCurrency ?: "$"
 
-            val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.5-flash")
+            val generationConfig = generationConfig {
+                thinkingConfig = thinkingConfig {
+                    thinkingBudget = 512
+                }
+                temperature = 0.1f
+            }
 
-            // 3. Prompt Engineering
+            val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
+                .generativeModel(
+                    "gemini-2.5-flash",
+                    generationConfig = generationConfig,
+                    tools = listOf(Tool.googleSearch())
+                )
+
+
             val prompt = """
                 You are an Inflation Watchdog.
                 
@@ -72,23 +86,27 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 **Output Rules**:
                 1. Ignore small currency conversion differences.
                 2. **CRITICAL**: In the 'alert_message', ALWAYS use the user's currency symbol ("$userCurrency") for the price. Do NOT use '$' unless the user's currency is actually '$'.
+                3. Return ONLY valid JSON.
+                4. Do NOT use Markdown.
                 
                 Return a JSON list:
-                [
-                  {
-                    "subscription_id": 12,
-                    "service_name": "Spotify",
-                    "current_tracked_price": 10.99,
-                    "actual_market_price": 11.99,
-                    "alert_message": "Spotify Premium is now $userCurrency 11.99. Your tracked price is outdated.",
-                    "is_urgent": true
-                  }
-                ]
+            [
+              {
+                "subscription_id": 12,
+                "service_name": "Spotify",
+                "current_tracked_price": 10.99,
+                "actual_market_price": 11.99,
+                "alert_message": "Spotify Premium is now...",
+                "is_urgent": true
+              }
+            ]
                 
                 If no discrepancies found, return [].
             """.trimIndent()
 
             val response = generativeModel.generateContent(prompt)
+
+
             val cleanJson = (response.text ?: "[]").replace("```json", "").replace("```", "").trim()
             val results = Json { ignoreUnknownKeys = true }.decodeFromString<List<PriceCheckResult>>(cleanJson)
 

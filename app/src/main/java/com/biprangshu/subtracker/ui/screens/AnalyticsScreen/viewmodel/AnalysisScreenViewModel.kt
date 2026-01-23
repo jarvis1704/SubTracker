@@ -25,8 +25,11 @@ import com.biprangshu.subtracker.worker.SubOptimizerWorker
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.generationConfig
+import com.google.firebase.ai.type.thinkingConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -135,23 +138,20 @@ class AnalysisScreenViewModel @Inject constructor(
 
     fun refreshAnalysis() {
 
-        //insight generation
-        val workRequest = OneTimeWorkRequestBuilder<SubOptimizerWorker>()
-            .addTag("SubOptimizerManual")
-            .build()
-        WorkManager.getInstance(context).enqueue(workRequest)
+        viewModelScope.launch {
 
-        //burn rate analysis
-        val burnRateRequest = OneTimeWorkRequestBuilder<BurnRateWorker>()
-            .addTag("BurnRateManual")
-            .build()
+            val workManager = WorkManager.getInstance(context)
 
-        //price increase check
-        val priceIncreaseRequest = OneTimeWorkRequestBuilder<PriceIncreaseWorker>()
-            .addTag("WatchdogManual")
-            .build()
+            workManager.enqueue(OneTimeWorkRequestBuilder<SubOptimizerWorker>().build())
 
-        WorkManager.getInstance(context).enqueue(listOf(workRequest, burnRateRequest, priceIncreaseRequest))
+            delay(2000)
+
+            workManager.enqueue(OneTimeWorkRequestBuilder<BurnRateWorker>().build())
+
+            delay(2000)
+
+            workManager.enqueue(OneTimeWorkRequestBuilder<PriceIncreaseWorker>().build())
+        }
     }
 
     //ai chat logic
@@ -204,8 +204,12 @@ class AnalysisScreenViewModel @Inject constructor(
                     - Be friendly but direct.
                 """.trimIndent()
 
+
+
                 val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-                    .generativeModel("gemini-3-flash-preview")
+                    .generativeModel(
+                        "gemini-2.5-flash-lite"
+                    )
 
                 val response = generativeModel.generateContent(prompt)
                 val aiReplyText = response.text ?: "I couldn't analyze that right now."

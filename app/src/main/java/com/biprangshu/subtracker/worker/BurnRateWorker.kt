@@ -10,6 +10,8 @@ import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.generationConfig
+import com.google.firebase.ai.type.thinkingConfig
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
@@ -54,8 +56,17 @@ class BurnRateWorker @AssistedInject constructor(
                 "- ${it.name}: ${it.price} ${it.currency}, Cycle: ${it.billingCycle}, First Payment: $firstPay"
             }
 
+            val generationConfig = generationConfig {
+                thinkingConfig = thinkingConfig {
+                    thinkingBudget = 512
+                }
+            }
+
             val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.5-flash")
+                .generativeModel(
+                    "gemini-2.5-flash",
+                    generationConfig = generationConfig
+                )
 
             val prompt = """
                 Today is $currentDate.

@@ -18,6 +18,9 @@ import kotlinx.serialization.json.Json
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.Tool
+import com.google.firebase.ai.type.generationConfig
+import com.google.firebase.ai.type.thinkingConfig
 
 
 @HiltWorker
@@ -55,8 +58,19 @@ class SubOptimizerWorker @AssistedInject constructor(
             }
 
 
+            val generationConfig = generationConfig {
+                thinkingConfig = thinkingConfig {
+                    thinkingBudget = 512
+                }
+                temperature = 0.4f
+            }
+
             val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
-                .generativeModel("gemini-3-flash-preview")
+                .generativeModel(
+                    "gemini-2.5-flash",
+                    generationConfig = generationConfig,
+                    tools = listOf(Tool.googleSearch())
+                )
 
 
             val prompt = """

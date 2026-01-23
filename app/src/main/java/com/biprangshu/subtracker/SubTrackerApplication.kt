@@ -80,17 +80,19 @@ class SubTrackerApplication : Application(), Configuration.Provider {
         fun manageWorker(
             isEnabled: Boolean,
             tag: String,
-            workerClass: Class<out androidx.work.ListenableWorker>
+            workerClass: Class<out androidx.work.ListenableWorker>,
+            delayDays: Long
         ) {
             if (isEnabled) {
-                val request = PeriodicWorkRequest.Builder(workerClass, safePeriod, TimeUnit.DAYS)
+                val request = PeriodicWorkRequest.Builder(workerClass, safePeriod, TimeUnit.DAYS,)
                     .setConstraints(constraints)
+                    .setInitialDelay(delayDays, TimeUnit.DAYS)
                     .addTag(tag)
                     .build()
 
                 workManager.enqueueUniquePeriodicWork(
                     tag,
-                    ExistingPeriodicWorkPolicy.UPDATE,
+                    ExistingPeriodicWorkPolicy.KEEP,
                     request
                 )
             } else {
@@ -99,8 +101,8 @@ class SubTrackerApplication : Application(), Configuration.Provider {
         }
 
 
-        manageWorker(optimizerEnabled, "SubOptimizerPeriodic", SubOptimizerWorker::class.java)
-        manageWorker(burnRateEnabled, "BurnRatePeriodic", BurnRateWorker::class.java)
-        manageWorker(priceAlertsEnabled, "PriceAlertPeriodic", PriceIncreaseWorker::class.java)
+        manageWorker(optimizerEnabled, "SubOptimizerPeriodic", SubOptimizerWorker::class.java, 0)
+        manageWorker(burnRateEnabled, "BurnRatePeriodic", BurnRateWorker::class.java, 2)
+        manageWorker(priceAlertsEnabled, "PriceAlertPeriodic", PriceIncreaseWorker::class.java, 4)
     }
 }
