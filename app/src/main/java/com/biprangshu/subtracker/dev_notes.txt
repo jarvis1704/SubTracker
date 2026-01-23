@@ -11,11 +11,12 @@ Things to do after the intial lookup of the app:
 6. Adding a your budget spend with a horizontal progress in it
 
 Work which is to be done:
-todo: fix top subscription graph logic
-todo: add user field to put the subscription plan name
 todo: move through the final app and check for bugs
 todo: Optimise the app size and performance
 todo: build the rate your app in about and other good options
 bug: on adding subscription screen, the billing cycle choice is not respected by the 'monthly price text'
-bug: fix the bug with the top subscription graph not showing the x index correctly
+bug: fix the bug with the top subscription graph not showing the x index correctly (not fixed entirely but will through production later updates)
 bug: Prevent adding subscrptions with 0 price
+
+future fixes:
+ - add user field to put the subscription plan name
