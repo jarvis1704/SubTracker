@@ -19,3 +19,4 @@ bug: Prevent adding subscriptions with 0 price
 
 future fixes:
  - add user field to put the subscription plan name
+ - feature: add trial period and notify before the trial ends
