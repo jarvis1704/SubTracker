@@ -376,24 +376,29 @@ fun AddSubscriptionDetailsScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Save Button
+
             Button(
                 onClick = {
-                    addSubscriptionViewModel.saveSubscription(
-                        name = currentName,
-                        priceInput = price,
-                        billingCycle = cycles[selectedCycleIndex],
-                        firstPaymentDate = selectedDateMillis,
-                        category = category,
-                        paymentMethod = paymentMethod,
-                        iconResId = iconResId,
-                        iconName = name,
-                        reminderEnabled = remindersEnabled,
-                        reminderDaysBefore = reminderDaysBefore.toInt(),
-                        onSuccess = onSaveSuccess,
-                        color= color
-                    )
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    if(price.isEmpty()){
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
+                        return@Button
+                    } else {
+                        addSubscriptionViewModel.saveSubscription(
+                            name = currentName,
+                            priceInput = price,
+                            billingCycle = cycles[selectedCycleIndex],
+                            firstPaymentDate = selectedDateMillis,
+                            category = category,
+                            paymentMethod = paymentMethod,
+                            iconResId = iconResId,
+                            iconName = name,
+                            reminderEnabled = remindersEnabled,
+                            reminderDaysBefore = reminderDaysBefore.toInt(),
+                            onSuccess = onSaveSuccess,
+                            color= color
+                        )
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
