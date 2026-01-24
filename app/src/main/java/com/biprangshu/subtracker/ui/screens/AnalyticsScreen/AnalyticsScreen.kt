@@ -121,7 +121,6 @@ fun AnalyticsScreen(
             val labels = forecasts.map { it.month }
 
             burnRateProducer.runTransaction {
-                // Two series: 1. Predicted, 2. Average
                 lineSeries {
                     series(predicted)
                     series(averages)
@@ -407,7 +406,7 @@ fun AnalyticsScreen(
         }
     }
 
-    // Show Bottom Sheet when state is true
+
     if (showChatSheet) {
         FinanceAssistantSheet(
             uiState = chatState,
