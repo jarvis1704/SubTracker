@@ -45,7 +45,7 @@ fun SettingsItem(
             )
         },
         colors = ListItemDefaults.colors(
-            containerColor = colorScheme.surfaceContainerHigh // Slightly distinct from background
+            containerColor = colorScheme.surfaceContainerHigh
         ),
         modifier = Modifier
             .clip(shape)
@@ -68,7 +68,8 @@ fun SettingsItemPainterResource(
             Icon(
                 icon,
                 contentDescription = null,
-                tint = colorScheme.primary
+                tint = colorScheme.primary,
+                modifier = Modifier.size(24.dp)
             )
         },
         trailingContent = {
@@ -80,7 +81,7 @@ fun SettingsItemPainterResource(
             )
         },
         colors = ListItemDefaults.colors(
-            containerColor = colorScheme.surfaceContainerHigh // Slightly distinct from background
+            containerColor = colorScheme.surfaceContainerHigh
         ),
         modifier = Modifier
             .clip(shape)
