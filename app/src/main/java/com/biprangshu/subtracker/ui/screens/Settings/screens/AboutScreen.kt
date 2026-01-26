@@ -259,7 +259,7 @@ fun AboutScreen(
 
             item { Spacer(Modifier.height(24.dp)) }
 
-            //todo: add sharing feedback on google play
+
 
             item {
                 SettingsItemPainterResource(
@@ -291,7 +291,7 @@ fun AboutScreen(
         }
     }
 
-    //todo: do something about the long license text
+
     if (showLicense) {
         SimpleLicenseBottomSheet(onDismiss = { showLicense = false })
     }
@@ -324,7 +324,7 @@ fun SimpleLicenseBottomSheet(onDismiss: () -> Unit) {
             )
 
 
-            //todo: The full license text can be placing in a scrollable container
+
             Text(
                 text = "Copyright (c) 2025 Biprangshu\n\n" +
                         "This file is part of SubTracker.\n\n" +

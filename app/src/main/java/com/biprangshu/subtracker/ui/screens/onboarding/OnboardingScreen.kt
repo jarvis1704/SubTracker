@@ -235,7 +235,6 @@ fun OnboardingScreen(
                 Button(
                     onClick = {
                         if (isLastPage) {
-                            //todo: redirect to initial setup page if new user
                             onGetStartedClick()
                         } else {
                             scope.launch {

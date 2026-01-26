@@ -379,7 +379,7 @@ fun AnalyticsScreen(
 //                    ),
 //                    shape = MaterialTheme.shapes.extraLarge,
 //                    modifier = Modifier.fillMaxWidth().clickable {
-//                        //todo: create a manual button for analysis refresh, different than this
+//
 //                        analysisScreenViewModel.refreshAnalysis()
 //                    }
 //                ) {

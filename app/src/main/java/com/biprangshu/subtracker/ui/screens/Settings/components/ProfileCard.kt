@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProfileCard() {
-    //todo: show this card only when user is logged in thorugh google
     Card(
         colors = CardDefaults.cardColors(
             containerColor = colorScheme.secondaryContainer,
@@ -74,7 +73,7 @@ fun ProfileCard() {
 //            Surface(
 //                color = colorScheme.surface.copy(alpha = 0.3f),
 //                shape = CircleShape,
-//                modifier = Modifier.size(40.dp).clickable { /* TODO */ }
+//                modifier = Modifier.size(40.dp).clickable { /*  */ }
 //            ) {
 //                Icon(
 //                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,

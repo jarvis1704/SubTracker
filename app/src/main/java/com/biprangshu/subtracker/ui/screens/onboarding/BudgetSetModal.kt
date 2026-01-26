@@ -156,7 +156,6 @@ fun BudgetSetModal(
                 FilledTonalButton(
                     onClick = {
                         //handle budget confirmation logic here
-                        //todo: save budget and currency to user preferences
                         onOnboardComplete(
                             if(budgetAmount.isNotEmpty()) budgetAmount.toDouble() else 0.0,
                             currency,
