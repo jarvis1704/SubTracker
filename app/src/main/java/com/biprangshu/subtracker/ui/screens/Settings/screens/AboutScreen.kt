@@ -277,15 +277,15 @@ fun AboutScreen(
             item { Spacer(Modifier.height(24.dp)) }
 
 
-            item {
-                SettingsItem(
-                    icon = Icons.Default.Info,
-                    title = "Open Source License",
-                    subtitle = "GNU General Public License v3.0",
-                    shape = RoundedCornerShape(24.dp),
-                    onClick = { showLicense = true }
-                )
-            }
+//            item {
+//                SettingsItem(
+//                    icon = Icons.Default.Info,
+//                    title = "Open Source License",
+//                    subtitle = "GNU General Public License v3.0",
+//                    shape = RoundedCornerShape(24.dp),
+//                    onClick = { showLicense = true }
+//                )
+//            }
 
             item { Spacer(Modifier.height(24.dp)) }
         }
