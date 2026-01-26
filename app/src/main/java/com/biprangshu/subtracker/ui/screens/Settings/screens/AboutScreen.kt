@@ -268,7 +268,8 @@ fun AboutScreen(
                     subtitle = "Let others know your experience",
                     shape = RoundedCornerShape(24.dp),
                     onClick = {
-                        openUrl("")
+                        openUrl("https://play.google.com/store/apps/details?id=com.biprangshu.subtracker&hl=en_GB&pli=1")
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
                     }
                 )
             }
