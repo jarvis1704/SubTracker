@@ -273,6 +273,8 @@ fun AboutScreen(
                 )
             }
 
+            item { Spacer(Modifier.height(24.dp)) }
+
 
             item {
                 SettingsItem(
