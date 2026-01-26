@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import com.biprangshu.subtracker.BuildConfig
 import com.biprangshu.subtracker.R // Ensure this R import is correct for your package
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
+import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItemPainterResource
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
@@ -81,14 +82,13 @@ fun AboutScreen(
 
     val hapticFeedback = LocalHapticFeedback.current
 
-    // Helper to open URLs
+
     fun openUrl(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
     }
 
-    // Social Links Data
-    // Replace Icons with your actual drawables or vectors if available
+
     val socialLinks = remember {
         listOf(
             SocialLink(R.drawable.github_logo, "https://github.com/jarvis1704"),
@@ -100,7 +100,7 @@ fun AboutScreen(
 
     var showLicense by rememberSaveable { mutableStateOf(false) }
 
-    // Shapes for the grouped card look
+
     val topListItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val bottomListItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
     val containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -203,7 +203,6 @@ fun AboutScreen(
                 ) {
                     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            // Developer PFP Placeholder
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -233,9 +232,9 @@ fun AboutScreen(
                         }
                         Spacer(Modifier.height(8.dp))
 
-                        // Social Links
+
                         Row {
-                            Spacer(Modifier.width((64 + 16).dp)) // Indent to align with text
+                            Spacer(Modifier.width((64 + 16).dp))
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 socialLinks.forEach { link ->
                                     FilledTonalIconButton(
@@ -262,7 +261,19 @@ fun AboutScreen(
 
             //todo: add sharing feedback on google play
 
-            // --- License Button ---
+            item {
+                SettingsItemPainterResource(
+                    icon = painterResource(R.drawable.playstore),
+                    title = "Rate on Play Store",
+                    subtitle = "Let others know your experience",
+                    shape = RoundedCornerShape(24.dp),
+                    onClick = {
+                        openUrl("")
+                    }
+                )
+            }
+
+
             item {
                 SettingsItem(
                     icon = Icons.Default.Info,
@@ -283,7 +294,7 @@ fun AboutScreen(
     }
 }
 
-// Data class for social buttons
+
 data class SocialLink(
     val icon: Int,
     val url: String
@@ -309,7 +320,7 @@ fun SimpleLicenseBottomSheet(onDismiss: () -> Unit) {
                 modifier = Modifier.padding(bottom = 16.dp).align(Alignment.CenterHorizontally)
             )
 
-            // Shortened License Text for display
+
             //todo: The full license text can be placing in a scrollable container
             Text(
                 text = "Copyright (c) 2025 Biprangshu\n\n" +
