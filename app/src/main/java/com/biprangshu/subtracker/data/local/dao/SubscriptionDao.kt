@@ -30,5 +30,4 @@ interface SubscriptionDao {
     @Query("SELECT SUM(price) FROM subscriptions WHERE billingCycle = 'Monthly'")
     fun getTotalMonthlySpend(): Flow<Double?>
 
-    //todo: get yearly spend
 }
