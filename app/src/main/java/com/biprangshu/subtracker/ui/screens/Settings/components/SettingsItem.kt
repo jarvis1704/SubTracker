@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,41 @@ fun SettingsItem(
         leadingContent = {
             Icon(
                 imageVector = icon,
+                contentDescription = null,
+                tint = colorScheme.primary
+            )
+        },
+        trailingContent = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = colorScheme.onSurfaceVariant
+            )
+        },
+        colors = ListItemDefaults.colors(
+            containerColor = colorScheme.surfaceContainerHigh // Slightly distinct from background
+        ),
+        modifier = Modifier
+            .clip(shape)
+            .clickable { onClick() }
+    )
+}
+
+@Composable
+fun SettingsItemPainterResource(
+    icon: Painter,
+    title: String,
+    subtitle: String,
+    shape: Shape,
+    onClick: () -> Unit
+) {
+    ListItem(
+        headlineContent = { Text(title, fontWeight = FontWeight.Medium) },
+        supportingContent = { Text(subtitle) },
+        leadingContent = {
+            Icon(
+                icon,
                 contentDescription = null,
                 tint = colorScheme.primary
             )
