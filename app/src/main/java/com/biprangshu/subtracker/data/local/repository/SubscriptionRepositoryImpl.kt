@@ -100,7 +100,7 @@ class SubscriptionRepositoryImpl @Inject constructor(
             when (cycle.lowercase()) {
                 "yearly" -> calendar.add(Calendar.YEAR, 1)
                 "weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
-                else -> calendar.add(Calendar.MONTH, 1) // Default to Monthly
+                else -> calendar.add(Calendar.MONTH, 1)
             }
         }
         return calendar.timeInMillis
