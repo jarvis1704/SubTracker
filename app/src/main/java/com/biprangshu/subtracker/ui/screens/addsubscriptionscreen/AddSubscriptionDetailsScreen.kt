@@ -1,5 +1,10 @@
 package com.biprangshu.subtracker.ui.screens.addsubscriptionscreen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -73,6 +78,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -81,6 +87,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.viewmodel.AddSubscriptionViewModel
@@ -109,6 +116,7 @@ fun AddSubscriptionDetailsScreen(
     val singleItemShape = RoundedCornerShape(24.dp)
 
     val hapticFeedback = LocalHapticFeedback.current
+    val context = LocalContext.current
 
 
     var currentName by remember { mutableStateOf(name) }
@@ -129,6 +137,12 @@ fun AddSubscriptionDetailsScreen(
     val userdata by addSubscriptionViewModel.userData.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        remindersEnabled = isGranted
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -225,7 +239,6 @@ fun AddSubscriptionDetailsScreen(
             )
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                // Billing Cycle
                 ListItem(
                     headlineContent = { Text("Billing Cycle") },
                     trailingContent = {
@@ -322,7 +335,26 @@ fun AddSubscriptionDetailsScreen(
                     trailingContent = {
                         Switch(
                             checked = remindersEnabled,
-                            onCheckedChange = { remindersEnabled = it },
+                            onCheckedChange = { isChecked ->
+                                if (isChecked) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        val hasPermission = ContextCompat.checkSelfPermission(
+                                            context,
+                                            Manifest.permission.POST_NOTIFICATIONS
+                                        ) == PackageManager.PERMISSION_GRANTED
+
+                                        if (hasPermission) {
+                                            remindersEnabled = true
+                                        } else {
+                                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                        }
+                                    } else {
+                                        remindersEnabled = true
+                                    }
+                                } else {
+                                    remindersEnabled = false
+                                }
+                            },
                             thumbContent = {
                                 if (remindersEnabled) {
                                     Icon(
