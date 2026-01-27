@@ -6,7 +6,7 @@ data class SubscriptionService(
     val name: String,
     val iconRes: Int,
     val color: Long,
-    val category: String // NEW FIELD
+    val category: String
 )
 
 object SubscriptionDataSource {
@@ -54,4 +54,8 @@ object SubscriptionDataSource {
         SubscriptionService("Amazon Prime", R.drawable.amazon_prime, 0xFF00A8E1, "Shopping"),
         SubscriptionService("Apple Music", R.drawable.apple_music, 0xFFFC3C44, "Music")
     )
+
+    fun getIconResByName(name: String): Int? {
+        return popularServices.find { it.name.equals(name, ignoreCase = true) }?.iconRes
+    }
 }

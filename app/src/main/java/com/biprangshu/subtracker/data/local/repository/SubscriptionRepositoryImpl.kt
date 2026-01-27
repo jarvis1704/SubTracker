@@ -4,6 +4,7 @@ import com.biprangshu.subtracker.data.local.dao.SubscriptionDao
 import com.biprangshu.subtracker.data.local.entity.SubscriptionEntity
 import com.biprangshu.subtracker.domain.model.Subscription
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
+import com.biprangshu.subtracker.data.SubscriptionDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.Calendar
@@ -42,6 +43,9 @@ class SubscriptionRepositoryImpl @Inject constructor(
         val nextPaymentDate = calculateNextPaymentDate(firstPaymentDate, billingCycle)
         val daysUntil = calculateDaysUntil(nextPaymentDate)
 
+
+        val freshIconResId = SubscriptionDataSource.getIconResByName(name) ?: logoResId
+
         return Subscription(
             id = id,
             name = name,
@@ -53,7 +57,7 @@ class SubscriptionRepositoryImpl @Inject constructor(
             firstPaymentDate = firstPaymentDate,
             dueInDays = daysUntil,
             nextPaymentDate = nextPaymentDate,
-            logoRedId = logoResId,
+            logoRedId = freshIconResId,
             category = category,
             paymentMethod = paymentMethod,
             remindersEnabled = remindersEnabled,
@@ -92,7 +96,7 @@ class SubscriptionRepositoryImpl @Inject constructor(
         calendar.timeInMillis = startDate
 
 
-        while (calendar.timeInMillis <= today) {
+        while (calendar.timeInMillis < today) {
             when (cycle.lowercase()) {
                 "yearly" -> calendar.add(Calendar.YEAR, 1)
                 "weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
