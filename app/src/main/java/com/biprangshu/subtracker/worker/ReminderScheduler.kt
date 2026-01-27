@@ -30,12 +30,14 @@ class ReminderScheduler @Inject constructor(
 
         var finalTriggerTime = reminderTime
         if (finalTriggerTime <= currentTime) {
-            val cycleDuration = if (billingCycle.equals("Monthly", ignoreCase = true)) {
-                30L
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = nextPaymentTime
+            if (billingCycle.equals("Monthly", ignoreCase = true)) {
+                cal.add(Calendar.MONTH, 1)
             } else {
-                365L
+                cal.add(Calendar.YEAR, 1)
             }
-            finalTriggerTime = calculateNextPaymentTimestamp(nextPaymentTime, billingCycle) - TimeUnit.DAYS.toMillis(reminderDaysBefore.toLong())
+            finalTriggerTime = cal.timeInMillis - TimeUnit.DAYS.toMillis(reminderDaysBefore.toLong())
         }
 
         val delay = finalTriggerTime - currentTime
