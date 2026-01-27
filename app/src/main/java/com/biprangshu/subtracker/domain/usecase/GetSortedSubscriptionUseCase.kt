@@ -11,8 +11,8 @@ class GetSortedSubscriptionsUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<List<Subscription>> {
         return repository.getAllSubscriptions().map { list ->
-            // Logic: Sort by closest due date first
-            list.sortedBy { it.dueInDays }
+            // Logic: Sort by closest due date first (using absolute timestamp)
+            list.sortedBy { it.nextPaymentDate }
         }
     }
 }

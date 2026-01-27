@@ -66,23 +66,27 @@ class AddSubscriptionViewModel @Inject constructor(
             )
 
 
-            val newId = addSubscriptionUseCase(subscription)
-
-
-            if (reminderEnabled && newId != -1L) {
-                reminderScheduler.scheduleReminder(
-                    subscriptionId = newId.toInt(),
-                    name = name,
-                    price = price,
-                    currency = "$",
-                    billingCycle = billingCycle,
-                    firstPaymentDate = firstPaymentDate,
-                    reminderDaysBefore = reminderDaysBefore
-                )
+            val newId = try {
+                addSubscriptionUseCase(subscription)
+            } catch (e: IllegalArgumentException) {
+                -1L
             }
 
 
-            onSuccess()
+            if (newId != -1L) {
+                if (reminderEnabled) {
+                    reminderScheduler.scheduleReminder(
+                        subscriptionId = newId.toInt(),
+                        name = name,
+                        price = price,
+                        currency = "$",
+                        billingCycle = billingCycle,
+                        firstPaymentDate = firstPaymentDate,
+                        reminderDaysBefore = reminderDaysBefore
+                    )
+                }
+                onSuccess()
+            }
         }
     }
 }
