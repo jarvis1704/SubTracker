@@ -12,6 +12,7 @@ Things to do after the intial lookup of the app:
 
 Work which is to be done:
 todo: Optimise the app size and performance
+todo: add license text in about section
 bug: fix the bug with the top subscription graph not showing the x index correctly (not fixed entirely but will through production later updates)
 
 future fixes:
