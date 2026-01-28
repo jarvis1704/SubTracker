@@ -92,7 +92,7 @@ class SubTrackerApplication : Application(), Configuration.Provider {
 
                 workManager.enqueueUniquePeriodicWork(
                     tag,
-                    ExistingPeriodicWorkPolicy.KEEP,
+                    ExistingPeriodicWorkPolicy.UPDATE,
                     request
                 )
             } else {
