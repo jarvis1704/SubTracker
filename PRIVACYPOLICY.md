@@ -1,35 +1,40 @@
 # Privacy Policy
 
-**Effective Date:** December 27, 2025
+**Effective Date:** January 29, 2026
 
 SubTracker ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose your information when you use our Android application (the "App").
 
 ## 1. Information We Collect
-To provide a functional subscription tracking experience, we may collect the following types of information:
+To provide a comprehensive subscription tracking experience, we process the following types of information:
 
-* **Account Information:** If you use our authentication features, we collect your email address and password to manage your account and synchronize data.
-* **Subscription Data:** We collect details about the subscriptions you add, such as name, price, and due dates, to provide tracking and spending analytics.
-* **Local Data:** We store fetched logos and subscription details in your device's local storage to ensure the app remains functional offline.
+* **Subscription Data:** We process details about the subscriptions you add, such as name, price, billing cycle, and due dates. **This data is stored locally on your device.**
+* **Usage Data:** We use **Firebase Analytics** to collect anonymous usage data (e.g., screen views, button clicks) to help us improve the App's performance and user experience.
+* **Device Information:** We may collect device-specific information (e.g., model, OS version) for analytics and crash reporting.
+
+**We do not collect or store your personal contact information (such as email or phone number) or create user accounts.**
 
 ## 2. How We Use Your Information
-We use the collected information for the following purposes:
-* To provide and maintain the App's core functionality (tracking, editing, and deleting subscriptions).
-* To calculate and display spending analytics (Monthly and Yearly totals).
-* To provide user authentication and secure access to your data.
+We use the information for the following purposes:
+* **Core Functionality:** To store and display your subscription portfolio and calculate spending totals.
+* **AI Insights:** To provide "Burn Rate" calculations and spending optimization tips using **Google Gemini**.
+* **Notifications:** To schedule local reminders for upcoming payments.
+* **Security:** To enable Biometric Authentication (Fingerprint/Face Unlock) if you choose to activate it.
 
-## 3. Third-Party Services
-The App interacts with the following third-party services to enhance your experience:
+## 3. Data Storage and Processing
+* **Local Storage:** All your subscription data, preferences, and custom settings are stored **locally** on your device using an encrypted database. We do not transmit this data to any external sync server.
+* **AI Processing:** When using AI features (e.g., Optimization, Burn Rate), specific subscription details (Name, Price, Currency) are securely sent to **Google Gemini** for processing. This data is not used to train Google's models and is transient.
+* **Biometric Data:** If you enable Biometric Lock, the App relies on your device's system-level authentication. We **never** access or store your actual fingerprint or face data.
 
-* **Logo Fetching (Logo.dev):** When searching for a subscription, the service name is sent to Logo.dev to dynamically fetch the official logo.
-* **Firebase/Backend:** If cloud synchronization is enabled, your data is stored securely in our database for multi-device access.
+## 4. Third-Party Services
+The App interacts with the following third-party services:
 
-## 4. Data Storage and Security
-* **Local Storage:** Subscription details and fetched logos are stored locally on your device against each entry.
-* **Security:** We implement security measures, including biometric and PIN options within the settings, to protect your data.
+* **Google Gemini (AI):** Used for generating spending insights and optimization suggestions.
+* **Firebase Analytics:** Used to collect anonymous usage statistics.
 
 ## 5. Your Rights and Choices
-* **Data Management:** You can add, edit, or delete your subscription data at any time within the App.
-* **Authentication:** You may log out or manage your profile via the Settings screen.
+* **Data Control:** You have full control over your data. You can add, edit, or delete subscriptions within the App at any time.
+* **Data Erasure:** Since data is stored locally, uninstalling the App or clearing its data via Android Settings will permanently remove all your stored information.
+* **Opt-Out:** You can disable specific features like Biometric Security in the App Settings.
 
 ## 6. Children's Privacy
 Our App does not knowingly collect personal information from children under the age of 13.
