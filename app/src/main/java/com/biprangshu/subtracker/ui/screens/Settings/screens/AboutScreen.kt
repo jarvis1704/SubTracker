@@ -277,15 +277,15 @@ fun AboutScreen(
             item { Spacer(Modifier.height(24.dp)) }
 
 
-//            item {
-//                SettingsItem(
-//                    icon = Icons.Default.Info,
-//                    title = "Open Source License",
-//                    subtitle = "GNU General Public License v3.0",
-//                    shape = RoundedCornerShape(24.dp),
-//                    onClick = { showLicense = true }
-//                )
-//            }
+            item {
+                SettingsItem(
+                    icon = Icons.Default.Info,
+                    title = "Open Source License",
+                    subtitle = "Apache License, Version 2.0",
+                    shape = RoundedCornerShape(24.dp),
+                    onClick = { showLicense = true }
+                )
+            }
 
             item { Spacer(Modifier.height(24.dp)) }
         }
@@ -326,14 +326,19 @@ fun SimpleLicenseBottomSheet(onDismiss: () -> Unit) {
 
 
             Text(
-                text = "Copyright (c) 2025 Biprangshu\n\n" +
-                        "This file is part of SubTracker.\n\n" +
-                        "SubTracker is free software: you can redistribute it and/or modify it under the terms of the GNU " +
-                        "General Public License as published by the Free Software Foundation, either version 3 of the " +
-                        "License, or (at your option) any later version.\n\n" +
-                        "SubTracker is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even " +
-                        "the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General " +
-                        "Public License for more details.",
+                text = "Copyright 2026 Biprangshu\n" +
+                        "\n" +
+                        "Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                        "you may not use this file except in compliance with the License.\n" +
+                        "You may obtain a copy of the License at\n" +
+                        "\n" +
+                        "    http://www.apache.org/licenses/LICENSE-2.0\n" +
+                        "\n" +
+                        "Unless required by applicable law or agreed to in writing, software\n" +
+                        "distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                        "WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                        "See the License for the specific language governing permissions and\n" +
+                        "limitations under the License.",
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(24.dp))
