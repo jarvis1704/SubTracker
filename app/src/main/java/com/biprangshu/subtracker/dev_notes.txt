@@ -13,8 +13,10 @@ Things to do after the intial lookup of the app:
 Work which is to be done:
 todo: Optimise the app size and performance
 todo: add license text in about section
+todo: make the images files webp so that the size is reduced
 bug: fix the bug with the top subscription graph not showing the x index correctly (not fixed entirely but will through production later updates)
 
 future fixes:
  - add user field to put the subscription plan name
  - feature: add trial period and notify before the trial ends
+ - Ui: add powered by Gemini text in the AI features screen
