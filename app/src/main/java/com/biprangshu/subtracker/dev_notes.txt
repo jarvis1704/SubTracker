@@ -20,3 +20,5 @@ future fixes:
  - add user field to put the subscription plan name
  - feature: add trial period and notify before the trial ends
  - Ui: add powered by Gemini text in the AI features screen
+ - backend: add the server prompt feature in firebase
+ - feature: add settings to choose currency
