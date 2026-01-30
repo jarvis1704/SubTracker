@@ -112,7 +112,7 @@ fun SubscriptionDetailsScreen(
                     )
                 }
 
-                // AI Alert Section
+
                 priceAlert?.let { alert ->
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
