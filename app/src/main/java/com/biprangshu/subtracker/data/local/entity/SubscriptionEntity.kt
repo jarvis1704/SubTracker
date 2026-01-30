@@ -12,15 +12,15 @@ data class SubscriptionEntity(
     val currency: String = "$",
 
     //billing details
-    val billingCycle: String, // e.g., "Monthly", "Yearly"
-    val firstPaymentDate: Long, // Timestamp for calculations
-    val paymentMethod: String? = null, // e.g., "Visa ending in 4567"
+    val billingCycle: String,
+    val firstPaymentDate: Long,
+    val paymentMethod: String? = null,
 
     //categorization
     val category: String = "Other",
 
     val iconName: String? = null,
-    val colorHex: String? = null, // Store brand color like 0xFFE50914 for Netflix
+    val colorHex: String? = null,
     val logoResId: Int? = null,
 
     //reminders

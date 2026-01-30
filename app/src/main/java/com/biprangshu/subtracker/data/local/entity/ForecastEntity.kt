@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 data class ForecastEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val month: String, // e.g., "Feb"
-    val year: Int,     // e.g., 2026
-    val predictedSpend: Double, // Actual cash flow needed (includes spikes)
-    val averageSpend: Double,   // Smoothed average (Monthly + Yearly/12)
+    val month: String,
+    val year: Int,
+    val predictedSpend: Double,
+    val averageSpend: Double,
     val timestamp: Long = System.currentTimeMillis()
 )
