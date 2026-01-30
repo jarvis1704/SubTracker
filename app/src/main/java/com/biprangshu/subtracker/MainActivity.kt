@@ -108,8 +108,7 @@ class MainActivity : FragmentActivity() {
                         }
                     )
 
-                    // REMOVED: Manual BackHandler.
-                    // NavDisplay inside NavGraph will now handle the predictive back gesture.
+
 
                     val currentRoute = backStack.lastOrNull() as? Route
 
