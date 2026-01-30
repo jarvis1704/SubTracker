@@ -73,7 +73,7 @@ class EditSubscriptionViewModel @Inject constructor(
 
             addSubscriptionUseCase(updatedSubscription)
 
-            // Update Reminder
+
             if (remindersEnabled) {
                 reminderScheduler.scheduleReminder(
                     subscriptionId = updatedSubscription.id,
