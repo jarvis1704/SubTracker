@@ -37,7 +37,7 @@ fun AISettingsScreen(
     val priceAlertsEnabled by viewModel.isPriceAlertsEnabled.collectAsState()
     val days by viewModel.periodicityDays.collectAsState()
 
-    // Shapes for grouped list items
+
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
@@ -112,7 +112,7 @@ fun AISettingsScreen(
                 modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
             )
 
-            // Frequency Slider Card
+
             Card(
                 shape = singleItemShape,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),

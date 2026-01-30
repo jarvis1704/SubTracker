@@ -105,12 +105,11 @@ fun EditSubscriptionScreen(
 
     val hapticFeedback = LocalHapticFeedback.current
 
-    // Loading & Error states can be handled here; for now, we render content if Success
+
     if (uiState is EditSubscriptionUiState.Success) {
         val subscription = (uiState as EditSubscriptionUiState.Success).subscription
 
-        // Local state initialized from the loaded subscription
-        // We use remember keys to ensure state resets if subscription changes (unlikely here but good practice)
+
         var price by remember(subscription) { mutableStateOf(subscription.price.toString()) }
         val cycles = listOf("Monthly", "Yearly")
         var selectedCycleIndex by remember(subscription) {
@@ -218,7 +217,7 @@ fun EditSubscriptionScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 2. Plan Details
+
                 Text(
                     "Plan Details",
                     style = MaterialTheme.typography.labelLarge,
@@ -254,7 +253,7 @@ fun EditSubscriptionScreen(
                         modifier = Modifier.clip(topItemShape)
                     )
 
-                    // First Payment Date
+
                     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                     val dateString = dateFormatter.format(Date(selectedDateMillis))
 
@@ -266,7 +265,7 @@ fun EditSubscriptionScreen(
                         onClick = { showDatePicker = true }
                     )
 
-                    // Category
+
                     ClickableInputItem(
                         icon = Icons.Default.Category,
                         label = "Category",
@@ -278,7 +277,7 @@ fun EditSubscriptionScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 3. Preferences
+
                 Text(
                     "Preferences",
                     style = MaterialTheme.typography.labelLarge,
@@ -287,7 +286,7 @@ fun EditSubscriptionScreen(
                 )
 
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    // Payment Method
+
                     ListItem(
                         headlineContent = {
                             OutlinedTextField(
@@ -309,7 +308,7 @@ fun EditSubscriptionScreen(
                         modifier = Modifier.clip(topItemShape)
                     )
 
-                    // Reminders Toggle
+
                     ListItem(
                         headlineContent = { Text("Remind me") },
                         supportingContent = {
@@ -351,7 +350,7 @@ fun EditSubscriptionScreen(
                         )
                     )
 
-                    // Reminder Days Slider
+
                     if (remindersEnabled) {
                         ListItem(
                             headlineContent = {
@@ -375,7 +374,7 @@ fun EditSubscriptionScreen(
 
                 Spacer(modifier = Modifier.height(48.dp))
 
-                // Save Button
+
                 Button(
                     onClick = {
                         viewModel.updateSubscription(
@@ -434,7 +433,7 @@ fun EditSubscriptionScreen(
     }
 }
 
-// Duplicated helper composable to ensure standalone functionality
+
 @Composable
 private fun ClickableInputItem(
     icon: ImageVector,

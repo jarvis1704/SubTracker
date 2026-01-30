@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
         initialValue = null
     )
 
-    // Hot flow of subscriptions, sorted by due date
+
     val subscriptions: StateFlow<List<Subscription>> = getSortedSubscriptionsUseCase()
         .stateIn(
             scope = viewModelScope,
@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    // Hot flow of the total monthly spend
+
     val totalMonthlySpend: StateFlow<Double> = subscriptionRepository.getTotalMonthlySpend()
         .stateIn(
             scope = viewModelScope,

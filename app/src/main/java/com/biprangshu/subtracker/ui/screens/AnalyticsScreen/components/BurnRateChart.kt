@@ -47,9 +47,9 @@ fun BurnRateChart(
         CartesianChartHost(
             chart = rememberCartesianChart(
                 rememberLineCartesianLayer(
-                    // Define lines: 1. Predicted (Primary), 2. Average (Secondary/Dashed)
+
                     lineProvider = LineCartesianLayer.LineProvider.series(
-                        // Line 1: Actual Burn Rate (Spikes)
+
                         LineCartesianLayer.Line(
                             fill = LineCartesianLayer.LineFill.single(fill(colorScheme.primary)),
 //                            areaFill = LineCartesianLayer.AreaFill.single(
@@ -60,7 +60,7 @@ fun BurnRateChart(
 //                                )
 //                            )
                         ),
-                        // Line 2: Average Baseline
+
                         LineCartesianLayer.Line(
                             fill = LineCartesianLayer.LineFill.single(fill(colorScheme.tertiary)),
                         )

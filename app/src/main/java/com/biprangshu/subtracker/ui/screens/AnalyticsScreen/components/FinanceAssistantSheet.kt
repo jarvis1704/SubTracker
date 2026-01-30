@@ -76,15 +76,15 @@ fun FinanceAssistantSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surface,
-        dragHandle = null // Custom header
+        dragHandle = null
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime) // Handle keyboard
+                .windowInsetsPadding(WindowInsets.ime)
                 .padding(bottom = 16.dp)
         ) {
-            // Header
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,10 +103,10 @@ fun FinanceAssistantSheet(
                 )
             }
 
-            // Divider
+
             Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
 
-            // Chat Area
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -133,7 +133,7 @@ fun FinanceAssistantSheet(
                 }
             }
 
-            // Input Area
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

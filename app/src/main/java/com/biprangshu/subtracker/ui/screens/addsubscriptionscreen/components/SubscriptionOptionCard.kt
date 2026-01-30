@@ -24,8 +24,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.biprangshu.subtracker.data.SubscriptionService
-import com.biprangshu.subtracker.navigation.Route
-import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.SubscriptionOption
 
 @Composable
 fun SubscriptionOptionCard(
@@ -52,11 +50,11 @@ fun SubscriptionOptionCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Logo
+
                 Surface(
                     modifier = Modifier.size(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    color = Color.White // White background for logos usually looks best
+                    color = Color.White
                 ) {
 //                    Image(
 //                        painter = painterResource(id = service.iconRes),

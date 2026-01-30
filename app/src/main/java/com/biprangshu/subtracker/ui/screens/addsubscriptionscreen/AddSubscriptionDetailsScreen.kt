@@ -285,7 +285,7 @@ fun AddSubscriptionDetailsScreen(
                     label = "Category",
                     value = category,
                     shape = bottomItemShape,
-                    onClick = { /*no need, already set*/
+                    onClick = {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
                     }
                 )

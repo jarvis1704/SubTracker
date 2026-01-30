@@ -43,12 +43,12 @@ class AddSubscriptionViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            // 1. Validate & Parse Price
+
             val price = priceInput.toDoubleOrNull() ?: 0.0
 
             val colorHex = String.format("#%08X", color)
 
-            // 2. Create Domain Model
+
             val subscription = Subscription(
                 name = name,
                 price = price,

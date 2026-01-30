@@ -53,7 +53,7 @@ import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-// Data model for the onboarding steps
+
 data class OnboardingStep(
     val title: String,
     val description: String,
@@ -246,7 +246,7 @@ fun OnboardingScreen(
                         }
                     },
                     modifier = Modifier.height(62.dp),
-                    shape = CircleShape, // Pill shape
+                    shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary

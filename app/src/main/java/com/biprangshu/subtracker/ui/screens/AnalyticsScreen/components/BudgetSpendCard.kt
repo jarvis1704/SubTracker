@@ -37,7 +37,7 @@ fun BudgetSpendCard(
     currency: String
 ) {
     val progress = (spent / budget).coerceIn(0f, 1f)
-    // Smooth animation for the progress bar
+
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(durationMillis = 1000),
@@ -81,7 +81,7 @@ fun BudgetSpendCard(
                     }
                 }
 
-                // Percent Text
+
                 Text(
                     text = "${(progress * 100).toInt()}%",
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
@@ -95,8 +95,8 @@ fun BudgetSpendCard(
                 progress = { animatedProgress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(42.dp) // Expressive thickness
-                    .clip(RoundedCornerShape(16.dp)), // Ensures track is also rounded
+                    .height(42.dp)
+                    .clip(RoundedCornerShape(16.dp)),
                 color = colorScheme.primary,
                 trackColor = colorScheme.surface.copy(alpha = 0.5f),
                 strokeCap = StrokeCap.Square,
