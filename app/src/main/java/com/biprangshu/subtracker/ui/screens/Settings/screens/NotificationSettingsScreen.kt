@@ -70,7 +70,7 @@ fun NotificationSettingsScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 1. Master Toggle (In-App)
+
             SwitchSettingsItem(
                 icon = if (masterEnabled) Icons.Default.NotificationsActive else Icons.Default.NotificationsOff,
                 title = "Allow Notifications",
@@ -99,7 +99,7 @@ fun NotificationSettingsScreen(
                         onCheckedChange = { viewModel.togglePaymentReminders(it) },
                         shape = singleItemShape
                     )
-                    // Future notification categories can be added here
+
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

@@ -1,4 +1,3 @@
-// [file: subtracker/ui/screens/Settings/screens/SettingsScreen.kt]
 package com.biprangshu.subtracker.ui.screens.Settings.screens
 
 import androidx.compose.foundation.layout.*
@@ -34,7 +33,7 @@ fun SettingsScreen(
     settingsScreenViewModel: SettingsScreenViewModel = hiltViewModel(),
     onNavigate: (Route) -> Unit = {}
 ) {
-    // Defines the strict visual grouping style from the screenshot
+
     val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
     val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
@@ -53,7 +52,7 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(top = innerPadding.calculateTopPadding() + 16.dp),
         ) {
-            // Static Header
+
             Text(
                 "Settings",
                 style = TextStyle(
@@ -74,9 +73,9 @@ fun SettingsScreen(
                     start = 16.dp,
                     end = 16.dp
                 ),
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Spacing between "Cards"
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Group 1: AI Features (The "Hero" feature set)
+
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         SettingsItem(
@@ -89,7 +88,7 @@ fun SettingsScreen(
                     }
                 }
 
-                // Group 2: Notifications & Security (Functional Settings)
+
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         SettingsItem(
@@ -112,7 +111,7 @@ fun SettingsScreen(
                     }
                 }
 
-                // Group 3: About
+
                 item {
                     SettingsItem(
                         icon = Icons.Default.Info,

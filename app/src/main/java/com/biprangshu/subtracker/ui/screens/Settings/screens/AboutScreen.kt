@@ -186,7 +186,7 @@ fun AboutScreen(
                             shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(
-                                painterResource(R.drawable.github_logo), // Replace with GitHub Icon
+                                painterResource(R.drawable.github_logo),
                                 contentDescription = "GitHub",
                                 modifier = Modifier.size(24.dp)
                             )
