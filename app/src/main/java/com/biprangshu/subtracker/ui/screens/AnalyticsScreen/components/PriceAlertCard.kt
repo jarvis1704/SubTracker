@@ -32,7 +32,7 @@ fun PriceAlertCard(
     onUpdate: () -> Unit
 ) {
 
-    val hapticFeedback = LocalHapticFeedback.current
+
 
     Card(
         colors = CardDefaults.cardColors(
