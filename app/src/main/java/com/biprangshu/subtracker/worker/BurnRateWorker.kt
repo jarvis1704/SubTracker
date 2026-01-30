@@ -41,13 +41,12 @@ class BurnRateWorker @AssistedInject constructor(
             val subscriptions = subscriptionRepository.getAllSubscriptions().first()
             if (subscriptions.isEmpty()) return Result.success()
 
-            // Calculate "Average" spend (Smoothed) for comparison line
-            // (Sum of Monthly + (Yearly / 12))
+
             val monthlyTotal = subscriptions.filter { it.billingCycle == "Monthly" }.sumOf { it.price }
             val yearlyAmortized = subscriptions.filter { it.billingCycle == "Yearly" }.sumOf { it.price } / 12.0
             val averageSpend = monthlyTotal + yearlyAmortized
 
-            // Prepare Prompt Data
+
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val currentDate = dateFormat.format(Date())
 
@@ -97,7 +96,7 @@ class BurnRateWorker @AssistedInject constructor(
                     month = it.month,
                     year = it.year,
                     predictedSpend = it.total_spend,
-                    averageSpend = averageSpend // Constant line for comparison
+                    averageSpend = averageSpend
                 )
             }
 
