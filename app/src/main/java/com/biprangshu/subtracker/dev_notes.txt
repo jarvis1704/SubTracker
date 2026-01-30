@@ -14,6 +14,8 @@ Work which is to be done:
 todo: Optimise the app size and performance
 todo: add license text in about section
 todo: make the images files webp so that the size is reduced
+todo: add comments in code files for better understanding
+todo: add copywrite comments in the code files
 bug: fix the bug with the top subscription graph not showing the x index correctly (not fixed entirely but will through production later updates)
 
 future fixes:
