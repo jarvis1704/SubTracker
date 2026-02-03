@@ -180,7 +180,7 @@ fun AboutScreen(
 
 
                         FilledTonalIconButton(
-                            onClick = { openUrl("https://github.com/biprangshu/SubTracker")
+                            onClick = { openUrl("https://github.com/jarvis1704/SubTracker")
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                       },
                             shapes = IconButtonDefaults.shapes()
