@@ -7,6 +7,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.biprangshu.subtracker.domain.repository.SubscriptionRepository
+import com.biprangshu.subtracker.domain.repository.UserDataRepository
 import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -18,7 +19,8 @@ class SubscriptionReminderWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val subscriptionRepository: SubscriptionRepository,
-    private val reminderScheduler: ReminderScheduler
+    private val reminderScheduler: ReminderScheduler,
+    private val userDataRepository: UserDataRepository
 ) : CoroutineWorker(context, workerParams) {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -33,7 +35,7 @@ class SubscriptionReminderWorker @AssistedInject constructor(
 
         val subscriptionName = inputData.getString("name") ?: "Subscription"
         val price = inputData.getDouble("price", 0.0)
-        val currency = inputData.getString("currency") ?: "$"
+        val currency = userDataRepository.getUser().first()?.preferredCurrency ?: "$"
         val subscriptionId = inputData.getInt("id", 0)
 
         val message = "Your payment of $currency$price for $subscriptionName is coming up soon."
