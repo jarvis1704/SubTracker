@@ -21,8 +21,8 @@ android {
         applicationId = "com.biprangshu.subtracker"
         minSdk = 24
         targetSdk = 36
-        versionCode = 16
-        versionName = "1.9.5 (play)"
+        versionCode = 17
+        versionName = "1.9.6 (play)"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
