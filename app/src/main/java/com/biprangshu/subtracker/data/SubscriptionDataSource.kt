@@ -18,6 +18,7 @@ object SubscriptionDataSource {
         SubscriptionService("Discord Nitro", R.drawable.discord_logo, 0xFF5865F2, "Communication"),
         SubscriptionService("Hulu", R.drawable.hulu_logo, 0xFF1CE783, "Entertainment"),
         SubscriptionService("HBO Max", R.drawable.hbo_max, 0xFF9E86FF, "Entertainment"),
+        SubscriptionService("F1 TV Pro", R.drawable.f1_logo, 0xFF000000, "Sports"),
         SubscriptionService("Google One", R.drawable.google_one, 0xFF4285F4, "Productivity"),
         SubscriptionService("Microsoft 365", R.drawable.microsoft_365, 0xFFF25022, "Productivity"),
         SubscriptionService("ChatGPT Plus", R.drawable.chatgpt, 0xFF10A37F, "AI"),
