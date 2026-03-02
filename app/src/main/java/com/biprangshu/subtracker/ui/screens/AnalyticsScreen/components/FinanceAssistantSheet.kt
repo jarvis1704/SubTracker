@@ -122,7 +122,10 @@ fun FinanceAssistantSheet(
                     }
                 }
 
-                items(uiState.messages) { message ->
+                items(
+                    items = uiState.messages,
+                    key = { it.id }
+                ) { message ->
                     ChatBubble(message)
                 }
 

@@ -1,5 +1,8 @@
 package com.biprangshu.subtracker.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Subscription(
     val id: Int = 0,
     val name: String,
