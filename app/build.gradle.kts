@@ -23,6 +23,7 @@ android {
         targetSdk = 36
         versionCode = 17
         versionName = "1.9.6 (play)"
+        resourceConfigurations += listOf("en")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
