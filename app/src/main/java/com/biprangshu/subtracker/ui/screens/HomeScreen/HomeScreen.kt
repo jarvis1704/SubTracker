@@ -111,7 +111,10 @@ fun HomeScreen(
                         bottom = innerPadding.calculateBottomPadding() + 16.dp
                     )
                 ) {
-                    items(subscriptions) { subscription ->
+                    items(
+                        items = subscriptions,
+                        key = { it.id }
+                    ) { subscription ->
                         val transitionKey = "subscription-${subscription.id}"
 
                         SubscriptionCard(

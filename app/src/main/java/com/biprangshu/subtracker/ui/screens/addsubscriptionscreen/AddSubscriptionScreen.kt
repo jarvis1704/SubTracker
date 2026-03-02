@@ -154,7 +154,10 @@ fun AddSubscriptionScreen(
             }
 
 
-            items(filteredServices) { service ->
+            items(
+                items = filteredServices,
+                key = { it.name }
+            ) { service ->
                 SubscriptionOptionCard(
                     service = service,
                     onOptionClick = { option ->
