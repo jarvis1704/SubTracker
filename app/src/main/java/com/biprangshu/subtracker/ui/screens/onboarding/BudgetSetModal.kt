@@ -42,15 +42,17 @@ import com.biprangshu.subtracker.showCurrencySetModal
 @Composable
 fun BudgetSetModal(
     modifier: Modifier = Modifier,
+    initialBudget: String = "",
+    initialCurrency: String = "$",
     onOnboardComplete: (budget: Double, currency: String, Route) -> Unit
 ) {
 
-    var budgetAmount by remember {
-        mutableStateOf("")
+    var budgetAmount by remember(initialBudget) {
+        mutableStateOf(initialBudget)
     }
 
-    var currency by remember {
-        mutableStateOf("$")
+    var currency by remember(initialCurrency) {
+        mutableStateOf(initialCurrency)
     }
 
     if(showCurrencySetModal){
