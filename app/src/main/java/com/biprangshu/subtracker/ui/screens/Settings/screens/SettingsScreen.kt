@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.biprangshu.subtracker.BuildConfig
 import com.biprangshu.subtracker.navigation.Route
+import com.biprangshu.subtracker.showCurrencySetModal
 import com.biprangshu.subtracker.ui.screens.Settings.components.SettingsItem
 import com.biprangshu.subtracker.ui.screens.Settings.components.SwitchSettingsItem
 import com.biprangshu.subtracker.ui.screens.Settings.viewmodel.SettingsScreenViewModel
+import com.biprangshu.subtracker.ui.screens.onboarding.BudgetSetModal
 import com.biprangshu.subtracker.ui.theme.AppFonts.robotoFlexTopBar
 
 @Composable
@@ -40,6 +42,7 @@ fun SettingsScreen(
     val singleItemShape = RoundedCornerShape(24.dp)
 
     val isBiometricEnabled by settingsScreenViewModel.isBiometricEnabled.collectAsState()
+    val userData by settingsScreenViewModel.userData.collectAsState()
 
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -100,6 +103,16 @@ fun SettingsScreen(
                                 onNavigate(Route.NotificationSettingsScreen)
                             }
                         )
+                        SettingsItem(
+                            icon = Icons.Default.AccountBalanceWallet,
+                            title = "Change Budget",
+                            subtitle = "Change your monthly budget",
+                            shape = middleItemShape,
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                showCurrencySetModal=true
+                            }
+                        )
                         SwitchSettingsItem(
                             icon = Icons.Default.Lock,
                             title = "Security",
@@ -126,4 +139,22 @@ fun SettingsScreen(
             }
         }
     }
+
+    val initialBudget = if (userData?.budget != null && userData!!.budget > 0.0) {
+        if (userData!!.budget % 1.0 == 0.0) {
+            userData!!.budget.toInt().toString()
+        } else {
+            userData!!.budget.toString()
+        }
+    } else ""
+    val initialCurrency = userData?.preferredCurrency ?: "$"
+
+    BudgetSetModal(
+        initialBudget = initialBudget,
+        initialCurrency = initialCurrency,
+        onOnboardComplete = { budget, currency, Route ->
+            settingsScreenViewModel.addBudget(budget, currency)
+            showCurrencySetModal=false
+        }
+    )
 }

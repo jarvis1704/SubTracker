@@ -58,6 +58,7 @@ class PriceIncreaseWorker @AssistedInject constructor(
                 temperature = 0.1f
             }
 
+            //todo: change model to Gemini 3.1 flash
             val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
                 .generativeModel(
                     "gemini-2.5-flash",
