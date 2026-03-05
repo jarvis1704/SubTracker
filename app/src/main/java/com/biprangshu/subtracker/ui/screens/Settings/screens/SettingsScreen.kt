@@ -108,7 +108,10 @@ fun SettingsScreen(
                             title = "Change Budget",
                             subtitle = "Change your monthly budget",
                             shape = middleItemShape,
-                            onClick = { showCurrencySetModal=true }
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                showCurrencySetModal=true
+                            }
                         )
                         SwitchSettingsItem(
                             icon = Icons.Default.Lock,
