@@ -32,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,8 @@ fun BudgetSetModal(
     var currency by remember(initialCurrency) {
         mutableStateOf(initialCurrency)
     }
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     if(showCurrencySetModal){
         ModalBottomSheet(
@@ -163,6 +167,7 @@ fun BudgetSetModal(
                             currency,
                             Route.HomeScreen
                         )
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
