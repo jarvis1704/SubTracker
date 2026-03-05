@@ -21,7 +21,7 @@ android {
         applicationId = "com.biprangshu.subtracker"
         minSdk = 24
         targetSdk = 36
-        versionCode = 19
+        versionCode = 20
         versionName = "1.9.7 (play)"
         resourceConfigurations += listOf("en")
 
