@@ -4,11 +4,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.dagger.hilt.android")
-//    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.baselineprofile)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -21,7 +20,7 @@ android {
         applicationId = "com.biprangshu.subtracker"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20
+        versionCode = 21
         versionName = "1.9.7 (play)"
         resourceConfigurations += listOf("en")
 
@@ -61,83 +60,77 @@ android {
 }
 
 dependencies {
+    // Project modules
+    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:worker"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:analytics"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:subscriptions"))
+    implementation(project(":feature:onboarding"))
+
+    // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.ui)
-    implementation(libs.navigation3.runtime)
-    implementation(libs.navigation3.ui)
-    implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.compose.animation.core)
     implementation(libs.androidx.compose.foundation.layout)
+
+    // Navigation 3
+    implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.compose)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Baseline Profile
+    implementation(libs.androidx.profileinstaller)
+    "baselineProfile"(project(":baselineprofile"))
+
+    // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.firebase.ai)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    "baselineProfile"(project(":baselineprofile"))
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    implementation(libs.androidx.navigation3.ui)
-
-    implementation(libs.androidx.navigation3.compose)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material3)
-
-    //extended icons
-    implementation(libs.androidx.compose.material.icons.extended)
-
-    // Credential Manager
-    implementation (libs.androidx.credentials)
-    implementation (libs.androidx.credentials.play.services.auth)
-    implementation (libs.googleid)
-
-    implementation (libs.play.services.auth)
 
     // Dagger Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    ksp(libs.androidx.lifecycle.compiler)
 
-    implementation(libs.lottie)
-    implementation (libs.lottie.compose)
+    // Biometric
+    implementation(libs.androidx.biometric)
 
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    implementation(platform(libs.okhttp.bom)) // Add OkHttp BOM
-    implementation(libs.retrofit.core)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp.core)
-    implementation(libs.okhttp.logging.interceptor)
-
-    implementation(libs.coil.compose)
-
-    implementation(libs.vico.compose.m3)
-
+    // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
-    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-
+    // Firebase
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

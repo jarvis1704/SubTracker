@@ -1,0 +1,133 @@
+package com.biprangshu.subtracker.core.worker
+
+import android.content.Context
+import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import com.biprangshu.subtracker.core.data.local.dao.PriceAlertDao
+import com.biprangshu.subtracker.core.data.local.entity.PriceAlertEntity
+import com.biprangshu.subtracker.core.domain.repository.SubscriptionRepository
+import com.biprangshu.subtracker.core.domain.repository.UserDataRepository
+import com.google.firebase.Firebase
+import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.Tool
+import com.google.firebase.ai.type.generationConfig
+import com.google.firebase.ai.type.thinkingConfig
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+@HiltWorker
+class PriceIncreaseWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val subscriptionRepository: SubscriptionRepository,
+    private val userDataRepository: UserDataRepository,
+    private val priceAlertDao: PriceAlertDao
+) : CoroutineWorker(context, params) {
+
+    @Serializable
+    data class PriceCheckResult(
+        val subscription_id: Int,
+        val service_name: String,
+        val current_tracked_price: Double,
+        val actual_market_price: Double,
+        val alert_message: String,
+        val is_urgent: Boolean
+    )
+
+    override suspend fun doWork(): Result {
+        return try {
+            val subscriptions = subscriptionRepository.getAllSubscriptions().first()
+            if (subscriptions.isEmpty()) return Result.success()
+
+            val subData = subscriptions.joinToString("\n") {
+                "- [ID: ${it.id}] ${it.name}: ${it.price} ${it.currency} (${it.billingCycle})"
+            }
+
+            val user = userDataRepository.getUser().first()
+            val userCurrency = user?.preferredCurrency ?: "$"
+
+            val generationConfig = generationConfig {
+                thinkingConfig = thinkingConfig {
+                    thinkingBudget = 512
+                }
+                temperature = 0.1f
+            }
+
+            val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI())
+                .generativeModel(
+                    "gemini-2.5-flash",
+                    generationConfig = generationConfig,
+                    tools = listOf(Tool.googleSearch())
+                )
+
+            val prompt = """
+                You are an Inflation Watchdog.
+                
+                **User Context**:
+                - User Currency: "$userCurrency"
+                - **Region Inference**: Infer the user's region based on the currency (e.g., '€' implies Europe, '₹' implies India, '£' implies UK). If generic ('${'$'}'), check for regional pricing cues in the subscription data or default to US.
+                
+                **Subscriptions**:
+                $subData
+                
+                **Task**:
+                Compare the user's tracked price against the **current actual market price IN THE INFERRED REGION** for 2024-2025.
+                
+                Identify ONLY services where:
+                1. The user's price is LOWER than the current regional price (meaning they updated it long ago).
+                2. There is a publicly announced price hike coming soon for that specific region.
+                
+                **Output Rules**:
+                1. Ignore small currency conversion differences.
+                2. **CRITICAL**: In the 'alert_message', ALWAYS use the user's currency symbol ("$userCurrency") for the price. Do NOT use '${'$'}' unless the user's currency is actually '${'$'}'.
+                3. Return ONLY valid JSON.
+                4. Do NOT use Markdown.
+                
+                Return a JSON list:
+            [
+              {
+                "subscription_id": 12,
+                "service_name": "Spotify",
+                "current_tracked_price": 10.99,
+                "actual_market_price": 11.99,
+                "alert_message": "Spotify Premium is now...",
+                "is_urgent": true
+              }
+            ]
+                
+                If no discrepancies found, return [].
+            """.trimIndent()
+
+            val response = generativeModel.generateContent(prompt)
+
+            val cleanJson = (response.text ?: "[]").replace("```json", "").replace("```", "").trim()
+            val results = Json { ignoreUnknownKeys = true }.decodeFromString<List<PriceCheckResult>>(cleanJson)
+
+            val alerts = results.filter { it.is_urgent }.map {
+                PriceAlertEntity(
+                    subscriptionId = it.subscription_id,
+                    subscriptionName = it.service_name,
+                    oldPrice = it.current_tracked_price,
+                    newPrice = it.actual_market_price,
+                    currency = userCurrency,
+                    message = it.alert_message
+                )
+            }
+
+            priceAlertDao.clearAlerts()
+            if (alerts.isNotEmpty()) {
+                priceAlertDao.insertAlerts(alerts)
+            }
+
+            Result.success()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure()
+        }
+    }
+}
