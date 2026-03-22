@@ -123,6 +123,7 @@ fun EditSubscriptionScreen(
         var paymentMethod by remember(subscription) { mutableStateOf(subscription.paymentMethod ?: "") }
         var remindersEnabled by remember(subscription) { mutableStateOf(subscription.remindersEnabled) }
         var reminderDaysBefore by remember(subscription) { mutableFloatStateOf(subscription.reminderDaysBefore.toFloat()) }
+        var isTrial by remember(subscription) { mutableStateOf(subscription.isTrial) }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
@@ -238,7 +239,8 @@ fun EditSubscriptionScreen(
                                             hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                                   },
                                         shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
-                                        icon = {}
+                                        icon = {},
+                                        enabled = !isTrial
                                     ) {
                                         Text(label)
                                     }
@@ -252,13 +254,31 @@ fun EditSubscriptionScreen(
                         modifier = Modifier.clip(topItemShape)
                     )
 
+                    ListItem(
+                        headlineContent = { Text("Free Trial") },
+                        trailingContent = {
+                            Switch(
+                                checked = isTrial,
+                                onCheckedChange = { 
+                                    isTrial = it
+                                    if (it) {
+                                        selectedCycleIndex = 0
+                                        reminderDaysBefore = 2f
+                                    }
+                                }
+                            )
+                        },
+                        colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
+                        modifier = Modifier.clip(middleItemShape)
+                    )
+
 
                     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                     val dateString = dateFormatter.format(Date(selectedDateMillis))
 
                     EditClickableInputItem(
                         icon = Icons.Default.CalendarToday,
-                        label = "First Payment",
+                        label = if (isTrial) "Trial End Date" else "First Payment",
                         value = dateString,
                         shape = middleItemShape,
                         onClick = { showDatePicker = true }
@@ -385,6 +405,7 @@ fun EditSubscriptionScreen(
                             paymentMethod = paymentMethod,
                             remindersEnabled = remindersEnabled,
                             reminderDaysBefore = reminderDaysBefore.toInt(),
+                            isTrial = isTrial,
                             onSuccess = onSaveSuccess
                         )
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)

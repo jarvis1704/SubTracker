@@ -36,12 +36,17 @@ class SubscriptionReminderWorker @AssistedInject constructor(
         val price = inputData.getDouble("price", 0.0)
         val currency = userDataRepository.getUser().first()?.preferredCurrency ?: "$"
         val subscriptionId = inputData.getInt("id", 0)
+        val isTrial = inputData.getBoolean("isTrial", false)
 
-        val message = "Your payment of $currency$price for $subscriptionName is coming up soon."
+        val message = if (isTrial) {
+            "Your trial for $subscriptionName ends in 2 days. You will be charged $currency$price."
+        } else {
+            "Your payment of $currency$price for $subscriptionName is coming up soon."
+        }
 
         NotificationHelper.showNotification(
             context = applicationContext,
-            title = "Upcoming Payment: $subscriptionName",
+            title = if (isTrial) "Trial Ending: $subscriptionName" else "Upcoming Payment: $subscriptionName",
             message = message,
             notificationId = subscriptionId
         )
@@ -56,7 +61,8 @@ class SubscriptionReminderWorker @AssistedInject constructor(
                     currency = subscription.currency,
                     billingCycle = subscription.billingCycle,
                     firstPaymentDate = subscription.firstPaymentDate,
-                    reminderDaysBefore = subscription.reminderDaysBefore
+                    reminderDaysBefore = subscription.reminderDaysBefore,
+                    isTrial = false // the next reminder will not be a trial
                 )
             }
         }

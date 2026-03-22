@@ -22,7 +22,8 @@ class ReminderScheduler @Inject constructor(
         currency: String,
         billingCycle: String,
         firstPaymentDate: Long,
-        reminderDaysBefore: Int
+        reminderDaysBefore: Int,
+        isTrial: Boolean
     ) {
         val nextPaymentTime = calculateNextPaymentTimestamp(firstPaymentDate, billingCycle)
         val reminderTime = nextPaymentTime - TimeUnit.DAYS.toMillis(reminderDaysBefore.toLong())
@@ -48,6 +49,7 @@ class ReminderScheduler @Inject constructor(
             .putString("name", name)
             .putDouble("price", price)
             .putString("currency", currency)
+            .putBoolean("isTrial", isTrial)
             .build()
 
         val workRequest = OneTimeWorkRequestBuilder<SubscriptionReminderWorker>()

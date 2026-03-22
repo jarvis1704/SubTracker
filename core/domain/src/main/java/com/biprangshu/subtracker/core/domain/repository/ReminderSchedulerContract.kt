@@ -8,7 +8,8 @@ interface ReminderSchedulerContract {
         currency: String,
         billingCycle: String,
         firstPaymentDate: Long,
-        reminderDaysBefore: Int
+        reminderDaysBefore: Int,
+        isTrial: Boolean = false
     )
     fun cancelReminder(subscriptionId: Int)
 }

@@ -25,5 +25,8 @@ data class SubscriptionEntity(
 
     //reminders
     val remindersEnabled: Boolean = false,
-    val reminderDaysBefore: Int = 1
+    val reminderDaysBefore: Int = 1,
+
+    //trial
+    val isTrial: Boolean = false
 )

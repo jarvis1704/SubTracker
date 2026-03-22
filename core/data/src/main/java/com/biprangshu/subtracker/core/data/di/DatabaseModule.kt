@@ -2,6 +2,8 @@ package com.biprangshu.subtracker.core.data.di
 
 import android.app.Application
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.biprangshu.subtracker.core.data.local.dao.ForecastDao
 import com.biprangshu.subtracker.core.data.local.dao.InsightDao
 import com.biprangshu.subtracker.core.data.local.dao.PriceAlertDao
@@ -22,6 +24,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN isTrial INTEGER NOT NULL DEFAULT 0")
+        }
+    }
+
     @Provides
     @Singleton
     fun providesDatabase(app: Application): AppDatabase {
@@ -29,7 +37,7 @@ object DatabaseModule {
             app,
             AppDatabase::class.java,
             "subtracker_db"
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides

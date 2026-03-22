@@ -54,6 +54,7 @@ class EditSubscriptionViewModel @Inject constructor(
         paymentMethod: String,
         remindersEnabled: Boolean,
         reminderDaysBefore: Int,
+        isTrial: Boolean = false,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
@@ -66,7 +67,8 @@ class EditSubscriptionViewModel @Inject constructor(
                 category = category,
                 paymentMethod = paymentMethod,
                 remindersEnabled = remindersEnabled,
-                reminderDaysBefore = reminderDaysBefore
+                reminderDaysBefore = reminderDaysBefore,
+                isTrial = isTrial
             )
 
             addSubscriptionUseCase(updatedSubscription)
@@ -79,7 +81,8 @@ class EditSubscriptionViewModel @Inject constructor(
                     currency = updatedSubscription.currency,
                     billingCycle = billingCycle,
                     firstPaymentDate = firstPaymentDate,
-                    reminderDaysBefore = reminderDaysBefore
+                    reminderDaysBefore = reminderDaysBefore,
+                    isTrial = isTrial
                 )
             } else {
                 reminderScheduler.cancelReminder(updatedSubscription.id)

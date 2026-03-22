@@ -39,6 +39,7 @@ class AddSubscriptionViewModel @Inject constructor(
         reminderEnabled: Boolean,
         reminderDaysBefore: Int,
         color: Long,
+        isTrial: Boolean = false,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
@@ -57,7 +58,8 @@ class AddSubscriptionViewModel @Inject constructor(
                 logoRedId = iconResId,
                 iconName = iconName,
                 remindersEnabled = reminderEnabled,
-                reminderDaysBefore = reminderDaysBefore
+                reminderDaysBefore = reminderDaysBefore,
+                isTrial = isTrial
             )
 
             val newId = try {
@@ -75,7 +77,8 @@ class AddSubscriptionViewModel @Inject constructor(
                         currency = "$",
                         billingCycle = billingCycle,
                         firstPaymentDate = firstPaymentDate,
-                        reminderDaysBefore = reminderDaysBefore
+                        reminderDaysBefore = reminderDaysBefore,
+                        isTrial = isTrial
                     )
                 }
                 onSuccess()

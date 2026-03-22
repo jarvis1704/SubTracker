@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.biprangshu.subtracker.core.data.local.dao.SubscriptionDao
 import com.biprangshu.subtracker.core.data.local.entity.SubscriptionEntity
 
-@Database(entities = [SubscriptionEntity::class], version = 1, exportSchema = false)
+@Database(entities = [SubscriptionEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun subscriptionDAO(): SubscriptionDao
 }

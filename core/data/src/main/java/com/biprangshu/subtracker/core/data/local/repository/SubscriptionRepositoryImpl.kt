@@ -58,7 +58,8 @@ class SubscriptionRepositoryImpl @Inject constructor(
             category = category,
             paymentMethod = paymentMethod,
             remindersEnabled = remindersEnabled,
-            reminderDaysBefore = reminderDaysBefore
+            reminderDaysBefore = reminderDaysBefore,
+            isTrial = isTrial
         )
     }
 
@@ -76,7 +77,8 @@ class SubscriptionRepositoryImpl @Inject constructor(
             category = category,
             paymentMethod = paymentMethod,
             remindersEnabled = remindersEnabled,
-            reminderDaysBefore = reminderDaysBefore
+            reminderDaysBefore = reminderDaysBefore,
+            isTrial = isTrial
         )
     }
 

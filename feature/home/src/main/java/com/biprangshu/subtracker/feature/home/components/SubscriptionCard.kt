@@ -66,10 +66,17 @@ fun SubscriptionCard(
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    "Due in ${subscription.dueInDays} Days",
-                    style = MaterialTheme.typography.labelLargeEmphasized
-                )
+                if (subscription.isTrial && subscription.firstPaymentDate > System.currentTimeMillis()) {
+                    Text(
+                        "Trial ends in ${subscription.dueInDays} Days",
+                        style = MaterialTheme.typography.labelLargeEmphasized
+                    )
+                } else {
+                    Text(
+                        "Due in ${subscription.dueInDays} Days",
+                        style = MaterialTheme.typography.labelLargeEmphasized
+                    )
+                }
             }
 
             //image

@@ -127,6 +127,7 @@ fun AddSubscriptionDetailsScreen(
     var paymentMethod by remember { mutableStateOf("") }
     var remindersEnabled by remember { mutableStateOf(true) }
     var reminderDaysBefore by remember { mutableFloatStateOf(1f) }
+    var isTrial by remember { mutableStateOf(false) }
 
     val userdata by addSubscriptionViewModel.userData.collectAsState()
 
@@ -245,7 +246,8 @@ fun AddSubscriptionDetailsScreen(
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                               },
                                     shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
-                                    icon = {}
+                                    icon = {},
+                                    enabled = !isTrial // disable if trial
                                 ) {
                                     Text(label)
                                 }
@@ -259,13 +261,31 @@ fun AddSubscriptionDetailsScreen(
                     modifier = Modifier.clip(topItemShape)
                 )
 
+                ListItem(
+                    headlineContent = { Text("Free Trial") },
+                    trailingContent = {
+                        Switch(
+                            checked = isTrial,
+                            onCheckedChange = { 
+                                isTrial = it
+                                if (it) {
+                                    selectedCycleIndex = 0 // Monthly
+                                    reminderDaysBefore = 2f
+                                }
+                            }
+                        )
+                    },
+                    colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
+                    modifier = Modifier.clip(middleItemShape)
+                )
+
 
                 val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                 val dateString = dateFormatter.format(Date(selectedDateMillis))
 
                 AddDetailsClickableInputItem(
                     icon = Icons.Default.CalendarToday,
-                    label = "First Payment",
+                    label = if (isTrial) "Trial End Date" else "First Payment",
                     value = dateString,
                     shape = middleItemShape,
                     onClick = {
@@ -421,7 +441,8 @@ fun AddSubscriptionDetailsScreen(
                             reminderEnabled = remindersEnabled,
                             reminderDaysBefore = reminderDaysBefore.toInt(),
                             onSuccess = onSaveSuccess,
-                            color= color
+                            color= color,
+                            isTrial = isTrial
                         )
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     }

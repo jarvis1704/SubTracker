@@ -17,6 +17,7 @@ data class Subscription(
     val category: String,
     val remindersEnabled: Boolean,
     val reminderDaysBefore: Int,
+    val isTrial: Boolean = false,
 
 
     val nextPaymentDate: Long = 0,
