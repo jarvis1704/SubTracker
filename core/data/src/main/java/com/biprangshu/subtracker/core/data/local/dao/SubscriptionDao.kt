@@ -27,6 +27,6 @@ interface SubscriptionDao {
     @Delete
     suspend fun deleteSubscription(subscription: SubscriptionEntity)
 
-    @Query("SELECT SUM(price) FROM subscriptions WHERE billingCycle = 'Monthly'")
-    fun getTotalMonthlySpend(): Flow<Double?>
+    @Query("SELECT SUM(price) FROM subscriptions WHERE billingCycle = 'Monthly' AND (isTrial = 0 OR firstPaymentDate <= :currentTime)")
+    fun getTotalMonthlySpend(currentTime: Long): Flow<Double?>
 }

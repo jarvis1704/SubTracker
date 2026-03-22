@@ -34,7 +34,7 @@ class SubscriptionRepositoryImpl @Inject constructor(
     }
 
     override fun getTotalMonthlySpend(): Flow<Double> {
-        return dao.getTotalMonthlySpend().map { it ?: 0.0 }
+        return dao.getTotalMonthlySpend(System.currentTimeMillis()).map { it ?: 0.0 }
     }
 
     private fun SubscriptionEntity.toDomain(): Subscription {
