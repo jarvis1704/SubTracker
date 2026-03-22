@@ -113,11 +113,11 @@ fun SubscriptionHeroCard(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Active",
+                    text = if (subscription.isTrial) "On Trial" else "Active",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = " • Next payment on $dateString",
+                    text = if (subscription.isTrial) " • Trial ends on $dateString" else " • Next payment on $dateString",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = Color.White.copy(alpha = 0.8f)
                     )
