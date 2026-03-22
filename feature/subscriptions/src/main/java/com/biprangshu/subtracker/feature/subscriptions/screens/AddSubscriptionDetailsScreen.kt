@@ -104,9 +104,11 @@ fun AddSubscriptionDetailsScreen(
     addSubscriptionViewModel: AddSubscriptionViewModel = hiltViewModel()
 ) {
 
-    val topItemShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+    val topItemShape =
+        RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
     val middleItemShape = RoundedCornerShape(4.dp)
-    val bottomItemShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
+    val bottomItemShape =
+        RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
 
     val hapticFeedback = LocalHapticFeedback.current
     val context = LocalContext.current
@@ -186,7 +188,9 @@ fun AddSubscriptionDetailsScreen(
 
             TextField(
                 value = price,
-                onValueChange = { if (it.all { char -> char.isDigit() || char == '.' }) price = it },
+                onValueChange = {
+                    if (it.all { char -> char.isDigit() || char == '.' }) price = it
+                },
                 textStyle = MaterialTheme.typography.displayLarge.copy(
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
@@ -235,6 +239,7 @@ fun AddSubscriptionDetailsScreen(
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
 
+                if (!isTrial) {
                     ListItem(
                         headlineContent = { Text("Billing Cycle") },
                         trailingContent = {
@@ -246,7 +251,10 @@ fun AddSubscriptionDetailsScreen(
                                             selectedCycleIndex = index
                                             hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                         },
-                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
+                                        shape = SegmentedButtonDefaults.itemShape(
+                                            index = index,
+                                            count = cycles.size
+                                        ),
                                         icon = {},
                                         enabled = !isTrial
                                     ) {
@@ -256,20 +264,23 @@ fun AddSubscriptionDetailsScreen(
                             }
                         },
                         leadingContent = {
-                            Icon(Icons.Default.Repeat, contentDescription = null, tint = colorScheme.primary)
+                            Icon(
+                                Icons.Default.Repeat,
+                                contentDescription = null,
+                                tint = colorScheme.primary
+                            )
                         },
                         colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
                         modifier = Modifier.clip(topItemShape)
                     )
                 }
 
-
                 ListItem(
                     headlineContent = { Text("Free Trial") },
                     trailingContent = {
                         Switch(
                             checked = isTrial,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 isTrial = it
                                 if (it) {
                                     selectedCycleIndex = 0 // Monthly
@@ -335,7 +346,11 @@ fun AddSubscriptionDetailsScreen(
                         )
                     },
                     leadingContent = {
-                        Icon(Icons.Default.CreditCard, contentDescription = null, tint = colorScheme.primary)
+                        Icon(
+                            Icons.Default.CreditCard,
+                            contentDescription = null,
+                            tint = colorScheme.primary
+                        )
                     },
                     colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
                     modifier = Modifier.clip(topItemShape)
@@ -394,7 +409,11 @@ fun AddSubscriptionDetailsScreen(
                         )
                     },
                     leadingContent = {
-                        Icon(Icons.Default.Notifications, contentDescription = null, tint = colorScheme.primary)
+                        Icon(
+                            Icons.Default.Notifications,
+                            contentDescription = null,
+                            tint = colorScheme.primary
+                        )
                     },
                     colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
                     modifier = Modifier.clip(
@@ -409,9 +428,10 @@ fun AddSubscriptionDetailsScreen(
                             Column {
                                 Slider(
                                     value = reminderDaysBefore,
-                                    onValueChange = { reminderDaysBefore = it
+                                    onValueChange = {
+                                        reminderDaysBefore = it
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
-                                                    },
+                                    },
                                     valueRange = 1f..7f,
                                     steps = 5
                                 )
@@ -428,7 +448,7 @@ fun AddSubscriptionDetailsScreen(
 
             Button(
                 onClick = {
-                    if(price.isEmpty()){
+                    if (price.isEmpty()) {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.Reject)
                         return@Button
                     } else {
@@ -444,7 +464,7 @@ fun AddSubscriptionDetailsScreen(
                             reminderEnabled = remindersEnabled,
                             reminderDaysBefore = reminderDaysBefore.toInt(),
                             onSuccess = onSaveSuccess,
-                            color= color,
+                            color = color,
                             isTrial = isTrial
                         )
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
