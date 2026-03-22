@@ -66,7 +66,7 @@ fun SubscriptionCard(
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(8.dp))
-                if (subscription.isTrial && subscription.firstPaymentDate > System.currentTimeMillis()) {
+                if (subscription.isTrial) { //possible bug here, need to test
                     Text(
                         "Trial ends in ${subscription.dueInDays} Days",
                         style = MaterialTheme.typography.labelLargeEmphasized
