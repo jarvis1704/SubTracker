@@ -234,32 +234,35 @@ fun AddSubscriptionDetailsScreen(
             )
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                ListItem(
-                    headlineContent = { Text("Billing Cycle") },
-                    trailingContent = {
-                        SingleChoiceSegmentedButtonRow {
-                            cycles.forEachIndexed { index, label ->
-                                SegmentedButton(
-                                    selected = index == selectedCycleIndex,
-                                    onClick = {
-                                        selectedCycleIndex = index
-                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-                                              },
-                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
-                                    icon = {},
-                                    enabled = !isTrial // disable if trial
-                                ) {
-                                    Text(label)
+
+                    ListItem(
+                        headlineContent = { Text("Billing Cycle") },
+                        trailingContent = {
+                            SingleChoiceSegmentedButtonRow {
+                                cycles.forEachIndexed { index, label ->
+                                    SegmentedButton(
+                                        selected = index == selectedCycleIndex,
+                                        onClick = {
+                                            selectedCycleIndex = index
+                                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                        },
+                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = cycles.size),
+                                        icon = {},
+                                        enabled = !isTrial
+                                    ) {
+                                        Text(label)
+                                    }
                                 }
                             }
-                        }
-                    },
-                    leadingContent = {
-                        Icon(Icons.Default.Repeat, contentDescription = null, tint = colorScheme.primary)
-                    },
-                    colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
-                    modifier = Modifier.clip(topItemShape)
-                )
+                        },
+                        leadingContent = {
+                            Icon(Icons.Default.Repeat, contentDescription = null, tint = colorScheme.primary)
+                        },
+                        colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
+                        modifier = Modifier.clip(topItemShape)
+                    )
+                }
+
 
                 ListItem(
                     headlineContent = { Text("Free Trial") },
@@ -276,7 +279,7 @@ fun AddSubscriptionDetailsScreen(
                         )
                     },
                     colors = ListItemDefaults.colors(containerColor = colorScheme.surfaceContainerHigh),
-                    modifier = Modifier.clip(middleItemShape)
+                    modifier = Modifier.clip(if (!isTrial) middleItemShape else topItemShape)
                 )
 
 
