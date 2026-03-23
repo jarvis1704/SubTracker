@@ -37,6 +37,10 @@ class SubscriptionRepositoryImpl @Inject constructor(
         return dao.getTotalMonthlySpend(System.currentTimeMillis()).map { it ?: 0.0 }
     }
 
+    override suspend fun convertEndedTrials(): Int {
+        return dao.convertEndedTrials(System.currentTimeMillis())
+    }
+
     private fun SubscriptionEntity.toDomain(): Subscription {
         val nextPaymentDate = calculateNextPaymentDate(firstPaymentDate, billingCycle)
         val daysUntil = calculateDaysUntil(nextPaymentDate)

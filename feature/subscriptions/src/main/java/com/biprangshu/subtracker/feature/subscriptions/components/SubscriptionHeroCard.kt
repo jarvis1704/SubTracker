@@ -111,13 +111,15 @@ fun SubscriptionHeroCard(
                 "Calculating..."
             }
 
+            val isActivelyOnTrial = subscription.isTrial && subscription.firstPaymentDate > System.currentTimeMillis()
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = if (subscription.isTrial) "On Trial" else "Active",
+                    text = if (isActivelyOnTrial) "On Trial" else "Active",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = if (subscription.isTrial) " • Trial ends on $dateString" else " • Next payment on $dateString",
+                    text = if (isActivelyOnTrial) " • Trial ends on $dateString" else " • Next payment on $dateString",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = Color.White.copy(alpha = 0.8f)
                     )

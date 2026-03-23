@@ -29,4 +29,7 @@ interface SubscriptionDao {
 
     @Query("SELECT SUM(price) FROM subscriptions WHERE billingCycle = 'Monthly' AND (isTrial = 0 OR firstPaymentDate <= :currentTime)")
     fun getTotalMonthlySpend(currentTime: Long): Flow<Double?>
+
+    @Query("UPDATE subscriptions SET isTrial = 0 WHERE isTrial = 1 AND firstPaymentDate <= :currentTime")
+    suspend fun convertEndedTrials(currentTime: Long): Int
 }

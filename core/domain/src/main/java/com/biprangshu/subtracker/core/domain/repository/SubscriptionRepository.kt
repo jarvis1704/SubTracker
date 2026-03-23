@@ -9,4 +9,5 @@ interface SubscriptionRepository {
     suspend fun insertSubscription(subscription: Subscription): Long
     suspend fun deleteSubscription(subscription: Subscription)
     fun getTotalMonthlySpend(): Flow<Double>
+    suspend fun convertEndedTrials(): Int
 }

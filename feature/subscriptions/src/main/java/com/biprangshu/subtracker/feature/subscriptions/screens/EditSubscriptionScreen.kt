@@ -124,7 +124,7 @@ fun EditSubscriptionScreen(
         var remindersEnabled by remember(subscription) { mutableStateOf(subscription.remindersEnabled) }
         var reminderDaysBefore by remember(subscription) { mutableFloatStateOf(subscription.reminderDaysBefore.toFloat()) }
         var isTrial by remember(subscription) {
-            mutableStateOf(subscription.isTrial && subscription.firstPaymentDate <= System.currentTimeMillis())
+            mutableStateOf(subscription.isTrial && subscription.firstPaymentDate > System.currentTimeMillis())
         }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
