@@ -47,6 +47,7 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -346,18 +347,16 @@ fun EditSubscriptionScreen(
                                 thumbContent = {
                                     if (remindersEnabled){
                                         Icon(
-                                            imageVector = Icons.Default.Check,
+                                            imageVector = Icons.Filled.Check,
                                             contentDescription = null,
-                                            tint = Color.White,
-                                            modifier = Modifier.size(16.dp)
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
                                         )
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                     }else{
                                         Icon(
-                                            imageVector = Icons.Default.Close,
+                                            imageVector = Icons.Filled.Closeet,
                                             contentDescription = null,
-                                            tint = Color.White,
-                                            modifier = Modifier.size(16.dp)
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
                                         )
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
                                     }
