@@ -270,6 +270,23 @@ fun EditSubscriptionScreen(
                                         selectedCycleIndex = 0
                                         reminderDaysBefore = 2f
                                     }
+                                },
+                                thumbContent = {
+                                    if (isTrial){
+                                        Icon(
+                                            imageVector = Icons.Filled.Check,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        )
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                    }else{
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        )
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+                                    }
                                 }
                             )
                         },
@@ -354,7 +371,7 @@ fun EditSubscriptionScreen(
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                     }else{
                                         Icon(
-                                            imageVector = Icons.Filled.Closeet,
+                                            imageVector = Icons.Filled.Close,
                                             contentDescription = null,
                                             modifier = Modifier.size(SwitchDefaults.IconSize),
                                         )
