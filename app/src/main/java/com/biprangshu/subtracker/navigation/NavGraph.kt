@@ -20,19 +20,21 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import com.biprangshu.subtracker.showCurrencySetModal
-import com.biprangshu.subtracker.ui.screens.AnalyticsScreen.AnalyticsScreen
-import com.biprangshu.subtracker.ui.screens.HomeScreen.HomeScreen
-import com.biprangshu.subtracker.ui.screens.Settings.screens.AISettingsScreen
-import com.biprangshu.subtracker.ui.screens.Settings.screens.AboutScreen
-import com.biprangshu.subtracker.ui.screens.Settings.screens.NotificationSettingsScreen
-import com.biprangshu.subtracker.ui.screens.Settings.screens.SettingsScreen
-import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionDetailsScreen
-import com.biprangshu.subtracker.ui.screens.addsubscriptionscreen.AddSubscriptionScreen
-import com.biprangshu.subtracker.ui.screens.editsubscriptionscreen.EditSubscriptionScreen
-import com.biprangshu.subtracker.ui.screens.onboarding.OnboardingScreen
-import com.biprangshu.subtracker.ui.screens.onboarding.viewmodel.OnboardingViewModel
-import com.biprangshu.subtracker.ui.screens.subscriptiondetailsscreen.SubscriptionDetailsScreen
+import com.biprangshu.subtracker.BuildConfig
+import com.biprangshu.subtracker.core.common.showCurrencySetModal
+import com.biprangshu.subtracker.core.navigation.Route
+import com.biprangshu.subtracker.feature.analytics.AnalyticsScreen
+import com.biprangshu.subtracker.feature.home.HomeScreen
+import com.biprangshu.subtracker.feature.onboarding.OnboardingScreen
+import com.biprangshu.subtracker.feature.onboarding.viewmodel.OnboardingViewModel
+import com.biprangshu.subtracker.feature.settings.screens.AISettingsScreen
+import com.biprangshu.subtracker.feature.settings.screens.AboutScreen
+import com.biprangshu.subtracker.feature.settings.screens.NotificationSettingsScreen
+import com.biprangshu.subtracker.feature.settings.screens.SettingsScreen
+import com.biprangshu.subtracker.feature.subscriptions.screens.AddSubscriptionDetailsScreen
+import com.biprangshu.subtracker.feature.subscriptions.screens.AddSubscriptionScreen
+import com.biprangshu.subtracker.feature.subscriptions.screens.EditSubscriptionScreen
+import com.biprangshu.subtracker.feature.subscriptions.screens.SubscriptionDetailsScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalMaterial3Api::class
@@ -126,6 +128,7 @@ fun NavGraph(
                         NavEntry(key) {
                             SettingsScreen(
                                 innerPadding = innerPadding,
+                                versionName = BuildConfig.VERSION_NAME,
                                 onNavigate = { route -> backStack.add(route) }
                             )
                         }
@@ -213,7 +216,9 @@ fun NavGraph(
                                 onBack = {
                                     backStack.removeAt(backStack.lastIndex)
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.KeyboardTap)
-                                }
+                                },
+                                versionName = BuildConfig.VERSION_NAME,
+                                appName = "SubTracker"
                             )
                         }
                     }

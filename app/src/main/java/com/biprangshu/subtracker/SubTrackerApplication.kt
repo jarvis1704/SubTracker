@@ -3,9 +3,12 @@ package com.biprangshu.subtracker
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.biprangshu.subtracker.domain.repository.UserPreferencesRepository
-import com.biprangshu.subtracker.worker.AIWorkerScheduler
-import com.biprangshu.subtracker.worker.NotificationHelper
+import com.biprangshu.subtracker.core.common.isAppReady
+import com.biprangshu.subtracker.core.common.showOnboardingScreens
+import com.biprangshu.subtracker.core.domain.repository.UserPreferencesRepository
+import com.biprangshu.subtracker.core.worker.AIWorkerScheduler
+import com.biprangshu.subtracker.core.worker.NotificationHelper
+import com.biprangshu.subtracker.core.worker.TrialConversionScheduler
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +27,9 @@ class SubTrackerApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var aiWorkerScheduler: AIWorkerScheduler
+
+    @Inject
+    lateinit var trialConversionScheduler: TrialConversionScheduler
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
@@ -51,6 +57,9 @@ class SubTrackerApplication : Application(), Configuration.Provider {
                 priceAlertsEnabled, 
                 periodDays
             )
+
+            // Schedule trial conversion worker to auto-convert ended trials
+            trialConversionScheduler.scheduleTrialConversion()
         }
     }
 }
